@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e -o pipefail -u
+cd "$(dirname "$0")"
 
 if [ -z "${TMPDIR}" ]; then
 	TMPDIR="/tmp/"
