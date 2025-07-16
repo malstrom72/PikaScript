@@ -1,5 +1,0 @@
- streamTest = function { args(@readline, @writeline); for (; readline(@s); ) writeline(reverse(s)) };
- eatline2 = function { [$0] = eatline($1); [$0] != void || s != void };
- eatline = function { s = [$0]{:find([$0], "\r\n")}; [$0] = [$0]{length(s):}; if ([$0]{0} == "\r") [$0] = [$0]{1:}; if ([$0]{0} == "\n") [$0] = [$0]{1:}; s };
- z2 = function { s="a\nabcd\nhejsan\ndu"; streamTest(>eatline2($0, @s), print) };
- inptest = function { [$0] = input(''); [$0] != void };

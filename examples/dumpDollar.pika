@@ -1,3 +1,0 @@
-include('debug.pika');
-dump(@$);
-include('temp.pika');

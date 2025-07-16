@@ -1,7 +1,0 @@
-STLValue<STRING> = value, represented by (and inherited from) a STL compliant string class
-STLVarSpace<VALUE, MAP> = variable space, implemented with (and inherited from) a STL compliant map class
-
-StdValue = STLValue<std::string>
-StdVarSpace = STLVarSpace<StdValue, std::map>
-
-Frame<VARSPACE, SUBFRAME> =

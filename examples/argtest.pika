@@ -1,5 +1,0 @@
-run('stdlib.pika');
-run('debug.pika');
-global = 1234;
-dump(@$);
-"hey"
