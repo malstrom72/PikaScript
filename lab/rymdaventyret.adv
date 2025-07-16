@@ -1,0 +1,235 @@
+ignore: efter
+
+synonym: dator = datorn
+synonym: datorn = skeppsdatorn
+synonym: generator = generatorn
+synonym: handscanner = scannern
+synonym: handscannern = scannern
+synonym: malm = uranmalm
+synonym: malmen = malm
+synonym: multiverktyg = multiverktyget
+synonym: nord = norr
+synonym: norr = norrut
+synonym: pumpen = bränslepumpen
+synonym: scanner = scannern
+synonym: signal = signaler
+synonym: skeppet = rymdskeppet
+synonym: skrivaren = 3d-skrivaren
+synonym: sten = stenen
+synonym: syd = söderut
+synonym: söder = söderut
+synonym: undersök = titta
+synonym: uran = uranmalmen
+synonym: uranmalm = uranmalmen
+synonym: verktyg = multiverktyg
+synonym: verkyget = verktyg
+synonym: väst = västerut
+synonym: väster = västerut
+synonym: öst = österut
+synonym: öster = österut
+
+var: basens signal = [oupptäckt] / upptäckt
+var: bränslepumpen = [ej tillverkad] / monterad / tagen
+var: generatorn = [avstängd] / påslagen
+var: rymdskeppet = ovanför burghalos / ovanför riddora / [på burghalos] / på riddora
+var: scannern = [i rymdskeppet] / tagen
+var: skeppsdatorn = [avstängd] / påslagen
+var: uranmalmen = i generatorn / i grottan / [oupptäckt] / tagen
+
+> använd scannern : alltid samma som undersök scannern
+> flyg iväg : alltid samma som lyft
+> inv : alltid samma som inventarie
+> inventarie : alltid samma som "vad har jag på mig?"
+> scanna efter signaler : alltid om scannern är tagen så skriv "Scannern får inte in någon signal just nu."
+> släpp multiverktyget : alltid skriv "Det vore väl dumt?"
+> släpp handscannern : alltid skriv "Nej. Den kan vara bra att ha."
+> ta av rymddräkten : alltid: skriv "Men då dör du ju i rymden!"
+> titta : alltid beskriv platsen
+> titta runt : alltid samma som titta
+> undersök scannern : alltid: om scannern är tagen skriv "Scannern har tre funktioner. Den kan scanna efter signaler, liv och specifika ämnen. Du använder den genom att skriva t.ex \"scanna efter signaler\""
+> vad bär jag? : alltid: samma som "vad har jag på mig?"
+> vad har jag på mig? : alltid:
+	Skriv "En rymddräkt.".
+	Skriv "Ett multiverktyg."
+	Om scannern är tagen så skriv "En handscanner.".
+	Om uranmalmen är tagen så skriv "En sten med uranmalm.".
+	Om bränslepumpen är tagen så skriv "En nytillverkad bränslepump.".
+
+> var är jag? : alltid samma som titta
+
+# Intro
+-------
+Ditt rymdskepp slutade fungera när du patrullerade i Rakadam-systemet. Du var tvungen att nödlanda på planeten Burghalos som är en obebodd ökenplanet.
+: gå till "Burghalos: ravinen"
+
+
+# Burghalos: ravinen
+--------------------
+Du befinner dig i en ravin som går i nord/sydlig riktning.
+: om rymdskeppet är på Burghalos skriv "Här står ditt rymdskepp.".
+
+> gå in i rymdskeppet : gå till "Rymdskeppets cockpit"
+> gå norrut : gå till Burghalos: ovanför ravinen
+> gå söderut : gå till "Burghalos: utanför grottan"
+
+# Burghalos: ovanför ravinen
+-----------------------------
+Du står ovanför en stor ravin som sträcker sig åt söder. Runt omkring dig är ett torrt ödeland.
+
+> följ scannern : samma som gå mot signalen
+> följ signalen : samma som "gå mot signalen"
+> gå mot signalen : om scannern är tagen och basens signal är upptäckt så skriv "Du går mot signalens position i cirka 20 minuter och kommer fram till..." och gå till "Burghalos: utanför basen"
+> gå ner i ravinen : samma som "gå söderut"
+> gå norrut : samma som "gå österut"
+> gå söderut : gå till "Burghalos: ravinen"
+> gå västerut : om basens signal är upptäckt så samma som "gå mot signalen" annars samma som "gå österut"
+> gå österut : skriv "Öknen är så stor. Du skulle bara tappa bort dig."
+> scanna efter signaler : om scannern är tagen skriv "Scannern detekterar en signal ett par kilometrar västerut." och notera att basens signal är upptäckt
+
+# Rymdskeppets cockpit
+----------------------
+Du är inuti ditt rymdskepp. Här finns skeppets kontrollpanel och dator samt en liten tunnel till det lilla motorrummet.
+: titta ut samt om scannern är i rymdskeppet så skriv "Här ligger en handscanner."
+
+> använd datorn : samma som "undersök datorn"
+> diagnos : 
+	om skeppsdatorn inte är påslagen så skriv "Datorn är inte påslagen."
+	annars om bränslepumpen inte är monterad så skriv "Diagnosen visar att bränslepumpen till motorn ej fungerar. Du behöver ersätta hela pumpen. Pumpens modellnummer är A9Z8K222." annars så skriv "Diagnosen visar att alla skeppets system fungerar."
+
+> flyg någon annanstans : skriv "Använd datorns navigeringssystem."
+> gå in i motorrummet : gå till rymdskeppets motorrum
+> gå ut ur rymdskeppet : 
+	om rymdskeppet är på Burghalos så gå till "Burghalos: ravinen"
+	om rymdskeppet är på Riddora så gå till "Riddora: rymdhamnen dockningsstation 57"
+	annars så skriv "Du känner inte för att gå på rymdpromenad just nu."
+
+> info : 
+	om skeppsdatorn inte är påslagen så skriv "Datorn är inte påslagen."
+	annars om rymdskeppet är på Burghalos så skriv "Datorns informerar dig att du befinner dig på Burghalos. En obebodd måne till planeten Riddora i Rakadam-systemet. Burghalos är huvudsakligen täckt av sand- och stenöken. Atmosfären går ej att andas i."
+	annars om rymdskeppet är ovanför Burghalos så skriv "Datorn informerar dig att du befinner dig i omloppsbana runt månen Burghalos."
+
+> kör diagnos : samma som diagnos
+> landa : 
+	om rymdskeppet är ovanför burghalos så skriv "Du tar snabbt ned rymdskeppet på marken intill ravinen." och ändra rymdskeppet till "på burghalos"
+	om rymdskeppet är ovanför riddora så skriv "Du landar på den mest kända rymdhamnen i huvudstaden Cinok." och ändra rymdskeppet till "på riddora"
+
+> landa på månen Burghalos : om rymdskeppet är ovanför burghalos så samma som landa
+> landa på Riddora : om rymdskeppet är ovanför riddora så samma som landar
+> lyft : samma som tryck på avfyringsknappen
+> navigera : 
+	skriv "Rakadam-systemet"
+	skriv "════════════════"
+	skriv ""
+	skriv "○ Solen"
+	skriv "│"
+	om rymdskeppet är ovanför riddora 	skriv "├── X Riddora (civiliserad)"
+	annars								skriv "├── ○ Riddora (civiliserad)"
+	skriv "│   │"
+	om rymdskeppet är på Burghalos eller rymdskeppet är ovanför Burghalos
+			skriv "│   └── X Burghalos (måne)"
+	annars	skriv "│   └── ○ Burghalos (måne)"
+	skriv "│"
+	skriv "├── ○ Teketopa (gasjätte)"
+	skriv "│   │"
+	skriv "│   └── ○ Satkal (måne)"
+	skriv "│"
+	skriv "└── ○ Xamnim (dvärgplanet)"
+	skriv ""
+	skriv "Använd \"åk till <planet>\""
+
+> slå av datorn : samma som stäng av datorn
+> slå på datorn : om skeppsdatorn är avstängd så skriv "Du slår på datorn och den presenterar en meny med följande funktioner: DIAGNOS, NAVIGERA och INFO." och ändra skeppsdatorn till påslagen annars om skeppsdatorn är påslagen så skriv "Den är redan påslagen. Välj funktion: DIAGNOS, NAVIGERA eller INFO."
+> starta rymdskeppet : skriv "Rymdskeppet är redan igång."
+> stäng av datorn : om skeppsdatorn är påslagen så skriv "Ok" och ändra skeppsdatorn till avstängd annars om skeppsdatorn är avstängd så skriv "Den är redan avstängd."
+> sätt på datorn : samma som "slå på datorn"
+> ta scannern : om scannern är i rymdskeppet så skriv "Ok" och ändra scannern till tagen
+> undersök kontrollpanelen : om bränslepumpen inte är monterad så skriv "Instrumenten indikerar att du har slut på bränsle." annars så skriv "Alla instrument tyder på att skeppet är i funktion. Bland kontrollerna finns avfyringsknappen."
+> titta på datorn : samma som undersök datorn
+> undersök datorn : 
+	om skeppsdatorn är avstängd så skriv "Den är avstängd."
+	annars så skriv "Datorn presenterar en meny med följande funktioner: DIAGNOS, NAVIGERA och INFO."
+
+> titta ut : 
+	om rymdskeppet är ovanför burghalos så skriv "Du befinner dig i omloppsbana runt månen Burghalos."
+	om rymdskeppet är på burghalos så skriv "Utanför rymdskeppet ser du en ravin."
+	om rymdskeppet är ovanför riddora så skriv "Du befinner dig i omloppsbana runt planeten Riddora."
+	om rymdskeppet är på riddora så skriv "Rymdskeppet är dockat i rymdhamnen Cinok Capital Spaceport."
+
+> tryck på avfyringsknappen : om rymdskeppet är på Burghalos och bränslepumpen är monterad så skriv "Du trycker på knappen och rymdskeppet lyfter med ett dån mot atmosfären. Efter några minuter har du nått omloppsbanan runt Burghalos." och ändra rymdskeppet till "ovanför Burghalos"
+> åk till burghalos : om rymdskeppet är ovanför burghalos så landa annars om rymdskeppet är på burghalos skriv "Du befinner dig redan på Burghalos." annars skriv "Du åker till Burghalos... (blahblah)" och ändra rymdskeppet till ovanför burghalos
+> åk till riddora : om rymdskeppet är ovanför riddora så landa annars om rymdskeppet är på riddora skriv "Du befinner dig redan på riddora." annars skriv "Du åker till riddora... (blahblah)" och ändra rymdskeppet till ovanför riddora
+
+# Burghalos: utanför basen
+---------------------------
+Du står utanför en gammal övergiven liten bas. Här finns en landningsplatta, ett litet kupolhus och en generator.
+
+> grodan boll : om uranmalmen är tagen så skriv "Kalle Stropp!"
+> gå in i kupolhuset : gå till "Burghalos: inne i basen"
+> gå tillbaka : skriv "Du går tillbaka mot ravinen." och gå till Burghalos: ovanför ravinen
+> gå öster : samma som gå tillbaka
+> slå på generatorn : om generatorn är påslagen så skriv "Den är redan påslagen." annars om uranmalmen inte är i generatorn så skriv "Den saknar bränsle."
+> sätt in uranmalmen i generatorn : om generatorn är avstängd och uranmalmen är tagen så skriv "Du lägger uranmalmen i bränslebehållaren och slår på generatorn." och ändra generatorn till påslagen och ändra uranmalmen till i generatorn
+> undersök generatorn : om generatorn är avstängd skriv "Generatorn är avstängd och saknar bränsle. Du ser en liten behållare för bränsle och du läser på instruktionerna att generatorn drivs av uran." annars så skriv "Generatorn är påslagen och genererar ström till basen."
+> undersök plattan : skriv "Det är inget särskilt med landningsplattan."
+
+# Burghalos: inne i basen
+-------------------------
+Du är inne i ett litet kupolhus på den övergivna basen. Här har ingen varit på länge. Dammet ligger tjockt överallt. Här finns ett antal skåp och maskiner, däribland en 3D-skrivare.
+
+> A9Z8K222 : samma som ange A9Z8K222
+> ange A9Z8K222 : om bränslepumpen är ej tillverkad så skriv "Du matar in A9Z8K222, modellnumret för rymdskeppets bränslepump. 3D-skrivaren börjar arbeta. Efter 20 minuter är skrivaren till slut färdig med tillverkningen. Du plockar upp den utskrivna bränslepumpen." och ändra bränslepumpen till tagen annars så skriv "Du har redan tillverkat en. Hur många behöver du egentligen?"
+> ange modellnummer för bränslepump : skriv "Och vad var det numret nu igen?"
+> använd 3D-skrivaren : om generatorn är avstängd så skriv "Du behöver ström för att använda 3D-skrivaren." annars så skriv "För att använda 3D-skrivaren behöver du ange ett modellnummer."
+> gå ut ur kupolhuset : gå till "Burghalos: utanför basen"
+> skriv ut en bränslepump : om generatorn är påslagen så skriv "Du behöver ange modellnummer."
+> slå på 3D-skrivaren : samma som använd 3D-skrivaren
+> ta pumpen : om bränslepumpen är tagen så skriv "Du har den redan."
+> undersök 3D-skrivaren : samma som använd 3D-skrivaren
+> undersök maskinerna : skriv "Den enda intressanta maskinen är 3D-skrivaren."
+> undersök skåpen : skriv "Du hittar ingenting av värde i skåpen."
+> vad var modellnumret? : skriv "Det får väl du komma ihåg själv!"
+
+# Burghalos: utanför grottan
+-----------------------------
+Du är utanför en grotta i södra änden av ravinen. Ravinen fortsätter norrut.
+
+> gå in i grottan : gå till Burghalos: inne i grottan
+> gå norrut : gå till "Burghalos: ravinen"
+
+# Burghalos: inne i grottan
+---------------------------
+Du står inne i en liten grotta. Grottan är full av märkliga stenar och mineraler.
+: om uranmalmen är i grottan så skriv "Det ligger en sten med uranmalm här."
+
+> gå ut ur grottan : gå till "Burghalos: utanför grottan"
+> scanna efter uran : om scannern är tagen och uranmalmen är oupptäckt så skriv "Du ställer in scannern på att scanna efter uran och startar. Efter någon minut är scanningen slutförd. Den har upptäckt att en sten i närheten innehåller uran." och ändra uranmalmen till i grottan
+> ta stenen : om uranmalmen är i grottan så skriv "Du tar stenen." och ändra uranmalmen till tagen
+> ta uranmalmen : samma som ta stenen
+
+# Rymdskeppets motorrum
+-----------------------
+Du befinner dig i det trånga lilla motorrummet. Motorn är av en modern modell som drivs på flytande dilithium.
+
+> ersätt den trasiga pumpen med den nya : om bränslepumpen är tagen så skriv "Du skruvar loss den gamla bränslepumpen med ditt multiverktyg och ersätter smidigt med den nya." och ändra bränslepumpen till monterad annars skriv "Du har ingen bränslepump att ersätta den med."
+> gå tillbaka : samma som gå ut
+> gå ut : gå till rymdskeppets cockpit
+> laga bränslepumpen : om bränslepumpen inte är monterad så skriv "Du har inte en aning om hur man lagar en sådan." annars så skriv "Den är ju utbytt och behöver inte lagas."
+> ta bränslepumpen : om bränslepumpen inte är monterad så skriv "Du behöver inte den trasiga pumpen." annars så skriv "Nej. Låt den sitta."
+> undersök bränslepumpen : om bränslepumpen är monterad så skriv "Den trasiga bränslepumpen är ersatt av en ny fungerande." annars så skriv "Bränslepumpen har uppenbarligen skadats rejält."
+> undersök motorn : skriv "Motorn ser intakt ut. Intill motorn sitter en bränslepump."
+
+# Riddora: rymdhamnen dockningsstation 57
+-----------------------------------------
+Du befinner dig i rymdhamnen Cinok Capital Spaceport, dockningsstation 57, där ditt rymdskepp är dockat. Härifrån kan du ta dig till rymdhamnens taxistation. Det finns också en liten bar i närheten.
+
+> gå till baren : gå till Riddora: Grok Bar
+
+# Riddora: grok bar
+-------------------
+I Grok Bar är det alltid packat med resenärer från rymdens alla hörn (har rymden verkligen hörn?) och idag är inget undantag. Det är full rulle och den stackars bartendern ser ut att ha det besvärligt.
+
+> jag vill beställa något : skriv '"Inte tid. Du får vänta."'
+> prata med bartendern : skriv '"Jag är upptagen" säger bartendern med ett plågat grin. Och om du inte har någon medicin mot mitt onda knä så får du vänta på din tur.'
+> varför har du ont i knät? : skriv '"Krigsskada."'
+> vilket krig? : skriv '"Ska du beställa något eller har du någon medicin? Jag menar allvar. Jag har jätteont i knät."'
+

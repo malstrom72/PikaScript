@@ -1,0 +1,5 @@
+include('systools.pika');
+print($0);
+print(run.root);
+include('toC.pika');
+if (!exists(@$1)) run('includeTest.pika', 'no');

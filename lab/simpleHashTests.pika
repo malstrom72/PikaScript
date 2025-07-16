@@ -1,0 +1,48 @@
+<<<<<<< .mine
+simpleHash1 = function { PRIME = 97; $0 % PRIME };
+simpleHash2 = function { PRIME = 97; ($0 * ($0 + 3)) % PRIME };
+simpleHash3 = function { A = 0.5 * (sqrt(5) - 1); s = $0 * A; p = 8; x = s - floor(s); floor((1 << p) * x) };
+simpleHash4 = function { A = 0.5 * (sqrt(5) - 1); w = 16; p = 8; s = floor(A * pow(2,w)); x = 0xFFFF & ($0 * s); x >> (w - p); };
+simpleHash5 = function { A = 0.5 * (sqrt(5) - 1); w = 32; p = 8; s = floor(A * pow(2,w)); x = round(($0 * s) % ~0); x >> (w - p); };
+
+prune(@histo);
+for (i = 0; i < 256; ++i) {
+	k = simpleHash5(i);
+	defaults(@histo[k], 0);
+	++histo[k];
+	print(bake("{i}:\t{simpleHash1(i)}\t{simpleHash2(i)}\t{simpleHash3(i)}\t{simpleHash4(i)}\t{k}\t{histo[k]}"));
+};
+print('s=0x' # radix({ A = 0.5 * (sqrt(5) - 1); w = 32; floor(A * pow(2,w)) }, 16));
+s = '';
+for (i = 0; i < 256; ++i) {
+	s #= ', ' # simpleHash5(i);
+};
+print(s);
+
+// C++
+// 
+// inline unsigned int SimpleHashFunction(unsigned int x, unsigned int bits) { NED_ASSERT(sizeof (unsigned int) == 4); unsigned int k = (0x9e3779b9 * x) >> (32 - bits); NED_ASSERT(0 <= k && k < (1 << bits)); return k; }
+=======
+simpleHash1 = function { PRIME = 97; $0 % PRIME };
+simpleHash2 = function { PRIME = 97; ($0 * ($0 + 3)) % PRIME };
+simpleHash3 = function { A = 0.5 * (sqrt(5) - 1); s = $0 * A; p = 7; x = s - floor(s); floor((1 << p) * x) };
+simpleHash4 = function { A = 0.5 * (sqrt(5) - 1); w = 16; p = 7; s = floor(A * pow(2,w)); x = 0xFFFF & ($0 * s); x >> (w - p); };
+simpleHash5 = function { A = 0.5 * (sqrt(5) - 1); w = 32; p = 7; s = floor(A * pow(2,w)); x = round(($0 * s) % ~0); x >> (w - p); };
+
+prune(@histo);
+for (i = 0; i < 128; ++i) {
+	k = simpleHash5(i);
+	defaults(@histo[k], 0);
+	++histo[k];
+	print(bake("{i}:\t{simpleHash1(i)}\t{simpleHash2(i)}\t{simpleHash3(i)}\t{simpleHash4(i)}\t{k}\t{histo[k]}"));
+};
+print('s=0x' # radix({ A = 0.5 * (sqrt(5) - 1); w = 32; floor(A * pow(2,w)) }, 16));
+s = 'unsigned int kTestTable[128] = { ';
+for (i = 0; i < 128; ++i) s #= simpleHash5(i) # ', ';
+s = chop(s, 2) # ' };';
+print(s);
+
+// C++
+// 
+// inline unsigned int SimpleHashFunction(unsigned int x, unsigned int bits) { NED_ASSERT(sizeof (unsigned int) == 4); unsigned int k = (0x9e3779b9 * x) >> (32 - bits); NED_ASSERT(0 <= k && k < (1 << bits)); return k; }
+>>>>>>> .r8020

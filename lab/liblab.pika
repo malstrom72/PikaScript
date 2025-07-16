@@ -1,0 +1,148 @@
+::cppWhite = function {
+	for (i = 0; {
+		c = $0{i};
+		if (in(c, ' ', TAB, CR, LF)) {
+			++i;
+			true
+		} else if (c == '/') {
+			c2 = $0{i + 1};
+			if (c2 == '/') {
+				for (i += 2; !in($0{i}, CR, LF, void); ++i);
+				true
+			} else if (c2 == '*') {
+				for (i += 2; $0{i:2} != '*/'; ++i);
+				i += 2;
+				true
+			} else false;
+		} else false
+	}; );
+	$0{i:};
+};
+::deepen = function { // (source, [prefix])
+	src = $0;
+	defaults(@pre, void);
+	symbol = function {
+		p = span($0, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$_");
+		if (p < length($0)) escape($0) else $0;
+	};
+			
+	EOL = ',' # LF;
+	deep = '';
+	ind = pre;
+	cur = '';
+	
+	foreach (src, >{
+		id = $1;
+		value = $2;
+		class = classify(value);
+		if (class == 'function' || class == 'string') value = escape(value);
+		
+		for (; id{:length(cur)} != cur ;) {
+			cur = reverse(cur);
+			cur = reverse(cur{find(cur, '.') + 1:});
+			ind = ind{:length(ind) - 1};
+			if (deep{length(deep) - 2:} == EOL) deep = deep{:length(deep) - 2} # LF;
+			deep #= ind # '}' # LF;
+		};
+		
+		for (; {
+				r = id{if (cur == void) 0 else length(cur) + 1:};
+				p = find(r, '.');
+				p < length(r)
+			} ;) {
+			s = r{:p};
+			r = r{p + 1:};
+			deep #= ind # symbol(s) # ': {' # LF;
+			ind #= TAB;
+			cur #= (if (cur != void) '.') # s;
+		};
+		deep #= ind # symbol(r) # ': ' # value # EOL;
+	});
+	
+	if (deep{length(deep) - 2:} == EOL) deep = deep{:length(deep) - 2} # LF;
+	for (; ind != pre ;) {
+		ind = ind{:length(ind) - 1};
+		deep #= ind # '}' # LF;
+	};
+	
+	deep;
+};
+
+::flatten = function { // (string, destination)
+	args(@src, @dst);
+	prune(dst);
+	
+	if (src{0} == '{') src = src{1: };
+	for (; src != void && src{0} != '}' ;) {
+		src = cppWhite(src);
+		split(src, ":=,\n\r}", @l, @r);
+		if (in(r{0}, ':', '=')) {
+			// FIX : unescape l if necessary, and support cppWhite after identifier
+			// FIX : use rspan
+			for (; in(l{length(l) - 1}, ' ', TAB) ;) l = l{:length(l) - 1};
+			src = cppWhite(r{1:});
+		} else {
+			defaults(@[dst].n, 0);
+			l = [dst].n++;
+		};
+			
+		c = src{0};
+		if (c == '{') {
+			src = flatten(src, @[dst][l]);
+			l = void;
+		} else if (c == "'") {
+			split(src{1:}, "'", @r, @src);
+			src = src{1:};
+			[dst][l] = r;
+		} else if (c == '"') {
+			// FIX : support escape codes
+			split(src{1:}, '"', @r, @src);
+			src = src{1:};
+			[dst][l] = r;
+		} else {
+			split(src, ",\n\r}", @r, @src);
+			// FIX : use rspan
+			for (; in(r{length(r) - 1}, ' ', TAB) ;) r = r{:length(r) - 1};
+		};
+		if (l != void) [dst][l] = r;
+
+		if (in(src{0}, ',', "\n", "\r")) src = src{1:};
+		src = cppWhite(src);
+	};
+	
+	src{1:};
+};
+
+::inject = function {
+	map = coalesce(@$1, '^');
+	open = coalesce(@$2, '%');
+	close = coalesce(@$3, '%');
+	openLength = length(open);
+	closeLength = length(close);
+	out = '';
+	for (in = $0; in != ''; ) {
+		out #= in{:(i = search(in, open))};
+		if ((in = in{i:}) != '') {
+			i = search(in = in{openLength:}, close);
+			if (in{i:} != void && exists(ref = @[map][in{:i}])) {
+				out #= [ref];
+				in = in{i + closeLength:};
+			} else out #= open;
+		};
+	};
+	out
+};
+
+::split = function { p = find($0, $1); if (exists(@$2)) [$2] = $0{:p}; if (exists(@$3)) [$3] = $0{p:}; p };
+// FIX : DROP ::between = function { $0 >= $1 && $0 <= $2 };
+// FIX : DROP ::clamp = function { min(max($0, $1), $2); };
+// FIX : DROP ::in = function { for (i = 1; i < $n && $0 != $[i]; ++i); (i < $n); };
+
+
+// mainly for the fun of it
+::sortstring = function {
+	s = $0;
+	swapChars = function { assert(0 <= $1 && $1 < length($0)); assert($1 <= $2 && $2 < length($0)); $0{:$1} # $0{$2} # $0{$1 + 1:$2 - ($1 + 1)} # $0{$1} # $0{$2 + 1:} };
+	qsort(0, length(s), >charcode(s{$0}) - charcode(s{$1}), >s = swapChars(s, $0, $1));
+	s
+};

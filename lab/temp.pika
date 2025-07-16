@@ -1,0 +1,18 @@
+::globals.seed.x = 1802990117;//123456789;
+::globals.seed.y = 376223966;//362436069;
+
+monkeyRandom.NORM = 1 / ~0;
+monkeyRandomIntWithSeed = function { t=([$0].x^([$0].x<<10));[$0].x=[$0].y;[$0].y=([$0].y^([$0].y>>13))^(t^(t>>10)) };
+monkeyRandomFloatWithSeed = function { monkeyRandomIntWithSeed($0) * monkeyRandom.NORM };
+monkeyRandomInt = function { monkeyRandomIntWithSeed(@::globals.seed) };
+monkeyRandomFloat = function { monkeyRandomFloatWithSeed(@::globals.seed) };
+
+for (iterations = 0
+		; { monkeyRandomInt(); !((::globals.seed.x == 3109151701 && ::globals.seed.y == 234831158)) }
+		; ++iterations) {
+	if ((iterations % 100000) == 0) print(iterations);
+};
+
+print(iterations);
+print(::globals.seed.x);
+print(::globals.seed.y);

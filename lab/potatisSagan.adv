@@ -1,0 +1,60 @@
+
+synonym: mos = potatismos
+synonym: moset = potatismos
+synonym: potatis = potatismos
+synonym: potatismoset = potatismos
+
+var: potatismos = [på golvet] / på spaden
+var: spaden = i handen / [i sandlådan]
+
+> titta : alltid beskriv
+
+Huset
+-----
+Du står i huset. Du älskar det här huset. Det är det bästa huset någonsin.
+: om potatismos är på golvet så skriv "Det ligger lite potatismos på golvet."
+
+> bra spel : skriv Eller hur!!
+> gå ut : gå till gården
+> hjälp : skriv Men hitta en spade pucko!
+> håll tyst : skriv Nu tycker jag du är lite otrevlig.
+> ja : skriv nej
+> laga mat : skriv Med vadå? Du har ju ingen spade. Skojade bara. Du behöver ingen spade. Du kan ändå inte laga mat.
+> mjau : skriv voff
+> nej : skriv ja
+> sov : skriv "Du lägger dig på golvet och försöker sova. Plötsligt lyckas du." och gå till "Drömmarnas värld"
+> säg mjau : skriv mjau
+> ta potatismos : om spaden är i handen skriv "Du tar upp moset med spaden." och sätt potatismos till på spaden annars skriv "Det är jättekladdigt och du har ingen spade."
+> ut : gå till gården
+> var är spaden : skriv "Får du väl hitta själv!"
+> var är spaden? : skriv "Får du väl hitta själv!"
+> var? : skriv Vet väl inte jag.
+> voff : säg mjau
+> ät : skriv Ät vad?
+> ät huset : skriv Nog för att du är hungrig, men nu är du bara larvig.
+> ät nånting : skriv Men kom igen. Du menar potatismoset. Så skriv "ät potatismos". Dumsnut.
+> ät potatismos : om potatismos är på golvet så skriv "Vad menar du? Ska du äta från golvet som en hund eller?" annars om potatismos är på spaden så skriv "MUMS! VAD GOTT! Det var så gott att du inte vill spela det här dåliga spelet något mer. Så du har vunnit typ. Det är slut. Gå och gör något annat med ditt liv." och gå till "Spelet är slut"
+
+Gården
+-------
+Du står ute på en skitful gård. Här finns ingenting förutom en smutsig sandlåda.
+: om spaden är i sandlådan skriv "Det ligger en gul plastspade i sandlådan."
+
+> gå in : gå till huset
+> kasta spaden på grannens fönster : skriv "Du slänger spaden på grannens fönster. Grannen tittar ut och lipar åt dig. Du blir ledsen. Det finns ingen här som kan trösta dig. Men du fick tillbaka spaden!"
+> lek i sandlådan : skriv "Du har fantastiskt roligt i sandlådan ända tills din gamle ärkefiende Ludvig dyker upp. Han trampar sönder alla dina sandslott. Du blir jätteledsen och vill inte spela mer. Spelet är slut." och gå till "Spelet är slut"
+> sätt spaden i handen : om spaden är i sandlådan så sätt spaden till i handen
+> ta spaden : om spaden är i sandlådan så sätt spaden i handen och skriv "Du tar spaden." annars skriv "Vilken spade?"
+
+Spelet är slut
+---------------
+
+> hjälp : skriv Jag sa ju att spelet är slut. Sluta prata.
+> starta om : skriv Skriv "omstart" om du vill börja om. Men det skulle inte jag vilja göra. Det är jättetråkigt.
+
+Drömmarnas värld
+------------------
+Du befinner dig i drömmarnas värld. Här kan allting hända, för det är DIN dröm. Bara din.
+
+> vakna : skriv "Okej då." och gå till huset
+

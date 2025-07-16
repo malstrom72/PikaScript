@@ -1,0 +1,51 @@
+root			<-	line* !.
+
+line			<-	( _* ( (label ":" _+)? ( ( data / declaration / instruction ) _* (";" comment)?
+					/ "DATs" _+ ( !(_* EOL) ascii_char )+ _* )
+					/ "!" _* (skip_label ":" _+)? (compile_time)? _* (";" comment)?
+					/ ";" comment
+					/ &EOL ) ( EOL / EOF ) )
+
+instruction		<-	mnemonic (_+ operand ( _+ operand ( _+ operand )? )? )?
+
+operand			<-	( local / "&" global ) (":" ( pos_integer / pre_def_const / "<" compile_time_var ">" ))?
+					  / "&" ("NULL" / _function)
+					  / "^" native_function
+					  / "%" ( param_number / pre_def_const / "<" compile_time_var ">" )
+					  / "#" ( float / integer / pre_def_const )
+					  / "#"? "<" compile_time_var ">"
+					  / "@" branch_target
+
+data			<-	"DAT" ( ( "i" / "f" ) _+ ( "#" ( float / integer / pre_def_const ) / "#"? "<" compile_time_var ">" )
+					/ "p" _+ "&" ( "NULL" / _function / global ( ":" ( pos_integer / pre_def_const / "<" compile_time_var ">" ) )? ) )
+
+declaration		<-	"FUNC" / ( "INP" / "OUT" / "LOC" ) ( "i" / "f" / "p" ) / ( "CNST" / "GLOB" / "LOCA" / "PARA" / "TEMP" ) _+
+					"*" (pos_integer / pre_def_const / "<" compile_time_var ">")
+                
+compile_time	<-	instruction
+					/ "DEF" ( "i" / "f" ) _+ ( "#" ( float / integer / pre_def_const ) / "#"? "<" compile_time_var ">" )
+
+ascii_char		<-	.
+comment			<-	(!EOL .)*
+digit			<-	[0-9]
+_				<-	[ \t]
+EOL				<-	("\r")? "\n"
+EOF				<-	!.
+hex_digit		<-	[0-9A-Fa-f]
+alpha			<-	[a-zA-Z]
+integer			<-	("+" / "-")? ("0x" hex_digit+ / "'" (!"'" ascii_char)* "'" / '"' (!'"' ascii_char)* '"' / digit+)
+float			<-	("+" / "-")? digit+ "." digit+ (("E" / "e") integer)?
+identifier		<-	[a-zA-Z$._] [a-zA-Z$._0-9]*
+compile_time_var<-	[a-zA-Z$._0-9]
+pre_def_const	<-	identifier
+_function		<-	identifier
+pos_integer		<-	integer
+global			<-	identifier
+local			<-	identifier
+branch			<-	identifier
+branch_target	<-	identifier
+native_function	<-	identifier
+param_number	<-	pos_integer
+mnemonic		<-	alpha alpha alpha alpha
+label			<-	identifier ( "#" ( integer / pre_def_const / "<" compile_time_var ">" ) )?
+skip_label		<-	identifier

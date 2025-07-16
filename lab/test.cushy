@@ -1,0 +1,597 @@
+/*
+	GUI Variables
+	=============
+
+	Constants
+	=========
+
+	MODEL.NAME			// public name, *may* change between versions
+	MODEL.IDENTIFIER	// "internal" name, will never change between (compatible) versions
+	MODEL.VERSION
+	PLATFORM.OS = 'windows'|'mac'
+	PLATFORM.CPU = 'x86'|'x86-64'|'ppc'
+	BUILD.TARGET = 'Debug'|'Beta'|'Release'
+	BUILD.VERSION
+	BUILD.NUMBER
+	BUILD.DATE
+	BUILD.TIME
+	BUILD.COMPILER
+	BUILD.LIBS
+	DIRS.BINARY			// The dir wherein the plug-in / application resides
+	DIRS.PATCHES		// e.g. "/Library/Audio/Patches/Sonic Charge/"
+	DIRS.DOCUMENTATION	// e.g. "/Library/Documentation/Sonic Charge/"
+	DIRS.SUPPORT		// e.g. "/Library/Application Support/Sonic Charge/"
+
+	Readable
+	========
+
+	feedbacks.*
+	patch.modified
+	undo.description
+	redo.description
+
+	isRegistered					// true or false (will always be false when the main cushy is initialized and updated immediately afterwards)
+	registrationName				// empty if not registered
+	trialTimeLeft					// "<n> days", "1 day", "<n> weeks", "1 week" or "0 days"
+	trialExpired					// true or false (never true if isRegistered)
+	
+	isEnabled						// true if not suspended and (for effects) not bypassed
+
+	Read and Writable
+	=================
+
+	params.*			// e.g. params.volume, values are from 0 to 1
+	params.*.human		// human readable string, for hints and text entry
+	patch.name			// name of current patch
+	uiScale				// as fraction, e.g. "1/1" is standard size, any update will force a reload (including reset of caches!)
+
+	Actions
+	#######
+
+	action: "changeParam", params: { param: <name>, (to: <value> | by: <amount> | toggle) }								// Either sets parameter to an absolute value ("to"), increases or decreases it by an amount ("by") or toggles between 0.0 and 1.0 ("toggle"). Automates changes in host. Do not prefix <name> with "params."
+	action: "initPatch", TODO : params: { [ name: <name>="[xlate]Init Patch[/xlate]" ] }								// initializes patch (sets all parameters to default values), <name> is [var] expanded
+	action: "copyPatch"																									// copies patch to clipboard
+	action: "pastePatch"																								// pastes patch from clipboard (if possible)
+	action: "exchangePatch"																								// exchanges patch <=> clipboard
+	action: "randomizePatch"																							// randomizes all parameters and name
+	action: "openPatch"
+	action: "savePatch"
+	action: "choosePatch", TODO: [ topItems: { { <caption>, <action>, [<params>] } | - ... }, bottomItems: ... ]
+	action: "switchPatch", params: { step:-1|1, wrap: true|false=false }
+	action: "chooseProgram", TODO: [ topItems: { { <caption>, <action>, [<params>] } | - ... }, bottomItems: ... ]
+	action: "switchProgram", params: { step:-1|1, wrap: true|false=false }
+	action: "undo"
+	action: "redo"
+	action: "toggleVersionCheck"
+	action: "register"
+	action: "unitTest", params: <iterations=100000>
+
+	Bitspeek Parameters
+	===================
+	params.sampleRate
+	params.sync
+	params.frameRate
+	params.midi
+	params.pitch
+	params.tracking
+	params.detune
+	params.noiseAdjust
+	params.legacyMode
+
+	Bitspeek Feedbacks
+	==================
+	feedbacks.sampleRate		// current sampleRate (e.g. 22050, 44100) etc
+	feedbacks.pitch				// exponential pitch from pitch detector, 0.0 == c3, +/- 1.0 per octave
+	feedbacks.frequency			// "natural frequency" of detected pitch in range 0..PI
+	feedbacks.amplitude			// "residual amplitude" in linear >= 0
+	feedbacks.volume			// "residual amplitude" in dB
+	feedbacks.unvoiced			// "noise" amount from analysis, 0..1
+	feedbacks.pan				// source "pan" from analysis, -1..1 (left to right)
+	feedbacks.width				// source "stereo width" from analysis, 0..2 (0 == mono, 1 == uncorrelated left & right, >1 == inverted correlation)
+	feedbacks.iirPower.<w>		// dynamically generated for <w> on request, <w> is in range 0..PI, output is linear >= 0
+*/
+
+bounds: { 0, 0, 470, 320 }
+
+autoexecs: {
+	{
+		action: "batch"
+		params: {
+			{ "set", { modalLayout, "" } }
+			{ "set", { blinkRegister, "false" } }
+		}
+	}
+	{
+		delay: 0.25 // secs
+		repeat: 0.25 // secs
+		action: "switch"
+		params: {
+			variable: blinkRegister
+			cases: {
+				true: { "set", { blinkRegister, "false" } }
+				false: { "set", { blinkRegister, "true" } }
+			}
+		}
+	}
+}
+
+views: {
+	// Background
+	{
+		type: "raster"
+		image: { name: "background" }
+	}
+
+	//
+	// ***** Development views *****
+	//
+/*	{
+		type: "group"
+		visibility: "asdf"
+		bounds: { w-35, 1, 34, 16 }
+		views: {
+			// Tests
+			{
+				type: "button"
+				bounds: { 0,0, 16,16 }
+				caption: "t"
+				action: "batch"
+				params: {
+					{ "edit", { text: "Number of iterations", variable: test.iterations, default: 100000 } }
+					{ "execute", { action: "unitTest", paramsVariable: test.iterations } }
+				}
+				standard: 	{ frame: "green", font: { color: "green" } }
+				down: 		{ frame: "green", fill: "green", font: { color: "black" } }
+				disabled: 	{ frame: "gray", font: { color: "gray" } }
+				hint: "unit tests"
+			}
+
+			// Reload
+			{
+				type: "button"
+				bounds: { 18, 0, 16, 16 }
+				caption: "r"
+				action: "reload"
+				standard: 	{ frame: "green", font: { color: "green" } }
+				down: 		{ frame: "green", fill: "green", font: { color: "black" } }
+				disabled: 	{ frame: "gray", font: { color: "gray" } }
+				hint: "reload"
+			}
+		}
+	}
+*/
+	// Context menu
+	{
+		type: "click"
+		mask: "context+click"
+		action: "popup"
+		params: { items: {
+			{ "&Undo [var]undo.description[/var]", "undo" }
+			{ "&Redo [var]redo.description[/var]", "redo" }
+			-
+			{ "&Copy Patch", "copyPatch" }
+			{ "&Paste Patch", "pastePatch" }
+			-
+			{ "Register...", "register" }
+			{ "Read User Guide", "launch", "file://[var]DIRS.DOCUMENTATION[/var]Bitspeek Docs/Bitspeek User Guide.pdf" }
+			{ "Auto-check for Updates", "toggleVersionCheck" }
+			{ "Go to soniccharge.com", "launch", "http://soniccharge.com" }
+			{ "About", "set", { modalLayout, "about" } }
+		} }
+	}
+
+	// Display Graph
+	{
+		type: "group"
+		visibility: isEnabled
+		views: { {
+			type: "vector"
+			bounds: { 118, 42, 225, 80 }
+			file: "lpcGraph"
+			autoRefresh: 20
+			guiVariables: true
+		} }
+	}
+
+	{
+		type: "button", cursor: "hand"
+		bounds: { 267, 26, 75, 15 }
+		action: "changeParam"
+		params: { param: "legacyMode", toggle }
+
+		standard:	{ image: { name: "legacy", opacity: 15, clip: { $,$, $,(h/2) } } }
+		checked:	{ image: { name: "legacy", opacity: 90, clip: { $,(h/2), $,(h/2) } } }
+		hint: "Legacy Mode = [var]params.legacyMode.human[/var]"
+	}
+
+	{
+		type: "paged"
+		index: "isRegistered"
+		pages: {
+			true: {
+				// Register to test
+				{
+					type: "caption"
+					bounds: { 104, 298, 316, 16 }
+					font: { fnt: "GraphiteStd11b", color: 0xd4830000, gamma: 2.0 }
+					align: "center"
+					ellipsis: "right"
+					offset: { 0, -3 }
+					text: "property of [var]registrationName[/var]"
+				}
+			}
+			false: {
+				// Trial text
+				{
+					type: "rectangle"
+					bounds: { 116, 112, 231, 13 }
+					fill: 0xff000000
+				}
+				{
+					type: "paged"
+					index: "trialExpired"
+					bounds: { 119, 114, 223, 9 }
+					pages: {
+						true: {	{
+							type: "paged"
+							index: "blinkRegister"
+							pages: {
+								true: {
+									{
+										type: "caption"
+										text: "no trial left, click to register"
+										align: "center"
+										font: { film: "displayfont", advance: 6, charset: " !\"#$%&'()*+,-./0123456789:;<=>?@@abcdefghijklmnopqrstuvwxyz[\\]^_`", unknown: "" }
+									}
+								}
+							}
+						} }
+						false: { {
+							type: "caption"
+							text: "[var]trialTimeLeft[/var] trial left, click to register"
+							align: "center"
+							font: { film: "displayfont", advance: 6, charset: " !\"#$%&'()*+,-./0123456789:;<=>?@@abcdefghijklmnopqrstuvwxyz[\\]^_`", unknown: "" }
+						} }
+					}
+				}
+				{
+					type: "click", cursor: "hand"
+					bounds: { 116, 112, 231, 13 }
+					action: "register"
+				}
+			}
+		}
+	}
+
+
+	// Display Glass
+	{
+		bounds: { 110,22, 358,108 }
+		type: "raster"
+		image: { name: "glass" }
+	}
+
+
+	// SampleRate slider
+	{
+		type: "group"
+		bounds: { 106, 153, 110, 54 }
+		views: {
+			{ type: "button", action: "changeParam", params: { param: "sampleRate", to: 0/3 }, cursor: "hand", mask: "press", bounds: { 25, 37, 14, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "sampleRate", to: 1/3 }, cursor: "hand", mask: "press", bounds: { 39, 37, 14, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "sampleRate", to: 2/3 }, cursor: "hand", mask: "press", bounds: { 53, 37, 15, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "sampleRate", to: 3/3 }, cursor: "hand", mask: "press", bounds: { 68, 37, 16, 11 } }
+			{
+				type: "slider"
+				variable: params.sampleRate
+				hint: "Sample Rate = [var]params.sampleRate.human[/var]"
+				default: 2/3
+				cap: {
+					size: { 17, 16 }
+					image: { name:"samplerate" }
+					scale:50
+				}
+				slit: {
+					start: { 34, 27 }
+					end: { 75, 27 }
+				}
+			}
+		}
+	}
+	// FrameRate slider
+	{
+		type: "group"
+		bounds: { 194, 153, 143, 54 }
+		views: {
+			{ type: "button", action: "changeParam", params: { param: "frameRate", to: 0/3 }, cursor: "hand", mask: "press", bounds: {  19, 37, 20, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "frameRate", to: 3/3 }, cursor: "hand", mask: "press", bounds: { 107, 37, 16, 11 } }
+			{
+				type: "slider"
+				variable: params.frameRate
+				hint: "Frame Rate = [var]params.frameRate.human[/var]"
+				default: 0.90856029641607
+				cap: {
+					size: { 35, 16 }
+					image: { name:"framerate" }
+					scale:50
+				}
+				slit: {
+					start: { 36.5, 27 }
+					end: { 104.5, 27 }
+				}
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Frame Rate", variable: params.frameRate.human } }
+					{ "Reset to Default", "changeParam", { param: "frameRate", to: 0.5 } }
+				} }
+			}
+		}
+	}
+	// Sync slider
+	{
+		type: "gruop"
+		bounds: { 318, 153, 75, 54 }
+		views: {
+			{ type: "button", action: "changeParam", params: { param: "sync", to: 0/3 }, cursor: "hand", mask: "press", bounds: { 21, 37, 16, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "sync", to: 3/3 }, cursor: "hand", mask: "press", bounds: { 39, 37, 16, 11 } }
+			{
+				type: "slider"				
+				variable: params.sync
+				hint: "Sync = [var]params.sync.human[/var]"
+				default: 0
+				cap: {
+					size: { 17,16 }
+					image: { name:"sync" }
+					scale:50
+				}
+				slit: {
+					start: { 30, 27 }
+					end: { 45, 27 }
+				}
+			}
+		}
+	}
+	
+	// Midi slider
+	{
+		type: "group"
+		bounds: { 372, 153, 83, 55 }
+		views: {
+			{ type: "button", action: "changeParam", params: { param: "midi", to: 0/3 }, cursor: "hand", mask: "press", bounds: { 21, 37, 16, 11 } }
+			{ type: "button", action: "changeParam", params: { param: "midi", to: 3/3 }, cursor: "hand", mask: "press", bounds: { 39, 37, 16, 11 } }
+			{
+				type: "slider"				
+				variable: params.midi
+				hint: "MIDI = [var]params.midi.human[/var]"
+				default: 0.0
+				cap: {
+					size: { 17,16 }
+					image: { name:"midi" }
+					scale:50
+				}
+				slit: {
+					start: { 33, 27 }
+					end: { 48, 27 }
+				}
+			}
+		}
+	}
+
+	// Pitch knob
+	{
+		type: "group"
+		bounds: { 126, 221, 47, 48 }
+		views: {
+			{
+				type: "knob"
+				variable: params.pitch
+				hint: "Pitch = [var]params.pitch.human[/var]"
+				default: 0.5
+				film: { image: "knob", frames: 91, interpolate: true }
+				sweep: { -135, 270 }
+				snap: { value: 0.5 }
+				transmission: {
+					resolution: 2
+					vertical: 6*12*2 // 6 octaves pitch range * 2 in resolution
+					horizontal: 6*12*2
+					fine: 1
+				}
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Pitch", variable: params.pitch.human } }
+					{ "Reset to Default", "changeParam", { param: "pitch", to: 0.5 } }
+				} }
+			}
+		}
+	}
+	// Tracking knob
+	{
+		type: "group"
+		bounds: { 191, 221, 47, 48 }
+		views: {
+			{
+				type: "knob"
+				variable: params.tracking
+				hint: "Tracking = [var]params.tracking.human[/var]"
+				default: 0.5
+				film: { image: "knob", frames: 91, interpolate: true }
+				sweep: { -135, 270 }
+				snap: { value: 0.5 }
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Tracking", variable: params.tracking.human } }
+					{ "Reset to Default", "changeParam", { param: "tracking", to: 0.5 } }
+				} }
+			}
+		}
+	}
+	// Detune knob
+	{
+		type: "group"
+		bounds: { 257, 221, 47, 48 }
+		views: {
+			{
+				type: "knob"
+				variable: params.detune
+				hint: "Detune = [var]params.detune.human[/var]"
+				default: 0
+				film: { image: "knob", frames: 91, interpolate: true }
+				sweep: { -135, 270 }
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Detune", variable: params.detune.human } }
+					{ "Reset to Default", "changeParam", { param: "detune", to: 0.5 } }
+				} }
+			}
+		}
+	}
+	// Noise knob
+	{
+		type: "group"
+		bounds: { 322, 221, 47, 48 }
+		views: {
+			{
+				type: "knob"
+				variable: params.noiseAdjust
+				hint: "Noise = [var]params.noiseAdjust.human[/var]"
+				default: 0.5
+				film: { image: "knob", frames: 91, interpolate: true }
+				sweep: { -135, 270 }
+				snap: { value: 0.5 }
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Noise", variable: params.noiseAdjust.human } }
+					{ "Reset to Default", "changeParam", { param: "noiseAdjust", to: 0.5 } }
+				} }
+			}
+		}
+	}
+	// Mix knob
+	{
+		type: "group"
+		bounds: { 387, 221, 47, 48 }
+		views: {
+			{
+				type: "knob"
+				variable: params.mix
+				hint: "Mix = [var]params.mix.human[/var]"
+				default: 1.0
+				film: { image: "knob", frames: 91, interpolate: true }
+				sweep: { -135, 270 }
+			}
+			{
+				type: "click"
+				mask: "context+click"
+				action: "popup"
+				params: { items: {
+					{ "Enter Exact Value...", "edit", { text: "Enter exact value for Mix", variable: params.mix.human } }
+					{ "Reset to Default", "changeParam", { param: "mix", to: 0.5 } }
+				} }
+			}
+		}
+	}
+
+	// Pitch snap-LED
+	{
+		bounds: { 144, 212, 9, 9 }
+		type: "raster"
+		image: { name: "diode" }
+	}
+	{
+		type: "paged"
+		index: "params.pitch"
+		bounds: { 144, 212, 9, 9 }
+		pages: {
+			'0.5': {  { type: "raster", image: { name: "diode", clip: { 0, h/2, $, $ } }	}  }
+		}
+	}
+	// Tracking snap-LED
+	{
+		bounds: { 209, 212, 9, 9 }
+		type: "raster"
+		image: { name: "diode" }
+	}
+	{
+		type: "paged"
+		index: "params.tracking"
+		bounds: { 209, 212, 9, 9 }
+		pages: {
+			'0.5': {  { type: "raster", image: { name: "diode", clip: { 0, h/2, $, $ } }	}  }
+		}
+	}
+	// Noise snap-LED
+	{
+		bounds: { 340, 212, 9, 9 }
+		type: "raster"
+		image: { name: "diode" }
+	}
+	{
+		type: "paged"
+		index: "params.noiseAdjust"
+		bounds: { 340, 212, 9, 9 }
+		pages: {
+			'0.5': {  { type: "raster", image: { name: "diode", clip: { 0, h/2, $, $ } }	}  }
+		}
+	}
+
+	// Clickable logo
+	{
+		type: "click", cursor: "hand"
+		bounds: { 116, 27, 134, 13 }
+		action: "switch"
+		params: {
+			variable: modalLayout
+			cases: { "about": { "set", { modalLayout, "" } } }
+			default: { "set", { modalLayout, "about" } }
+		}
+	}
+
+	// About box
+	{
+		type: "cushy"
+		layoutVariable: modalLayout
+	}
+
+	{
+		type: "button"
+		bounds: { 0, 0, 46, 15 }
+		caption: "size"
+		action: "popup"
+		mask: "down"
+		params: {
+			items: {
+				{ "1/2", "set", { uiScale, "1/2" } },
+				{ "2/3", "set", { uiScale, "2/3" } },
+				{ "3/4", "set", { uiScale, "3/4" } },
+				{ "1/1", "set", { uiScale, "1/1" } },
+				{ "4/3", "set", { uiScale, "4/3" } },
+				{ "3/2", "set", { uiScale, "3/2" } },
+				{ "2/1", "set", { uiScale, "2/1" } },
+			}
+			autoDisable: true
+		}
+		standard: { frame: "lime", fill: "black", font: { ivgfont: "sans-serif", size: 10, color: "lime" } }
+		down: { frame: "lime", fill: "lime", font: { ivgfont: "sans-serif", size: 10, color: "black" } }
+		disabled: { frame: "gray", font: { ivgfont: "sans-serif", size: 10, color: "gray" } }
+	}
+}

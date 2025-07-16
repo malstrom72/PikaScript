@@ -1,0 +1,10 @@
+clock(>{
+trace();
+::report = function { void };
+::print = function { void };
+run('lab/nuexp.pika');
+for (i = 0; i < 100; ++i) run('src/UnitTests.pika');
+for (j = 0; j < 100; ++j) run('lab/nuexpTests.pika');
+run('lab/chessTest.pika');
+::print = <print>;
+});

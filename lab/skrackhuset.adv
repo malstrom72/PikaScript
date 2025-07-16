@@ -1,0 +1,69 @@
+ignore: den
+ignore: det
+ignore: en
+ignore: ett
+ignore: genom
+ignore: gå
+ignore: i
+ignore: på
+ignore: till
+ignore: ur
+
+synonym: beskriv = titta
+synonym: blå = blåa
+synonym: blått = blåa
+synonym: burk = burken
+synonym: glasburk = burken
+synonym: glasburken = burken
+synonym: kolla = titta
+synonym: röd = röda
+synonym: rött = röda
+synonym: undersök = titta
+
+var: burken = buren / [i skåpet]
+var: zombieflaskan = [i skåpet]
+
+> släpp burken : alltid: om burken är buren så skriv "Det vill du inte. Den är av glas och kan gå sönder." annars skriv "Du bär ingen burk."
+> ställ burken här : alltid: skriv "Här är inget bra ställe att ställa en burk."
+> titta : alltid: beskriv platsen
+
+Intro
+-----
+Du hade varit ute med hunden i skogen när det plötsligt började regna. En åskknall skrämde iväg din hund. Hunden sprang in i ett hus som ser ut som ett riktigt skräckhus. Du springer efter och står nu på terassen.
+: gå till terassen
+
+
+Terassen
+--------
+Du står på terassen. Här finns en lucka i golvet och en dörr in till huset.
+
+> in : in dörren
+> in dörren : skriv "Du öppnar dörren och kliver in i hallen." samt gå till hallen
+> in huset : in
+> titta dörren : skriv Det är en olåst dörr.
+> titta luckan : skriv Det är en lucka som bara verkar gå att öppna inifrån.
+> öppna dörren : in
+> öppna luckan : undersök luckan
+
+Hallen
+------
+I hallen är det ganska mörkt men du ser ändå. Du kan gå rakt fram till en korridor. Åt höger ligger ett kök och åt vänster är en dörr.
+
+> höger : gå till köket
+> in köket : gå till köket
+> köket : gå till köket
+> ställ burken : ställ burken här
+> ut : gå till terassen
+
+Köket
+------
+Du står i ett ganska litet och nedgånget kök. Ett fönster lyser upp så det är lite ljusare här än i hallen. Här finns ett blått och ett rött skåp och ett sopnedkast i väggen.
+
+> hallen : gå till hallen
+> ställ burken skåpet : ställ tillbaka burken
+> ställ tillbaka burken : om burken är buren så skriv "Ok. Du ställer tillbaka burken i det blå skåpet." och ändra burken till "i skåpet" annars om burken är i skåpet så skriv "Den är ju redan i skåpet." annars skriv "Vilken burk?"
+> ta burken : om burken är i skåpet skriv "Ok. Du tar burken." och ändra burken till "buren" annars om burken är buren skriv "Du har ju redan burken." annars skriv "Vilken burk?"
+> tillbaka : gå till hallen
+> titta blåa skåpet : om burken är i skåpet skriv "I det blå skåpet står en ganska stor tom glasburk." annars skriv "Det blå skåpet är tomt."
+> titta röda skåpet : om zombieflaskan är i skåpet så skriv "I det röda skåpet finner du en flaska." annars skriv "Det röda skåpet är tomt."
+

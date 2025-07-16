@@ -1,0 +1,73 @@
+
+clip = function { min(max($0, -$1), $1) };
+SecondOrderShaperNorm = function { cx = clip($0, 2); cx - (1.0 / 4.0) * cx * abs(cx) };
+
+f=0.00001;
+rq=1.0;
+k = tan(PI * f);
+print(k);
+if (k < 0.0) rq = -rq;
+krq = (k + rq);
+m = 2.0 / (1.0 + k * krq);
+n = 2.0;//10.0 * sqrt(k);
+
+//n = 2*(sqrt(2)*sqrt(k)-k);
+//n = 2.0 - 2.0 * sqrt(1.0 - n);
+
+g = 8.0 * k / sqr(1 + 2 * k);
+g = 2*(sqrt(2)*sqrt(k)-k);
+
+n = g * 2.0;
+rn = 1.0 / n;
+
+
+s1z = 0.0;
+s2z = 0.0;
+
+for (i = 0; i < 10000; ++i) {
+	x=1000000.0;
+	h = (m * (x * 0.5 - k * s1z - rq * s1z - s2z));
+	hp = h;
+	s1 = s1z + k * h;
+	s1 = SecondOrderShaperNorm(s1 * n) * rn; // s1 is half magnitude compared to unoptimized, so Clip(x, 0.5) is -1.0 to 1.0 range
+	bp = s1 + s1z;
+	s2 = s2z + k * bp;
+	s2 = SecondOrderShaperNorm(s2 * n) * rn; // s1 is half magnitude compared to unoptimized, so Clip(x, 0.5) is -1.0 to 1.0 range
+	lp = s2 + s2z;
+	s1z = s1;
+	s2z = s2;
+};
+
+print(lp);
+
+/*
+
+
+clip = function { min(max($0, -$1), $1) };
+SecondOrderShaperNorm = function { cx = clip($0, 2); cx - (1.0 / 4.0) * cx * abs(cx) };
+
+f=0.0001;
+rq=1.0;
+k = tan(PI * f);
+print(k);
+if (k < 0.0) rq = -rq;
+krq = (k + rq);
+m = 2.0 / (1.0 + k * krq);
+n = 2.0;//10.0 * sqrt(k);
+rn = 1.0 / n;
+
+s1z = 0.0;
+s2z = 0.0;
+g = 1.0;
+//g = 2*(sqrt(2)*sqrt(k)-k);
+g = 8.0 * k / sqr(1 + 2 * k);
+
+for (i = 0; i < 10000; ++i) {
+	s2 = s2z + k * 2;
+	s2 = SecondOrderShaperNorm(s2 * g) / g; // s1 is half magnitude compared to unoptimized, so Clip(x, 0.5) is -1.0 to 1.0 range
+	s2z = s2;
+};
+
+print(s2);
+
+*/

@@ -1,0 +1,141 @@
+ignore: den
+ignore: det
+ignore: en
+ignore: ett
+ignore: genom
+ignore: gå
+ignore: i
+ignore: på
+ignore: ur
+
+synonym: bord = bordet
+synonym: bröd = brödet
+synonym: diamantringen = ringen
+synonym: dörr = dörren
+synonym: fönstrena = fönster
+synonym: fönstret = fönster
+synonym: hus = huset
+synonym: kolla = titta
+synonym: plocka = ta
+synonym: svamp = svamparna
+synonym: svampar = svamparna
+synonym: undersök = titta
+
+var: brödet = buret / [på bordet] / uppätet
+var: luckan = [stängd] / öppen
+var: ringen = buren / [i hålet]
+var: svamparna = burna / [på marken]
+var: tavlan = buren / [på väggen]
+
+> jag äter ändå : alltid: ät brödet
+> lägg ner tavlan : alltid: släpp tavlan
+> släpp brödet : 
+	alltid: om brödet är buret så skriv "Du känner inte för att släppa brödet här." annars skriv "Vilket bröd?"
+
+> släpp ringen : 
+	alltid: om ringen är buren så
+	skriv "Du känner inte för att lämna ifrån dig en så fin sak. Den kan ju vara värd mycket pengar!"
+	annars skriv "Du har inte ringen."
+
+> släpp tavlan : 
+	alltid: om tavlan är buren skriv "Nej. Den gör sig inte bra just här."
+	annars skriv "Du har inte tavlan."
+
+> ta brödet : 
+	alltid: om brödet är buret så skriv "Du har redan brödet."
+	annars skriv "Vilket bröd?"
+
+> ta svamparna : alltid: om svamparna inte är burna skriv "Vilka svampar?" annars skriv "Du har redan svamparna."
+> titta : beskriv platsen
+> titta brödet : om brödet är buret skriv Det ser gott ut men du har inget smör. annars skriv Vilket bröd?
+> ät brödet : alltid: om brödet är buret eller brödet är på bordet så skriv "Mums mums!" och ändra brödet till "uppätet"
+> ät ringen : alltid: skriv Den verkar lite hårdsmält va?
+> ät svamparna : alltid: om svamparna är burna så skriv "Du äter motvilligt upp svamparna. De smakar ännu värre än de ser ut. Oj. Du dog visst." och sätt svamparna till "uppätna" och gå till döden annars skriv "Du har inga svampar."
+> ät upp brödet : alltid: ät brödet
+> ät ändå : alltid: ät brödet
+> åk till döden : alltid: skriv Varför vill du komma till döden?
+
+Huset
+-----
+Du står i ett stort rum. Här finns ett bord. En dörr leder ut. Det sitter en lucka i golvet.
+: om brödet är på bordet så skriv "På bordet ligger ett bröd."
+	dessutom om tavlan är på väggen så skriv "På väggen hänger en tavla."
+	annars skriv "Där det förut satt en tavla på väggen syns nu ett litet hål."
+	dessutom om luckan är öppen skriv "Luckan är öppen." annars skriv "Luckan är stängd."
+
+> hoppa ner luckan : ner
+> in hålet : skriv Hålet är för litet att gå in i.
+> lägg brödet bordet : släpp brödet
+> lägg tillbaka brödet : släpp brödet
+> ner : om luckan är stängd så skriv "Hur då? Luckan är ju stängd." annars skriv "Ok. Du försöker gå ner i det kolsvarta hålet men ramlar, bryter nacken och dör omedelbart." och gå till döden
+> ner luckan : ner
+> släpp brödet : 
+	om brödet är buret ändra brödet till "på bordet" och skriv "Du lägger brödet på bordet."
+	annars skriv "Vilket bröd?"
+
+> släpp tavlan : sätt tillbaka tavlan
+> spotta ut brödet : skriv Usch vad äcklig du är!
+> stäng luckan : om luckan är öppen så skriv "Du stänger luckan." och gör luckan stängd annars skriv "Den är redan stängd."
+> sätt tillbaka tavlan : om tavlan är buren så skriv Du sätter tillbaka tavlan där den satt på väggen. och ändra tavlan till på väggen annars skriv Du har inte tavlan.
+> ta bort tavlan : ta tavlan
+> ta brödet : 
+	om brödet är på bordet så skriv "Du tar brödet." och ändra brödet till "buret"
+	annars om brödet är buret så skriv "Du har redan brödet."
+	annars om brödet inte är på bordet så skriv "Vilket bröd?"
+
+> ta ringen : 
+	om ringen är i hålet och tavlan inte är på väggen så skriv "Du tar ringen." och ändra ringen till "buren"
+	annars om ringen är buren så skriv "Du har redan ringen."
+	annars skriv "Vilken ring?"
+
+> ta tavlan : 
+	om tavlan inte är buren så skriv "Du tar tavlan från väggen. Bakom tavlan finns ett litet hål."
+	och gör tavlan buren annars om tavlan är buren så skriv "Du har redan tavlan."
+	annars skriv "Det finns ingen tavla här."
+
+> ta tillbaka tavlan : ta tavlan
+> titta brödet : om brödet är buret eller om brödet är på bordet skriv Det ser gott ut men du har inget smör. annars skriv Vilket bröd?
+> titta dörren : skriv Det är en helt vanlig dörr. Den är olåst.
+> titta hålet : 
+	om ringen är i hålet så skriv "I hålet ligger en liten diamantring."
+	annars så skriv "Hålet är tomt."
+
+> titta luckan : om luckan är öppen så skriv "Luckan är öppen. Den leder ner i ett kolsvart hål. Försöker du gå ner där bryter du nog nacken." annars skriv "Luckan är stängd."
+> titta ner : titta ner i luckan
+> titta ner luckan : titta luckan
+> titta ringen : 
+	om ringen är i hålet eller ringen är buren
+	skriv "Det är en mycket fin och antagligen väldigt dyr diamantring. Men du är ingen expert på juveler så vem vet?"
+	annars skriv "Vilken ring?"
+
+> titta tavlan : skriv "Tavlan är ett porträtt på en mycket fet och ful gammal man."
+> ut : gå till Skogen
+> ut dörren : ut
+> ut huset : ut
+> ut skogen : ut
+> ät upp ringen : ät ringen
+> öppna dörren : skriv "Du öppnar dörren och går ut..." och ut
+> öppna luckan : om luckan är stängd så skriv "Du öppnar luckan." och gör luckan öppen annars skriv "Den är redan öppen."
+
+Skogen
+------
+Du står i skogen. Här finns ett litet hus.
+: om svamparna är på marken skriv "Det växer några otäcka svampar här på marken."
+
+> in : gå till Huset
+> in dörren : in
+> in huset : in
+> ta svamparna : om svamparna är på marken skriv "Du plockar de läskiga svamparna. De känns verkligen slemmiga." och ändra svamparna till burna annars skriv "Vilka svampar?"
+> titta fönster : skriv "Inuti huset är endast ett rum. I rummet står ett bord."
+> titta huset : skriv "Det är ett fint litet tegelhus med två fönster och en dörr."
+> öppna dörren : skriv "Du öppnar dörren och går in i huset..." och in
+
+Döden
+------
+Du är död. Helt enkelt. Finns inte mycket att göra åt den saken. Skriv "omstart" för att börja om spelet.
+
+> jag vill inte dö : skriv "Okej då. Du får en chans till." och gå till huset
+> jag vill inte vara död : jag vill inte dö
+> vakna upp döden : jag vill inte vara död
+> åk till döden : skriv "Du är ju redan död!"
+

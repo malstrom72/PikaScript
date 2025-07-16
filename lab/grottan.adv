@@ -1,0 +1,635 @@
+
+synonym: beskriv = undersök
+synonym: boet = bo
+synonym: brun = bruna
+synonym: burkar = burk
+synonym: dosa = dosan
+synonym: döda = slå
+synonym: dörr = dörren
+synonym: dörren = dörr
+synonym: ek = träd
+synonym: eken = träd
+synonym: fackla = facklorna
+synonym: ficklampa = lampa
+synonym: ficklampan = lampa
+synonym: flaska = flaskan
+synonym: flaskan = glasflaskan
+synonym: frukt = frukter
+synonym: fågelbo = bo
+synonym: fågelboet = bo
+synonym: fågeln = fågel
+synonym: fågelägg = ägg
+synonym: fågeläggen = ägg
+synonym: glasflaska = glasflaskan
+synonym: grotta = grottan
+synonym: gröna = grön
+synonym: gula = gul
+synonym: guldnyckel = nyckel
+synonym: guldnyckeln = nyckel
+synonym: hieroglyferna = hieroglyfer
+synonym: ifrån = från
+synonym: inuti = i
+synonym: inv = inventarie
+synonym: juveler = skatter
+synonym: kasta = släpp
+synonym: kastruller = kastrull
+synonym: kista = sarkofag
+synonym: kistan = kista
+synonym: knuffa = slå
+synonym: korgen = korg
+synonym: korridoren = korridor
+synonym: kristalldrake = draken
+synonym: kristalldraken = draken
+synonym: lampan = lampa
+synonym: mask = maskar
+synonym: mat = matrester
+synonym: maten = mat
+synonym: matresterna = matrester
+synonym: miniatyrdrake = draken
+synonym: miniatyrdraken = draken
+synonym: mörda = döda
+synonym: nyckeln = nyckel
+synonym: oljan = olja
+synonym: pengar = skatter
+synonym: perspicum = perspicuum
+synonym: perspikum = perspicuum
+synonym: platsen = rummet
+synonym: port = porten
+synonym: porten = dörren
+synonym: prata = tala
+synonym: pyramid = pyramiden
+synonym: rester = matrester
+synonym: röda = röd
+synonym: sarkofag = sarkofagen
+synonym: skatterna = skatter
+synonym: skrik = säg
+synonym: släng = kasta
+synonym: smycken = skatter
+synonym: sno = ta
+synonym: sparka = slå
+synonym: speldosa = dosan
+synonym: speldosan = dosan
+synonym: spring = gå
+synonym: stenport = stenporten
+synonym: stenporten = porten
+synonym: trollet = troll
+synonym: trädet = träd
+synonym: trädörr = dörr
+synonym: trädörren = dörren
+synonym: undersök = titta
+synonym: uttala = säg
+synonym: vatten = vattnet
+synonym: vätska = vätskan
+synonym: äggen = ägg
+
+var: bottle = empty / filled with oil / filled with water / [in the tree]
+var: cave door = [closed] / open
+var: chest = [closed]
+var: dragon = asleep / [awake]
+var: eggs = carried / [in the kitchen] / in the nest
+var: golden key = carried / [on bird]
+var: gone through a door = [false] / true
+var: has visited the treasure room = [false] / true
+var: liquid = identified / [unidentified]
+var: memory = [hazy] / recalled
+var: music box = carried / [in the sarcophagus]
+var: music box lock = [locked] / unlocked
+var: music box secret = revealed / [secret]
+var: oil = [nowhere] / on the kitchen floor
+var: pyramid door = [closed] / open
+var: sarcophagus = [closed] / open
+var: stone gate = [solid] / transparent
+var: treasure = carried / [in the treasure room]
+var: troll = [cooking] / fainted
+var: wheel = [at 0] / at 1 / at 2 / at 3
+
+> använd speldosan : always: same as "öppna locket på dosan"
+> drick : always: same as "drick vatten ur glasflaskan"
+> drick vatten ur glasflaskan : always:
+	if the bottle is filled with water then
+		write "Ahh! Det var gott. Men nu är din flaska tom."
+		and make bottle empty
+	otherwise if the bottle is empty then
+		write "Men flaskan är ju tom."
+
+> ge bort dosan : always: same as släpp dosan
+> häll ut oljan ur flaskan : always:
+	if the bottle is filled with oil then
+		write "Ok. Nu är den tom."
+		and make bottle empty
+		and change oil to nowhere
+
+> häll ut vattnet i glasflaskan : always:
+	if the bottle is filled with water then
+		write "Ok. Nu är den tom."
+		and make bottle empty
+
+> inventarie : always same as vad bär jag?
+> lås upp dosan med guldnyckeln : always:
+	if the golden key is carried and the music box is carried then
+		write "Den pyttelilla guldnyckeln passar perfekt i det pyttelilla låset. Du öppnar dosan och den börjar spela vacker musik. Det är en speldosa! En liten sovande miniatyrdrake av kristall ligger inuti dosan. När du stänger dosan låser den sig självt."
+		and note that the music box lock is unlocked
+		and note that the music box secret is revealed
+
+> släck lampan : always write "Det är onödigt. Lampan drivs av solceller så batteriet kan inte ta slut."
+> släpp dosan : always: if the music box is carried then write "Du vill inte göra dig av med den vackra dosan."
+> släpp flaskan : always: if the bottle is not in the tree then write "Varför?"
+> släpp lampan : always write "Och hur ska du klara dig utan ljus?"
+> släpp skatterna : always: if treasure is carried then write "Nej. Det vill du inte. Det var ju därför du kom hit till grottan till att börja med."
+> ta miniatyrdraken i speldosan : always:
+	if the music box lock is unlocked and the music box is carried then write "Den lilla draken sitter fast i dosan."
+
+> tillbaka : always "gå tillbaka"
+> titta : always describe location
+> undersök dosan : always:
+	if the music box is carried then
+		write "Dosan är av guld och vackert utsmyckad med små juveler. Den har ett lock som är stängt och låst med ett pyttelitet lås."
+
+> undersök miniatyrdraken i speldosan : always:
+	if the music box lock is unlocked and the music box is carried then write "Den lilla kristalldraken är konstgjord. Den ser så rofylld ut där den sover. Den gillar nog musik."
+
+> undersök flaskan : always if the bottle is filled with oil then write "Glasflaskan är full med olja." otherwise if the bottle is "filled with water" then write "Glasflaskan är full med vatten." otherwise if the bottle is empty then write "Glasflaskan är tom."
+> undersök platsen : always describe location
+> titta runt : always describe location
+> undersök äggen : always if the eggs are carried then write "Det är tre små blå fågelägg."
+> tänd lampan : always write "Den är redan tänd."
+> töm flaskan : always: if the bottle is filled with oil or filled with water then write "Ok. Nu är den tom." and make bottle empty
+> vad bär jag? : always:
+	Write "En ficklampa.".
+	If eggs are carried write "En korg med tre fågelägg.".
+	If golden key is carried write "En pytteliten guldnyckel."
+	If the bottle is empty then write "En tom glasflaska."
+	If the bottle is "filled with water" then write "En glasflaska full med vatten."
+	If the bottle is "filled with oil" then write "En glasflaska full med olja."
+	If music box is carried and music box secret is not revealed then write "En mystisk liten dosa."
+	If music box is carried and music box secret is revealed then write "En vacker speldosa."
+	If treasure is carried then write "Så mycket skatter du bara orkar bära."
+
+> vad har jag på mig? : always same as "vad bär jag?"
+> var är jag? : always describe location
+> ät äggen : always: if eggs are carried then write "Råa fågelägg? Nej tack."
+> öppna locket på dosan : always:
+	if the golden key is carried and the music box is carried then
+		the same as "lås upp dosan med guldnyckeln"
+	otherwise if the music box is carried then
+		write "Dosan är låst."
+
+
+# Intro
+-------
+Du öppnar ögonen men allting är kolsvart. Du har ont i huvudet. Det känns som att du har fått en smäll. Du reser dig hastigt upp och slår huvudet i något hårt. Aj aj. Nu gör det ännu ondare. När du sätter dig ner känner du nånting runt och kallt på marken. Kan det vara... en ficklampa?
+
+> lys : same as lys med lampan
+> lys med lampan : "tänd lampan"
+> ta ficklampan : write Ok.
+> titta : write "Allting är kolsvart."
+> tänd ficklampan : write "Du tänder ficklampan och ..." and go to Grottan
+> vad bär jag? : skriv "Ingenting.".
+
+# Grottan
+---------
+Du står i en fuktig grotta. En liten ström med vatten rinner mot grottans utgång bakom dig. Framför dig syns en trädörr i grottväggen.
+: undersök dörren
+
+> fyll glasflaskan med vatten : 
+	if the bottle is empty then
+		write "Du fyller flaskan full med vatten från den lilla strömmen."
+		and note that the bottle is filled with water
+	otherwise if the bottle is filled with water or filled with oil then
+		write "Den är redan full."
+
+> följ strömmen : same as "gå ut"
+> gå igenom dörren : if cave door is open go to Korridoren otherwise write "Hur går man igenom en stängd dörr?"
+> gå in i korridoren : if cave door is open go to Korridoren
+> gå mot utgången : same as "gå ut"
+> gå ut : if treasure is carried then write "Du går ut ur grottan och ger dig av hemåt som en rik man. Du tänker att du kommer leva lycklig i alla dina dagar. För alla vet ju att man blir lycklig av pengar. Eller?" and go to Slut otherwise if memory is not recalled then write "Precis som du är på väg ut ur grottan så minns du varför du hamnat här. Du har hört en legend om en drake som vaktar en skatt i denna grotta. När du kom in så måste du ha halkat på det hala grottgolvet och slagit i huvudet." and make memory recalled otherwise if memory is recalled then write "Du vill inte gå hem utan den legendariska skatten."
+> lås upp dörren : write "Den är inte låst."
+> stäng dörren : write "Det går inte. Den har fastnat."
+> ta vatten : same as "fyll glasflaskan med vatten"
+> undersök dörren : if cave door is closed write "Dörren är stängd." otherwise write "Dörren är öppen."
+> titta in genom dörren : if cave door is open then write "Du ser en svagt upplyst korridor genom dörrspringan." otherwise write "Hur då?"
+> undersök vattnet : write "Det ser fräscht och gott ut."
+> öppna dörren : if cave door is closed then write "Dörren är tung men du lyckas till slut öppna den tillräckligt." and make "cave door" open otherwise write "Dörren är redan öppen."
+
+# Korridoren
+------------
+Du står i en cirka fem meter lång korridor med fyra dörrar i olika färger: en grön och en brun på den ena sidan och en gul och en röd på den andra. Bakom dig leder en trädörr tillbaka till grottan.
+
+> gå igenom den bruna dörren : go to Köket
+> gå igenom den gröna dörren : if "gone through a door" is false then make "gone through a door" true and write "Du öppnar den gröna dörren och till din förvåning upptäcker du att den leder ut i en skog." also go to Skogsgläntan
+> gå igenom den gula dörren : if "gone through a door" is false then make "gone through a door" true and write "Du öppnar den gula dörren och till din förvåning upptäcker du att den leder rakt ut i en öken." also go to öknen
+> gå igenom den röda dörren : go to Bron över lavasjön
+> gå igenom trädörren : same as "gå igenom dörren till grottan"
+> gå igenom dörren till grottan : go to grottan
+> gå tillbaka : go to grottan
+> gå ut : same as "gå igenom dörren till grottan"
+> gå ut genom trädörren : same as "gå igenom dörren till grottan"
+> släpp äggen : if the eggs are carried then write "Vore det inte bättre att ge dem till fågeln?"
+> undersök den bruna dörren : write "Det kommer en skarp doft av vidbränd mat från den bruna dörren."
+> undersök den gröna dörren : write "Den gröna dörren är gjord av trä."
+> undersök den gula dörren : write "Den gula dörren är en tung stendörr."
+> undersök den röda dörren : write "Du förnimmer än doft av ruttna ägg från den röda dörren."
+> öppna den bruna dörren : write "Du öppnar den bruna dörren och går igenom." and go to Köket
+> öppna den gröna dörren : write "Du öppnar den gröna dörren och till din förvåning upptäcker du att den leder ut i en skog." and go to Skogsgläntan
+> öppna den gula dörren : write "Du öppnar den gula dörren och till din förvåning upptäcker du att den leder rakt ut i en öken." and go to öknen
+> öppna den röda dörren : same as "gå igenom den röda dörren"
+
+# Skogsgläntan
+---------------
+Du befinner dig i en liten skogsglänta. Runt omkring dig är skogen tjock och ogenomtränglig. En stor ihålig ek står mitt i gläntan. Bakom dig står en ensam grön dörr och märkligt nog så syns ingenting bakom dörren.
+
+> gå igenom den gröna dörren : go to korridoren
+> gå in i den gröna dörren : go to korridoren
+> gå in i skogen : skriv "Skogen är för snårig för att gå i."
+> gå in i eken : go to Inuti eken
+> gå tillbaka : go to korridoren
+> gå upp : same as "klättra upp i trädet"
+> klättra upp i trädet : write "Eken är hög, men har många grenar som är lätta att klättra på. Du klättrar upp i toppen." and go to Ekens Topp
+> undersök den gröna dörren : write "Den är grön och gjord av trä."
+> undersök eken : write "Eken är ihålig och har stadiga grenar. Hålet är stort nog att gå in i."
+> öppna den gröna dörren : write "Du öppnar den gröna dörren och går igenom den." and go to korridoren
+
+# Ekens topp
+------------
+Du är högst upp i toppen på en ek. På en gren finns ett litet fågelbo.
+: undersök fågeln
+
+> fånga fågeln : write "Nä du. Fågeln är alldeles för snabb för att fångas in."
+> ge korgen med ägg till fågeln : 
+	if the eggs are carried then
+		write "Fågeln gör en liten piruett av glädje och kvittrar \"Tack, tack, snälla människa! Nu ska du få din belöning!\" och ger dig den pyttelilla guldnyckeln som hängde runt hennes hals."
+		and note that the eggs are in the nest
+		and note that the golden key is carried
+
+> gå ner : same as "klättra ner från trädet"
+> hjälp fågeln : 
+	if the eggs are not in the nest then
+		write "Hon saknar ju sina ägg. Försök att hitta dom."
+
+> hoppa : same as "hoppa ner ifrån trädet"
+> hoppa ner ifrån trädet : skriv "Du är för högt upp. Du vågar inte det."
+> klättra : same as "klättra ner från trädet"
+> klättra ner från trädet : go to skogsgläntan
+> döda fågeln : skriv "Du var minsann ingen djurvän! Skärp dig."
+> ta fågeln : same as "fånga fågeln"
+> ta nyckeln : 
+	if the eggs are not in the nest then
+		write "Fågeln är för snabb för dig. Du kan inte få tag på nyckeln så. Du kanske borde försöka hjälpa fågeln istället?" otherwise if the golden key is carried write "Du har redan guldnyckeln."
+
+> ta äggen : if the eggs are in the nest then write "Nä, nä. Nu har du varit snäll och hjälpt fågeln. Var inte dum nu."
+> tala med fågeln : 
+	if the eggs are not in the nest then
+		write "Fågeln kraxar \"Sorg, sorg, var är mina ägg!? Kan du hjälpa mig att återfå dom så lovar jag dig en belöning!\""
+	otherwise
+		write "Fågen kvittar \"Tack, tack, snälla människa!\""
+
+> undersök boet : 
+	if the eggs are not in the nest then
+		write "Fågelboet är tomt."
+	otherwise
+		same as "undersök fågeln"
+
+> undersök fågeln : 
+	if the eggs is in the nest then
+		write "I boet sitter en liten fågel och ruvar på sitt ägg. Hon kvittrar \"Tack, tack, snälla människa!\"" otherwise write "En fågel studsar runt mellan grenarna och kraxar \"Sorg, sorg, var är mina ägg!?\". Hon ser ut att bära en pytteliten guldnyckel runt sin lilla fågelhals."
+
+
+# Köket
+--------
+Du står i ett mycket stökigt kök. Här är en enda stor röra av kastruller, burkar, matrester och spill. En brun dörr leder tillbaka till korridoren. En annan dörr finns i andra änden av köket.
+: if the troll is cooking then
+		write "Ett troll står här och lagar mat. Han har ryggen emot dig."
+	otherwise if the troll is fainted then
+		write "Ett troll ligger avsvimmat på golvet."
+	if the eggs are in the kitchen then
+		write "På en bänk står en korg med några små fågelägg."
+	if oil is on the kitchen floor then
+		write "Det är en pöl med hal olja på golvet."
+
+> fyll glasflaskan med olja : if the oil is "on the kitchen floor" then write "Det går inte att ta upp oljan igen."
+> gå igenom den andra dörren : 
+	if the troll is cooking then
+		write "Trollet blockerar vägen. Du vågar inte försöka ta dig förbi."
+	otherwise
+		go to Skafferiet
+
+> gå igenom den bruna dörren : go to korridoren
+> gå in i skafferiet : if the troll is fainted then go to skafferiet
+> gå tillbaka : go to korridoren
+> gå ut igenom den bruna dörren : go to korridoren
+> häll ut oljan på golvet :
+	if the bottle is filled with oil and oil is not on the kitchen floor then
+		write "Du häller ut oljan på golvet. Trollet märker ingenting."
+		and note that the bottle is empty
+		and note that the oil is on the kitchen floor
+	otherwise if the bottle is filled with oil then
+		write "Det är redan olja på golvet."
+
+> lyssna på trollets ramsa : 
+	if the troll is cooking then
+		write "Han sjunger på trollska. Du förstår inte ett ord."
+	otherwise
+		write "Lyssna på vadå?"
+
+> skräm trollet : if troll is not fainted then write "Trollet är alldeles för skrämmande för att du ska våga skrämma det."
+> kasta flaskan på trollet : if the troll is not fainted then write "Det skulle göra honom typ superarg. Du skulle bli typ supermosad."
+> slå trollet : 
+	if the troll is cooking then
+		write "Är du galen? Det är ett troll. Ett stort otäckt troll."
+	otherwise if the troll is fainted then
+		write "Man ska inte slå på den som redan ligger."
+
+> smyg förbi trollet : 
+	if the troll is cooking then
+		write "Du försöker smyga förbi trollet men råkar stöta till några burkar som slamrar. Trollet vänder sig om och ser rasande ut. Du springer snabbt tillbaka ut i korridoren."
+		and go to korridoren
+
+> ta korgen : ta äggen
+> ta matrester : skriv "Du är inte hungrig."
+> ta upp en burk : "ta upp en kastrull"
+> ta upp en kastrull : if the troll is cooking then write "Det vågar du inte." otherwise write "Varför?"
+> ta upp oljan : same as fyll glasflaskan med olja
+> ta äggen : 
+	if the troll is cooking and the eggs are in the kitchen but oil is not on the kitchen floor
+		write "Du försöker försiktigt ta korgen med ägg utan att trollet ser, men precis som du fått korgen vänder han sig om och springer mot dig. I ren förskräckelse släpper du korgen och springer ut i korridoren."
+		and go to Korridoren
+	otherwise if the troll is cooking and the eggs are in the kitchen and oil is on the kitchen floor
+		write "Trollet upptäcker dig och springer emot dig men halkar på oljan på golvet. Han trillar och slår huvudet så hårt att han svimmar av. Du har nu korgen med ägg."
+		and change the eggs to carried and change "troll" to "fainted"
+	otherwise if the eggs are carried
+		write "Du har redan äggen."
+
+> tala med trollet : 
+	if the troll is cooking then
+		write "Du talar inte trollska och även om du gjorde det så skulle du nog göra bäst i att inte påkalla hans uppmärksamhet."
+	otherwise
+		write "Trollet är avsvimmat och det är nog bäst att inte väcka honom."
+
+> undersök den andra dörren : 
+	if the troll is cooking then
+		write "En högst normal dörr, men den blockeras av en högst onormal kock."
+	otherwise
+		write "En högst normal dörr."
+
+> undersök den bruna dörren : write "Well. Den är brun. Den leder tillbaka till korridoren."
+> undersök trollet : 
+	if the troll is cooking then
+		write "Trollet är enormt och stinker sopor. Han står med ryggen emot dig och lagar mat samtidigt som han gnolar på en ramsa."
+	otherwise if the troll is fainted then
+		write "Trollet ligger avsvimmat på golvet. Och det är du glad över. Han ser så fruktansvärd ut att du knappt vågar titta på honom."
+
+> undersök trollets mat : skriv "Du skulle inte äta den om du så fick en miljon kronor."
+> undersök äggen : if the eggs are in the kitchen or carried then write "Det är små blå fågelägg."
+> väck trollet : if the troll is fainted then write "Väldigt dålig idé."
+> ät matrester : skriv "Du har inte tid att äta just nu."
+> öppna den bruna dörren : write "Du öppnar den bruna dörren och går igenom." and go to Korridoren
+
+# Skafferiet
+------------
+Du har kommit in i ett litet men välfyllt skafferi. På hyllorna står stora burkar och lådor fyllda med de mest vidriga råvaror man kan tänka sig. Mögliga frukter, torkade maskar, mystiska inälvor. Du ser också en liten lapp som sitter tejpad på väggen.
+
+> gå ut ur skafferiet : go to köket
+> leta bland hyllorna : same as undersök råvarorna
+> läs lappen : same as undersök lappen
+> ta lappen : write "Den sitter bra där den sitter."
+> ta mystiska inälvor : same as ta mögliga frukter
+> ta mögliga frukter : write "Usch. Nej tack."
+> ta råvaror : same as ta mögliga frukter
+> ta torkade maskar : same as ta mögliga frukter
+> undersök hyllorna : same as undersök råvarorna
+> undersök lappen : write "Lappen verkar vara en inköpslista, eller kanske en meny. Men den är skriven på trollska så du begriper inte mycket. Längst upp står det något med \"draaco\". Ett ord skrivet på sniskan längst ner fångar också din uppmärksamhet: \"perspicuum\"."
+> undersök råvarorna : skriv "Du rotar runt bland hyllorna en stund men hittar ingenting särskilt."
+
+# öknen
+--------
+Du befinner dig i ett stort platt ökenlandskap. Det är varmt och torrt. Långt bort i horisonten skymtar du vad som ser ut att vara en gigantisk pyramid. Bakom dig står en ensam gul dörr och märkligt nog syns ingenting bakom dörren.
+
+> gå igenom den gula dörren : go to korridoren
+> gå in i den gula dörren : go to korridoren
+> gå mot pyramiden : 
+	if the bottle is not filled with water then
+		write "Dålig idé. Du skulle förmodligen dö av törst."
+	otherwise
+		write "Med vatten i flaskan tar du mod till dig och beger dig mot pyramiden. Färden dit tar flera timmar och värmen är snudd på outhärdlig. Långt innan du är framme har du druckit upp sista droppen vatten. Svårt uttorkad är du nu framme vid..."
+		and make the bottle empty
+		and go to "Utanför pyramiden"
+
+> gå tillbaka : go to korridoren
+> undersök den gula dörren : write "Den är gul och gjord av sten."
+> öppna den gula dörren : write "Du öppnar den gula dörren och går igenom den." and go to korridoren
+
+# Inuti eken
+------------
+Du befinner dig inuti en stor ihålig ek. Någon har ristat "klick, klick, klick, klick" i stammen.
+: if the bottle is in the tree write "En tom glasflaska ligger på marken."
+
+> gå tillbaka : go to Skogsgläntan
+> gå ut ur eken : go to Skogsgläntan
+> ta glasflaskan : if the bottle is in the tree then write "Ok" and make the bottle empty
+
+# Utanför pyramiden
+--------------------
+Du står utanför en stor pyramid. Runt omkring dig är öken och du kan se dina egna fotspår som leder hit ifrån den ensamma gula dörren i fjärran. Det tycks vara evig sol på denna plats. Det finns en ingång till pyramiden här.
+
+> följ fotspåren tillbaka : same as "gå tillbaka till den gula dörren"
+> gå in i pyramiden : gå till "Inne i pyramiden"
+> gå tillbaka till den gula dörren : 
+	if the bottle is not "filled with water" then
+		write "Du behöver vatten för den färden."
+	otherwise
+		write "Du beger dig tillbaka mot den gula dörren. Några timmar senare är du tillbaka och din flaska med vatten är nu uppdrucken."
+		and make bottle empty
+		and go to "öknen"
+
+
+# Inne i pyramiden
+------------------
+Du befinner dig i en förkammare inuti pyramiden. Facklor kastar ett svagt ljus över tusentals hieroglyfer inristade på väggarna. Bredvid dig flyter en liten kanal med vatten. Bakom dig leder en liten trappa ut igen. Rakt framför dig är en dörr med ett stort hjul.
+: if the pyramid door is open then write "Dörren är öppen."
+
+> drick vatten från kanalen : write "Ahh! Det ar kallt och fräscht."
+> fyll glasflaskan med vatten : 
+	if the bottle is empty then
+		write "Du fyller flaskan med kallt vatten från kanalen."
+		and make the bottle filled with water
+	otherwise if the bottle is filled with water or filled with oil then
+		write "Den är redan full."
+
+> gå in genom dörren : if the pyramid door is closed then write "Hur går man igenom en stängd dörr?" otherwise go to Gravkammaren
+> gå tillbaka : same as "gå ut ur pyramiden"
+> gå upp för trappan : same as "gå ut ur pyramiden"
+> gå ut ur pyramiden : gå till "Utanför pyramiden"
+> läs hieroglyfer : skriv Tyvärr förstår du ingenting.
+> läs på väggarna : same as "läs hieroglyfer"
+> medsols : same as vrid hjulet medsols
+> motsols : same as vrid hjulet motsols
+> släck facklorna : write "Dum idé. Då blir det ju mörkt."
+> stäng dörren : if the pyramid door is open then write "Du kan inte rubba dörren."
+> ta en fackla : write "De sitter hårt fastsurrade i väggen."
+> ta vatten : same as "fyll glasflaskan med vatten"
+> undersök dörren : if the pyramid door is closed then write "Dörren är stängd. Den är stor och tung och går inte att rubba." otherwise write "Dörren är öppen."
+> undersök hieroglyfer : samma som läs hieroglyfer
+> undersök hjulet på dörren : write "Hjulet går att vrida på. Det är förmodligen en låsmekanism för dörren."
+> undersök kanalen : same as "undersök vattnet"
+> undersök vattnet : skriv Vattnet verkar fräscht.
+> vrid hjulet medsols : 
+	if wheel is at 0 then
+		change wheel to at 1
+		and write "Du har ett klickande ljud inifrån dörren."
+	otherwise if wheel is at 1 then
+		change wheel to at 2
+		and write "Du har ett klickande ljud inifrån dörren."
+	otherwise if wheel is at 3 and pyramid door is closed then
+		write "Du har ett högt slammer och oljudet av gnisslande kugghjul inifrån dörren. Långsamt öppnar sig dörren tillräckligt mycket för att du ska kunna komma igenom."
+		and change the pyramid door to open
+	otherwise
+		change wheel to at 0
+		and write "Du har ett rasslande ljud inifrån dörren."
+
+> vrid hjulet motsols : 
+	if wheel is at 2 then
+		change wheel to at 3
+		and write "Du har ett klickande ljud inifrån dörren."
+	otherwise
+		change wheel to at 0
+		and write "Du har ett rasslande ljud inifrån dörren."
+
+> vrid hjulet åt höger : same as vrid hjulet medsols
+> vrid hjulet åt vänster : same as vrid hjulet motsols
+> vrid på hjulet : write "Medsols eller motsols?"
+> öppna dörren :
+	if the pyramid door is closed then
+		write "Hur mycket du än försöker så lyckas du inte rubba dörren."
+	otherwise
+		write "Dörren är redan öppen."
+
+# Gravkammaren
+--------------
+Du står nu i en inre kammare inuti pyramiden. Det är mörkt och den enda ljuskällan här är din ficklampa. Rummet är tomt förutom en liten sarkofag som står mitt i rummet.
+: if the sarcophagus is open then write "Sarkofagen är öppen."
+
+> gå ut genom dörren : same as "gå ut till förkammaren"
+> gå ut till förkammaren : go to inne i pyramiden
+> slå på mumien : if the sarcophagus is open then write "Du har helt klart problem med dina aggressioner."
+> stäng locket på sarkofagen : if the sarcophagus is open then write "Ok" and make the sarcophagus closed otherwise write "Den är redan stängd."
+> ta dosan : if the music box is in the sarcophagus and the sarcophagus is open then write "Ok" and change the music box to carried
+> ta mumien : if the sarcophagus is open then write "Det vill du inte. Låt den vila i frid."
+> undersök dosan : if the music box is carried or the sarcophagus is open and the music box is in the sarcophagus then write "Dosan är av guld och vackert utsmyckad med små juveler. Den har ett lock som är stängt och låst med ett pyttelitet lås."
+> titta i sarkofagen : 
+	if the sarcophagus is open then
+		if the music box is in the sarcophagus then
+			write "Inuti sarkofagen ligger en liten mumie. Kanske var det en gång ett litet barn eller en dvärg. På mumien står en liten vacker dosa."
+		otherwise
+			write "Inuti sarkofagen ligger en liten mumie."
+	if the sarcophagus is closed then write "Sarkofagen är stängd."
+
+> undersök mumien : if the sarcophagus is open then write "Mumien är liten. Kanske var det en gång ett litet barn eller en dvärg."
+> undersök sarkofagen : 
+	if the sarcophagus is open then
+		write "Sarkofagen är öppen."
+		and same as "titta i sarkofagen"
+	if the sarcophagus is closed then write "Sarkofagen är stängd."
+
+> väck mumien : if the sarcophagus is open then write "Den är död. Stendöd. Jag lovar."
+> öppna locket på dosan : if the music box is carried or the sarcophagus is open and the music box is in the sarcophagus then write "Dosan är låst."
+> öppna locket på sarkofagen : if the sarcophagus is closed then write "Du öppnar sarkofagen." and make the sarcophagus open and then the same as "titta i sarkofagen" otherwise write "Den är redan öppen."
+
+# Bron över lavasjön
+----------------------
+Du står vid en bro som leder över en djup klyfta i berget. Längst nere i klyftan flyter lava. Det är väldigt varmt här och luften stinker av svavel. På andra sidan bron syns en stor stenport. Bakom dig leder en röd dörr tillbaka till korridoren. I en spricka i väggen rinner någon slags mörk vätska.
+
+> fyll glasflaskan med vätskan : 
+	if the bottle is filled with oil then
+		write "Den är redan full med olja."
+	otherwise if the bottle is filled with water then
+		write "Den är ju full med vatten."
+	otherwise if the bottle is empty and if the liquid isn't identified then
+		same as "undersök vätskan"
+	also if the bottle is empty then
+		write "Du fyller flaskan med oljan ifrån sprickan. Det går långsamt och tar lite tid, men till slut är hela flaskan full."
+		then change bottle to filled with oil
+
+> gå till stenporten : same as gå över bron
+> gå tillbaka : same as "gå ut igenom den röda dörren"
+> gå ut igenom den röda dörren : go to korridoren
+> gå över bron : go to "Stenporten"
+> hoppa ner : write "Skulle inte tro det. Du skulle dö."
+> ta olja : same as "fyll glasflaskan med vätskan"
+> ta vätska ifrån sprickan : same as "fyll glasflaskan med vätskan"
+> undersök sprickan : same as undersök vätskan
+> undersök vätskan : 
+	write "Vätskan som rinner i sprickan är hal och oljig. Ja. Det är nog precis vad det är. Olja." and make liquid identified
+
+> öppna den röda dörren : write "Du öppnar den röda dörren och går igenom." and go to Korridoren
+
+# Stenporten
+------------
+Du står vid en stor stenport vid en klyfta i berget. En bro leder tillbaka till andra sidan över en flod av lava.
+
+> gå igenom porten : 
+	if the stone gate is transparent and if has visited the treasure room is not true then
+		write "Du går rakt igenom stenporten, som att det inte fanns där överhuvudtaget. Du kliver in i en stor kammare och det första du ser är en stor drake som ligger och vaktar en ännu större skatt. Innan draken hinner se dig gömmer du dig bakom en pelare."
+		then go to skattkammaren
+	otherwise if the stone gate is transparent then
+		go to skattkammaren
+
+> gå in : same as "gå igenom porten"
+> gå tillbaka : same as gå över bron
+> gå över bron : go to "Bron över lavasjön"
+> hoppa ner : write "Vill du dö?"
+> perspicuum : same as säg perspicuum
+> ropa perspicuum : same as "säg perspicuum"
+> säg perspicuum : skriv "När du uttalar ordet \"perspicuum\" börjar stenporten att skimra och bli lätt genomskinlig." and make the "stone gate" "transparent"
+> ta på stenporten : same as undersök stenporten
+> undersök stenporten : 
+	if the stone gate is solid then
+		write "Stenporten är stängd. Den är stor och tung, helt slät och det finns inget handtag. Det finns till synes ingen möjlighet att öppna den. När du känner på den så känns den varm."
+	otherwise
+		write "Stenporten är fortfarande stängd men skimrar och är lätt genomskinlig. När du försöker ta på den så går det inte. Din hand går rakt igenom den."
+
+> titta in genom porten : if the stone gate is not solid then write "Även om porten är lite genomskinlig är det svårt att urskönja något bakom. Du försöker ta på porten men då går din hand rakt igenom den."
+> undersök lavan : write "Den ser varm ut."
+> öppna stenporten : write "Det finns inget handtag."
+
+# Skattkammaren
+---------------
+Du befinner dig i en stor kammare full med pengar, juveler och smycken. En stor drake ligger och vaktar skatterna. Långt ovanför draken lyser solen ner genom ett stort hål i berget.
+: if the dragon is asleep then write "Draken sover."
+
+> gå tillbaka : same as gå ut
+> gå ut : go to "Stenporten"
+> lås upp dosan : same as "öppna dosan med guldnyckeln"
+> slå draken : write "Väldigt dålig idé."
+> ta skatter : 
+	if the dragon is awake then
+		write "Inte en chans. Du har inte lust att bli drakens grillmiddag."
+	otherwise if the dragon is asleep then
+		if treasure is not carried then
+			write "Du fyller dina fickor med guldpengar och samlar på dig så mycket skatter du bara kan bära. Hurra!"
+			and make treasure carried
+		otherwise
+			write "Du bär redan så mycket skatter du bara kan."
+
+> undersök draken : 
+	if the dragon is awake then
+		write "Draken är svart och stor som tio elefanter. Dess kropp är täckt av fjäll hård som pansar. Det kommer rök ur näsborrarna och ögonen lyser röda i dunklet."
+	otherwise if the dragon is asleep then
+		write "Den stora svarta draken sover. Hans snarkningar får marken att skälva."
+
+> väck draken : if the dragon is asleep then write "Väldigt dålig idé."
+> öppna dosan med guldnyckeln : 
+	if the golden key is carried and the music box is carried then
+		write "Den pyttelilla guldnyckeln passar perfekt i det pyttelilla låset. Du öppnar dosan och den börjar spela vacker musik."
+		and change the music box lock to unlocked
+		and change the music box secret to revealed
+		and if the dragon is awake then
+			write "Draken verkar bli sömnig av ljudet. Det dröjer inte länge förrän draken har somnat."
+			and make the dragon asleep
+
+> öppna locket på dosan : same as "lås upp dosan"
+
+# Slut
+------
+Spelet är slut.
+
+

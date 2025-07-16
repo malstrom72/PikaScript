@@ -1,0 +1,31 @@
+// fnt=load('/Users/magnus/Downloads/all_64c/c64_upper.64c')
+// for (j = 0; j < 256; ++j) { for (i = 0; i < 8; ++i) print(replace(replace(radix(ordinal(fnt{2+(8*j)+i}),2,8),'0','.'),'1','#')); print(""); }
+// C64_FONT_LAYOUT = "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[`]`` !\"#$%&'()*+,-./0123456789:;<=>?";
+
+vargs(@exe, @fn,, @chars);
+defaults(@chars, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]");
+
+c64Font = load(fn);
+
+s = '';
+for (i = 0; i < length(chars); ++i) {
+	c = ordinal(chars{i});
+	if (c >= 32 && c < 64) {
+		c64c = c;
+	} else if (c >= 64 && c < 64+32) {
+		c64c = c - 64;
+	} else {
+		throw("Invalid C64 character");
+	};
+	for (y = 0; y < 8; ++y) {
+		rows[y] = ordinal(c64Font{2 + (8 * c64c) + y});
+	};
+	v0 = (rows[0] << 24) | (rows[1] << 16) | (rows[2] << 8) | (rows[3]);
+	v1 = (rows[4] << 24) | (rows[5] << 16) | (rows[6] << 8) | (rows[7]);
+	if (v0 >= (1 << 31)) v0 -= 2 * (1 << 31);
+	if (v1 >= (1 << 31)) v1 -= 2 * (1 << 31);
+	if (s !== '') s #= ", ";
+	s #= v0 # ", " # v1;
+};
+s = "[ " # s # " ]";
+print(s);

@@ -1,0 +1,13 @@
+['places.0.actions.go west'] = 'GO_:1';
+['places.0.actions.w'] = 'GO_:1';
+['places.0.actions.west'] = 'GO_:1';
+['places.0.description'] = 'You are standing in a clearing in the Mistwood forrest. You can see a little hole in the ground beneath an old oak. The oak looks climbable. A path leads westwards.';
+['places.0.name'] = 'entry';
+['places.1.actions.e'] = 'GO_:0';
+['places.1.actions.enter'] = 'GO_:2';
+['places.1.actions.enter building'] = 'GO_:2';
+['places.1.description'] = 'You are standing outside a small red hut. The door to the hut is open and a stench comes from inside it.';
+['places.1.name'] = 'outside of hut';
+['places.2.description'] = 'You are inside a small shabby hut consisting of one small room. There is a fireplace here and a table.';
+['places.2.name'] = 'inside of hut';
+['places.n'] = 3;

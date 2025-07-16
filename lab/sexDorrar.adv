@@ -1,0 +1,128 @@
+
+synonym: bl†a = bl†
+synonym: d”rren = d”rr
+synonym: gr”na = gr”n
+synonym: gula = gul
+synonym: r”da = r”d
+synonym: tr„det = tr„d
+
+var: bryggst„llet = [tomt] / vatten i
+var: dykardr„kten = framme / [undanstoppad] / k”pt
+var: f†gelungen = [vid tr„det] / tagen / vid mamman
+var: kokosn”ten = tagen / vid mannen / [vid palmen]
+var: pinnen 1 = [vid tr„det] / tagen
+var: pinnen 2 = tagen / [”ver †n]
+var: provr”ret = [p† bordet] / tagen / vatten i / varm luft i
+var: stenen = [vid †n] / tagen / bortkastad
+var: stocken = liggande / [st†ende]
+var: yxan = [vid tr„det] / vid boet / tagen
+var: ”ronpropparna = [i aff„ren] / tagna
+var: b„rnstenen = [vid trollet] / tagen / vid mannen
+var: pinnen 3 = [ i vattnet] / tagen
+
+> titta : alltid: beskriv platsen
+
+Intro
+-----
+Du vaknar upp i ett kolsvart rum. Du k„nner dig v„ldigt f”rvirrad men precis n„r du reser dig upp t„nds ljuset.
+: g† till hexagonrummet
+
+
+Hexagonrummet
+-------------
+Du „r i ett hexagonrum med en d”rr p† varje sida. En bl†,en r”d,en gr”n,en gul,en lila och en rosa. P† golvet ser du en ritad triangel med kanterna mot den r”da,den bl† och den gr”na d”rren. Du ser att det „r sm† runda h†l vid varje kant.
+
+> g† in i den bl†a d”rren : skriv "Du g†r igenom den bl† d”rren och kommer fram till..." och g† till †n
+> g† in i den gr”na d”rren : skriv "Du g†r igenom den gr”na d”rren och kommer fram till..." och g† till skogen
+> g† in i den gula d”rren : skriv "Du g†r igenom den gula d”rren och kommer till..." och g† till ”knen
+> g† in i den lila d”rren : skriv "du g†r igenom den lila d”rren och kommer till..." och g† till labbet
+> g† in i den rosa d”rren : skriv "Du f”rs”ker ”ppna d”rren men den „r l†st."
+> g† in i den r”da d”rren : skriv "Du g†r igenom den r”da d”rren och kommer till..." och g† till grottan
+
+Skogen
+------
+Du kommer fram i en skogsgl„nta. Skogen bredvid dig „r alldeles f”r t„t f”r att g† igenom. Konstigt nog leder d”rren in i ett tr„d. Framf”r dig „r en stort tr„d.
+: om f†gelungen „r vid tr„det skriv "Vid tr„dets botten sitter en liten f†gelunge."
+
+> g† in i skogen : skriv "Skogen „r s† t„t att det „r sv†rt att komma f”rbi tr„den. Du vill inte g† ifr†n skogsgl„ntan."
+> g† tillbaka : skriv "Du g†r tillbaka genom den gr”na d”rren." och g† till hexagonrummet
+> kl„ttra upp i tr„det : skriv "Du hittar n†gra l„mpliga grenar att kl„ttra upp f”r. Nu „r du uppe i tr„det." och g† till uppe i tr„det
+> ta f†gelungen : om f†gelungen „r vid tr„det skriv "Du tar upp den lilla f†gelungen den s„ger bara: Pip,pip. Den verkar lite r„dd." och „ndra f†gelungen till tagen annars skriv Vilken f†gelunge?
+> titta vid tr„det : om pinnen 1 „r vid tr„det skriv "Du hittar en liten pinne vid botten av tr„det. Du tar pinnen." och „ndra pinnen 1 till tagen annars skriv "Du hittar inget s„rskilt f”rutom lite koda."
+
+Uppe i tr„det
+-------------
+Du „r nu uppe i tr„det. Du ser ett trasigt f†gelbo och en f†gel som sitter p† en gren r„tt s† n„ra det och ser ledsen ut. Du ser att f†geln har en liten gr”n kristal fasttejpat p† en av sina vingar. Du ser en yxa sitta fast lite l„ngre bort fr†n f†geln p† en liten gren.
+: skriv "Du fr†gar varf”r f†geln „r ledsen och den nickar mot f†gelboet. Du f”rst†r att du beh”ver laga det. Du tror det r„cker med fyra pinnar."
+
+> fr†ga om f†gelungen kan ta yxan : om yxan „r vid tr„det skriv "Du fr†gar om f†gel ungen kan ta den. Den g†r ut p† grenen och f”rs”ker ta den. Men mamman m„rker och blir glad att se sin unge. Hon flyger bort till yxan och hj„lper till att ta den till dig som en bel”ning att du hittade f†gelungen. De lyckas och nu ligger yxan precis bredvid dig." och „ndra yxan till vid boet och „ndra f†gelungen till vid mamman
+> kl„ttra ner : skriv "Du g†r ner till gl„ntan igen." och g† till skogen
+> ta fram f†gelungen : skriv "Du tror mamman kanske blir v„ldigt arg. Du vill v„nta tills du lagat f†gelboet."
+> ta yxan : om yxan „r vid tr„det skriv "Den sitter p† en ostabil gren du vill inte chansa p† att falla ner fr†n tr„det." annars om yxan „r vid boet skriv "Du tar yxan" och „ndra yxan till tagen
+
+Grottan
+-------
+Du kommer till en liten grottta. Framf”r dig ligger ett stort troll och sover. Han har ett halsband med en liten r”d kristal p†. lite brevid trollet st†r en kista.
+
+> g† tillbaka : skriv "Du g†r tillbaka genom den r”da d”rren." och g† till hexagonrummet
+> ta kristalen : skriv "Du v†gar inte ta kristalen. Trollet kanske vaknar."
+> ”ppna kistan : skriv "Du smyger fram och ”ppnar kistan lite men den knarar s† mycket s† du v†gar inte ”ppna den."
+> leta bakom trollet : om b„rnstenen „r vid trollet skriv "Du letar runt och bakom trollet ser du en b„rnsten som du tar." och „ndra b„rnstenen till tagen annars skriv "Du hittar inget kul"
+
+”knen
+-----
+Du kommer in i en oas. H„r st†r ett litet t„lt. Runtomkringn dig „r ”knen o„ndlig. En ynka liten kaktus har v„xt vid vattnet. Konsigt nog leder d”rren ingenstans.
+: om kokosn”ten „r vid palmen skriv "Du ser en lien kokosn”t sitta under ett palmblad p† en palm."
+
+> g† bort fr†n oasen : skriv "Det vill du inte! Det „r l„tt att tappa bort sig d„rute och d† kanske du inte hittar tillbaka till oasen."
+> g† in i t„ltet : skriv "Du g†r in i det lilla t„ltet och kommer in i en liten aff„r." och g† till inne i t„ltet
+> g† tillbaka : skriv "Du g†r tillbaka genom den gula d”rren." och g† till hexagonrummet
+> kasta en sten p† kokosn”ten : om stenen „r tagen skriv "Du tar fram din sten och siktar l„nge. Sen kastar du och tr„ffar kokosn”ten. Den faller ner i sanden och du tar upp den." och „ndra kokosn”ten till tagen och „ndra stenen till bortkastad annars om kokosn”ten inte „r vid palmen skriv "Vilken kokosn”t?"
+> ta en tagg fr†n kaktusen : skriv "Du lyckas inte ta av n†gon utan sk„r dig lite. Du har aldrig s„tt en s†dan kaktus. Den ser v„ldigt konstig ut."
+> ta in varm luft i provr”ret : om provr”ret „r tagen skriv "Du ”ppnar r”ret och st„nger det snabbt igen. Nu har du varm luft inuti i det." och „ndra provr”ret till varm luft i
+> dyk ner i vattnet : om dykardr„kten „r k”pt och pinnen 3 „r i vattnet skriv "Du simmar ner i vattnet. Du hittar en pinne l„ngst ner p† botten och tar den" och „ndra pinnen 3 till tagen annars om dykardr„kten inte „r k”pt skriv "Du v†gar inte simma ner!" annars om pinnen 3 inte „r i vattnet skriv : "Du hittar inget kul."
+> ta in varm luft i provr”ret : om provr”ret „r tagen skriv "Du ”ppnar upp provr”ret och st„nger igen det efter en stund. Nu har du varm luft i provr”ret." och „ndra provr”ret till varm luft i.
+
+Inne i t„ltet
+-------------
+Du „r inne i ett litet t„lt. Det ser ut som en liten aff„r. I disken sitter en man.
+: skriv "Det „nda han verkar s„lja „r n†gra gamla ”ronproppar."
+
+> Fr†ga hur mycket ”ronpropparna kostar : skriv "Du fr†gar honom hur mycket ”ronpropparna kostar. Han s„ger att de kostar en kokosn”t."
+> fr†ga vad det „r f”r slags kaktus : skriv "Jo det „r en v„ldigt ovanlig. Den finns inte p† m†nga st„llen. Det „nda s„ttet att ta av en tagg fr†n den „r att anv„nda vatten f”r att sk„ra. Men man kan ju inte sk„ra med vatten det rinner ju bara. Eller?
+> g† tillbaka : samma som g† ut ur t„ltet
+> g† ut ur t„ltet : skriv "Du g†r ut ur t„ltet och kommer till oacen igen." och g† till ”knen
+> k”p ”ronpropparna : om kokosn”ten „r tagen skriv "Du ger mannen kokosn”ten och han ger dig ”ronpropparna. Han tar fram en dykardr„kt och fr†gar om du vill k”pa den den kostar en b„rnsten." och „ndra kokosn”ten till vid mannen och „ndra ”ronpropparna till tagna och „ndra dykardr„kten till framme.
+> k”p dykardr„kten : om dykardr„kten „r framme och b„rnstenen „r tagen skriv "Du l„mnar fram b„rnstenen i utbytte mot dykardr„kten. Nu har du en dykardr„kt." och „ndra b„rnstenen till hos mannen och „ndra dykardr„kten till k”pt annars skriv "Det kan du inte!"
+
+†n
+--
+Du kommer fram till en liten †. Du befinner dig i en liten skog. P† andra sidan ligger det n†gra sm† stenar. P† botten av †n ser du en stor bl† kristal som verkar sitta fast under en rot. Konstigt nog d”rren leder ingenstans.
+: om pinnen 2 „r ”ver †n skriv "Du ser ocks† en liten pinne h„nga ”ver †n."
+
+> g† tillbaka : skriv "Du g†r tillbaka genom den bl†a d”rren." och g† till hexagonrummet
+> g† ”ver till andra sidan : om stocken „r liggande skriv "Du g†r ”ver den vingliga stocken och kommer ”ver till andra sidan." och g† till andra sidan av †n
+> hug ner ett tr„d : om yxan „r tagen och stocken „r st†ende skriv "Det tar l†ngt tid men till slut lyckas du och f†r en tjock stam. Du l„gger ”ver †n." och „ndra stocken till liggande
+> ta pinnen : om pinnen 2 „r ”ver †n och stocken „r st†ende skriv "Du n†r inte pinnen du tror du beh”ver en stock eller n†got att l„gga ”ver †n. D† skulle du nog kunna n† den."
+ annars om pinnen 2 „r ”ver †n och stocken „r liggande skriv "Du g†r f”rsikt ut p† stocken och tar av den lilla pinnen fr†n tr„det." och „ndra pinnen 2 till tagen
+
+> ta vatten : om provr”ret „r tagen skriv "Du fyller upp vatten i hela provr”ret." och „ndra provr”ret till vatten i
+
+Andra sidan av †n
+-----------------
+Du „r p† andra sidan †n. H„r ligger det lite stenar vid kanten av †n. Du kan ocks† g† ner i vattnet fr†n det h†llet.
+
+> g† ner i vattnet : skriv "Du vill inte g† ner i vattnet. Du kan inte andas d„r under och det kanske „r sv†rt att komma upp om det „r s† str”mt."
+> g† tillbaka : skriv "Du g†r tillbaka till andra sidan p† den vingliga stocken." och g† till †n
+> ta en sten : om stenen inte „r tagen skriv "okej" och „ndra stenen till tagen
+
+Labbet
+------
+Du kommer in i ett labb. Det „r ganska m”rkt men du kan se „nd†. H„r finns det massa olika kemi prylar. Det st†r en grej man g”r drycker med. P† v„ggen sitter en lapp.
+: om provr”ret „r p† bordet skriv "Det ligger ett litet provr”r p† ett bord."
+
+> g† tillbaka : skriv "Du g†r tillbaka genom den lila d”rren." och g† till "Hexagonrummet"
+> h„ll ner vattnet i bryggst„llet : om provr”ret „r vatten i skriv "Du h„ller ner vattnet i ett litet glas i bryggst„llet." och „ndra provr”ret till tagen och „ndra bryggst„llet till vatten i
+> ta provr”ret : om provr”ret „r p† bordet skriv "Du tar prov r”ret och ser en liten lapp p† den. Det st†r att allt den f†ngar in stannar f”r evigt i samma form och temperatur som n„r man tog det." och „ndra provr”ret till tagen
+> titta p† lappen : skriv "Det st†r n†gra formler p† lappen men den „nda du kan tyda „r en f”rstorings form. Man ska ha lite vatten och varm luft. Du ser ocks† hur man g”r en sak s† om man anv„nder den s† bed”vas den man anv„nder det p†. Du ser inte riktigt vad man beh”ver men du ser „nda tr sen n†gra bokst„ver du inte kan l„sa sno och ett annat ord som du bara ser ko p†. Du t„nker att den h„r lappen m†ste vara v„ldigt gammal."
+> h„ll ner den varma luften i bryggst„llet : om provr”ret „r varm luft i och bryggst„llet inte „r vatten i skriv : "Du ”ppnar upp r”ret och luften †ker in i en liten beh†llare." och „ndra provr”ret till tagen och „ndra bryggst„let till varm luft i om provr”ret „r varm luft i och bryggst„llet „r vatten i skriv "Du h„ller ner luften i en beh†lare och blandar det med vatten. Nu har du en formel!" och „ndra provr”ret till f”rstorings formel i och „ndra bryggst„let till tomt.

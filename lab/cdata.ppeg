@@ -1,0 +1,26 @@
+root		<-													{ $l = @$$ }
+				_ PRECOMPILER? _ l:list EOF
+
+list		<-	"{"_ (											{ [$$].n = 0; $v = @[$$][0] }
+					v:value (","_								{ $v = @[$$][++[$$].n] }
+					v:value)* )? "}"_							{ ++[$$].n }
+
+value		<-	list											# will go into already designated target
+				/ x=EXPRESSION _								{ [$$] = $x }
+
+EXPRESSION	<- (SUB_EXPR / !(_ [,}]) .)*
+SUB_EXPR	<-	&'(' PARENTHESIS
+					/ &'[' BRACKETS
+					/ &["'] STRING
+					/ &('/*' / '//') COMMENT
+					/ &(EOL _ '#') EOL _ PRECOMPILER
+
+PARENTHESIS	<-	'(' (SUB_EXPR / !')' .)* ')'
+BRACKETS	<-	'[' (SUB_EXPR / !']' .)* ']'
+STRING		<-	('"' ( ('\\' / !'"') . )* '"' / "'" ( (!"'" .) )* "'")
+_			<-	(EOL _ PRECOMPILER / COMMENT / [ \t\r\n])*
+EOL			<-	"\r" / "\n"
+EOF			<-	!.
+EOL_OR_F	<-	(EOL / EOF)
+PRECOMPILER	<-	'#' (!EOL ("\\"+ [ \t]* EOL_OR_F / .))* EOL_OR_F
+COMMENT		<-	('/*' (!'*/' .)* '*/') / ("//" (!EOL .)* EOL_OR_F)

@@ -1,0 +1,33 @@
+
+/*
+permutate = function {
+    args(@n, @a);
+    if (n == 1) {
+        s = ''; iterate(a, >s #= $2); print(s);
+    } else {
+        for (i = 0; i < n - 1; ++i) {
+            permutate(n - 1, a);
+            print('swap: ' # (if ((n & 1) == 0) i else 0) # ' & ' # (n - 1));
+            swap(@[a][if ((n & 1) == 0) i else 0], @[a][n - 1]);
+        };
+        permutate(n - 1, a);
+    };
+};
+
+permutate(4, compose(@arr, 1, 2, 3, 4));
+*/
+
+compose(@order, 1,2,3,4,5,6,7,8);
+test = function {
+    args(@order, @offset, @counter);
+    for (; counter <= 8; ++counter) {
+        swap(@[order][offset], @[order][counter - 1]);
+        if (offset < 3) {
+            test(order, offset + 1, counter + 1);
+        } else {
+            s = ''; iterate(order, >s #= $2); print(s);
+        };
+        swap(@[order][offset], @[order][counter - 1]);
+    };
+};
+test(@order, 0, 1);

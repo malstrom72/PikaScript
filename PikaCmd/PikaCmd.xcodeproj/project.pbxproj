@@ -1,0 +1,446 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F74062E210E989D40044ADBD /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
+		F74062E310E989D40044ADBD /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
+		F74062E410E989D40044ADBD /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
+		F74062E510E989D40044ADBD /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
+		F7905AFE10C47FBF00FF4A18 /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
+		F7905B1010C47FD100FF4A18 /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
+		F7905B1310C47FD100FF4A18 /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
+		F7B2F97C10C48AD800CD08A4 /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
+		F7E8546916B83B3D009B0B05 /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
+		F7E8546A16B83B3D009B0B05 /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
+		F7E8546B16B83B3D009B0B05 /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
+		F7E8546C16B83B3D009B0B05 /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		F74062ED10E989D40044ADBD /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.gcc;
+			fileType = sourcecode.c;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+		F7E8546E16B83B3D009B0B05 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.gcc;
+			fileType = sourcecode.c;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+		F7FC4CFE0D63BC0A00589F5D /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.gcc;
+			fileType = sourcecode.c;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXFileReference section */
+		F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PikaCmd.cpp; sourceTree = SOURCE_ROOT; };
+		F7905B0510C47FD100FF4A18 /* PikaScript.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = PikaScript.cpp; path = ../src/PikaScript.cpp; sourceTree = SOURCE_ROOT; };
+		F7905B0610C47FD100FF4A18 /* PikaScript.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PikaScript.h; path = ../src/PikaScript.h; sourceTree = SOURCE_ROOT; };
+		F7905B0810C47FD100FF4A18 /* QStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = QStrings.cpp; path = ../src/QStrings.cpp; sourceTree = SOURCE_ROOT; };
+		F7905B0910C47FD100FF4A18 /* QStrings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QStrings.h; path = ../src/QStrings.h; sourceTree = SOURCE_ROOT; };
+		F79520E816B83C2100F0485E /* PikaCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = PikaCmd; path = /Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCC/Debug/PikaCmd; sourceTree = "<absolute>"; };
+		F79520EA16B83C2200F0485E /* PikaCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = PikaCmd; path = /Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCCSmall/Debug/PikaCmd; sourceTree = "<absolute>"; };
+		F79520EC16B83C2200F0485E /* PikaCmd GCC 64-bit */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "PikaCmd GCC 64-bit"; path = "/Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCC/Debug/PikaCmd GCC 64-bit"; sourceTree = "<absolute>"; };
+		F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BuiltIns.cpp; sourceTree = SOURCE_ROOT; };
+		F7B8C1F910CC7DCD00EC2AE3 /* PikaScriptImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PikaScriptImpl.h; path = ../src/PikaScriptImpl.h; sourceTree = SOURCE_ROOT; };
+		F7E8EF6410C49136003BD514 /* QuickVars.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QuickVars.h; path = ../src/QuickVars.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76F660486A84900D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F74062E610E989D40044ADBD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7E8546D16B83B3D009B0B05 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* YoctoScript */ = {
+			isa = PBXGroup;
+			children = (
+				F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */,
+				F7905B0510C47FD100FF4A18 /* PikaScript.cpp */,
+				F7905B0610C47FD100FF4A18 /* PikaScript.h */,
+				F7B8C1F910CC7DCD00EC2AE3 /* PikaScriptImpl.h */,
+				F7905B0810C47FD100FF4A18 /* QStrings.cpp */,
+				F7905B0910C47FD100FF4A18 /* QStrings.h */,
+				F7E8EF6410C49136003BD514 /* QuickVars.h */,
+				F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */,
+			);
+			name = YoctoScript;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76F620486A84900D96B5E /* PikaCmd GCC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "PikaCmd GCC" */;
+			buildPhases = (
+				F7B2F98510C48B1800CD08A4 /* ShellScript */,
+				8DD76F640486A84900D96B5E /* Sources */,
+				8DD76F660486A84900D96B5E /* Frameworks */,
+			);
+			buildRules = (
+				F7FC4CFE0D63BC0A00589F5D /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = "PikaCmd GCC";
+			productInstallPath = "$(HOME)/bin";
+			productName = YoctoScript;
+			productReference = F79520E816B83C2100F0485E /* PikaCmd */;
+			productType = "com.apple.product-type.tool";
+		};
+		F74062DF10E989D40044ADBD /* PikaCmd GCC Small x86 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F74062EE10E989D40044ADBD /* Build configuration list for PBXNativeTarget "PikaCmd GCC Small x86" */;
+			buildPhases = (
+				F74062E010E989D40044ADBD /* ShellScript */,
+				F74062E110E989D40044ADBD /* Sources */,
+				F74062E610E989D40044ADBD /* Frameworks */,
+			);
+			buildRules = (
+				F74062ED10E989D40044ADBD /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = "PikaCmd GCC Small x86";
+			productInstallPath = "$(HOME)/bin";
+			productName = YoctoScript;
+			productReference = F79520EA16B83C2200F0485E /* PikaCmd */;
+			productType = "com.apple.product-type.tool";
+		};
+		F7E8546616B83B3D009B0B05 /* PikaCmd GCC 64-bit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F7E8546F16B83B3D009B0B05 /* Build configuration list for PBXNativeTarget "PikaCmd GCC 64-bit" */;
+			buildPhases = (
+				F7E8546716B83B3D009B0B05 /* ShellScript */,
+				F7E8546816B83B3D009B0B05 /* Sources */,
+				F7E8546D16B83B3D009B0B05 /* Frameworks */,
+			);
+			buildRules = (
+				F7E8546E16B83B3D009B0B05 /* PBXBuildRule */,
+			);
+			dependencies = (
+			);
+			name = "PikaCmd GCC 64-bit";
+			productInstallPath = "$(HOME)/bin";
+			productName = YoctoScript;
+			productReference = F79520EC16B83C2200F0485E /* PikaCmd GCC 64-bit */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
+			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "PikaCmd" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* YoctoScript */;
+			productRefGroup = 08FB7794FE84155DC02AAC07 /* YoctoScript */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DD76F620486A84900D96B5E /* PikaCmd GCC */,
+				F74062DF10E989D40044ADBD /* PikaCmd GCC Small x86 */,
+				F7E8546616B83B3D009B0B05 /* PikaCmd GCC 64-bit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F74062E010E989D40044ADBD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../src/debug.pika",
+				"$(SRCROOT)/../src/help.pika",
+				"$(SRCROOT)/../src/interactive.pika",
+				"$(SRCROOT)/../src/objects.pika",
+				"$(SRCROOT)/../src/stdlib.pika",
+			);
+			outputPaths = (
+				"$(SRCROOT)/BuiltIns.cpp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
+		};
+		F7B2F98510C48B1800CD08A4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../src/debug.pika",
+				"$(SRCROOT)/../src/help.pika",
+				"$(SRCROOT)/../src/interactive.pika",
+				"$(SRCROOT)/../src/objects.pika",
+				"$(SRCROOT)/../src/stdlib.pika",
+			);
+			outputPaths = (
+				"$(SRCROOT)/BuiltIns.cpp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
+		};
+		F7E8546716B83B3D009B0B05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../src/debug.pika",
+				"$(SRCROOT)/../src/help.pika",
+				"$(SRCROOT)/../src/interactive.pika",
+				"$(SRCROOT)/../src/objects.pika",
+				"$(SRCROOT)/../src/stdlib.pika",
+			);
+			outputPaths = (
+				"$(SRCROOT)/BuiltIns.cpp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76F640486A84900D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7905AFE10C47FBF00FF4A18 /* PikaCmd.cpp in Sources */,
+				F7905B1010C47FD100FF4A18 /* PikaScript.cpp in Sources */,
+				F7905B1310C47FD100FF4A18 /* QStrings.cpp in Sources */,
+				F7B2F97C10C48AD800CD08A4 /* BuiltIns.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F74062E110E989D40044ADBD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F74062E210E989D40044ADBD /* PikaCmd.cpp in Sources */,
+				F74062E310E989D40044ADBD /* PikaScript.cpp in Sources */,
+				F74062E410E989D40044ADBD /* QStrings.cpp in Sources */,
+				F74062E510E989D40044ADBD /* BuiltIns.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7E8546816B83B3D009B0B05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7E8546916B83B3D009B0B05 /* PikaCmd.cpp in Sources */,
+				F7E8546A16B83B3D009B0B05 /* PikaScript.cpp in Sources */,
+				F7E8546B16B83B3D009B0B05 /* QStrings.cpp in Sources */,
+				F7E8546C16B83B3D009B0B05 /* BuiltIns.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB923208733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+			};
+			name = Debug;
+		};
+		1DEB923308733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+			};
+			name = Release;
+		};
+		1DEB923608733DC60010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "PLATFORM_STRING=UNIX";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PRODUCT_NAME = PikaCmd;
+			};
+			name = Debug;
+		};
+		1DEB923708733DC60010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = YES;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_FAST_MATH = YES;
+				GCC_FEEDBACK_DIRECTED_OPTIMIZATION = Off;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PLATFORM_STRING=UNIX",
+					NDEBUG,
+				);
+				GCC_STRICT_ALIASING = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ICC_DATA_ARG_ALIAS = NO;
+				ICC_DATA_NO_ALIAS = YES;
+				ICC_DIAG_NON_VIRTUAL_DESTRUCTOR = YES;
+				ICC_OPTLEVEL = speedHLO;
+				ICC_OPT_INLINE = any;
+				ICC_OPT_IPO_FOR_SINGLE_FILE_COMPILATION = YES;
+				ICC_OPT_REQUIRE_ARCH_IA32 = archP;
+				ICC_OPT_USE_ARCH_IA32 = archP;
+				ICC_OTHER_CFLAGS = "$(OTHER_CFLAGS) -ipo";
+				ICC_RT_LIBRARY = static;
+				PRODUCT_NAME = PikaCmd;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
+			};
+			name = Release;
+		};
+		F74062EF10E989D40044ADBD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = i386;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				SDKROOT = "";
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCCSmall";
+			};
+			name = Debug;
+		};
+		F74062F010E989D40044ADBD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_UNROLL_LOOPS = NO;
+				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCCSmall";
+			};
+			name = Release;
+		};
+		F7E8547016B83B3D009B0B05 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "PikaCmd GCC 64-bit";
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+			};
+			name = Debug;
+		};
+		F7E8547116B83B3D009B0B05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "PikaCmd GCC 64-bit";
+				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "PikaCmd GCC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923208733DC60010E9CD /* Debug */,
+				1DEB923308733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "PikaCmd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB923608733DC60010E9CD /* Debug */,
+				1DEB923708733DC60010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F74062EE10E989D40044ADBD /* Build configuration list for PBXNativeTarget "PikaCmd GCC Small x86" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F74062EF10E989D40044ADBD /* Debug */,
+				F74062F010E989D40044ADBD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F7E8546F16B83B3D009B0B05 /* Build configuration list for PBXNativeTarget "PikaCmd GCC 64-bit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F7E8547016B83B3D009B0B05 /* Debug */,
+				F7E8547116B83B3D009B0B05 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

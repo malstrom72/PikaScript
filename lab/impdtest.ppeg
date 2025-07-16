@@ -1,0 +1,9 @@
+_ <- [ \t\r\n]
+arg <- l=label? v=(_* value !':')?		{ print("label: " # $l); print("value: " # $v); }
+args <- _* (a:arg (_+ a:arg)*)?
+label <- symbol ':'
+symbol <- [-a-zA-Z_.] [-a-zA-Z_.0-9]*
+value <- (![ \t\r\n:].)+
+
+arg <- ((l=label { print("label: " # $l) }) (_+ el=label { print("label: " # $el) } )*)? (v=(_* value) { print("value: " # $v) })?
+arg <- (label (_+ label)*)? (_* value)?

@@ -1,0 +1,24 @@
+ignore: the
+ignore: at
+synonym: examine = look
+synonym: run = go
+
+> eat food 	: always if food is held then write "Yummy!" and make food eaten otherwise write "Which food?"
+> north	 	: always n
+> east 		: always e
+> south 	: always s
+> west 		: always w
+> go north 	: always n
+> go east 	: always e
+> go south 	: always s
+> go west 	: always w
+
+Living room
+-----------
+You are standing in the living room. You can see a table and a door.
++ "look door" and "look table"
+
+> close door 	: if door is open then write "Slam!" and make door closed otherwise write "It is already closed."
+> open door 	: if door is closed then write "Creeeek..." and make door open otherwise write "Door is already open dummy."
+> look door		: if door is closed write "The door is closed." otherwise write "The door is open."
+> look table 	: if food is on the table write "There is some food on the table." otherwise write "It is empty. Like your head."

@@ -1,0 +1,56 @@
+{
+	$$parser.processStack = function {
+		$currentTarget.F = void;
+		$currentTarget.T = void;
+		$currentCond = void;
+		for ($i = $$parser.stack.n - 1; $i >= 0; --$i) {
+			$inst = $$parser.stack[$i];
+			if ($inst{0} == '@') {
+				$cond = $inst{1};
+				$label = $inst{1:};
+				if (exists(@$aliases[$label])) $label = $aliases[$label];
+				$currentTarget[$cond] = $label;
+				$currentCond = $cond;
+				remove(@$$parser.stack, $i, 1);
+			} else if ($inst{0} == ':') {
+				$cond = $inst{1};
+				$label = $inst{1:};
+				if ($currentTarget[$cond] != void) {
+					$aliases[$label] = $currentTarget[$cond];
+					remove(@$$parser.stack, $i, 1);
+				} else {
+					$currentTarget[$cond] = $label;
+					$$parser.stack[$i] = $label # ':';
+				}
+			} else if ($inst == '!') { 
+				swap(@$currentTarget.F, @$currentTarget.T);
+				$currentCond = (if ($currentCond == 'F') 'T' else 'F');
+				remove(@$$parser.stack, $i, 1);
+			} else {
+				if ($currentCond == 'F') {
+					if ($inst{:2} == '==') $inst = '!=' # $inst{2:}
+					else if ($inst{:2} == '!=') $inst = '==' # $inst{2:}
+					else if ($inst{:2} == '<=') $inst = '>' # $inst{2:}
+					else if ($inst{:2} == '>=') $inst = '<' # $inst{2:}
+					else if ($inst{:1} == '<') $inst = '>=' # $inst{1:}
+					else if ($inst{:1} == '>') $inst = '<=' # $inst{1:};
+				};
+				$inst #= ',@' # $currentTarget[$currentCond];
+				$currentTarget.F = void;
+				$currentTarget.T = void;
+				$$parser.stack[$i] = $inst;
+			}
+		}
+	}
+}
+root		<-	{ $$parser.l = 0; $$parser.stack.n = 0 } BoolExpr { append(@$$parser.stack, '@Fdont'); append(@$$parser.stack, '@Tdo'); iterate(@$$parser.stack, >print($2)); $$parser.processStack(); iterate(@$$parser.stack, >print($2)) }
+BoolExpr	<-	Or
+Or			<-	{ $label = $$parser.l++ } And ('||' { append(@$$parser.stack, '@Tl' # $label) } _ And)* { append(@$$parser.stack, ':Tl' # $label) }
+And			<-	{ $label = $$parser.l++ } Comp ('&&' { append(@$$parser.stack, '@Fl' # $label) } _ Comp)* { append(@$$parser.stack, ':Fl' # $label) }
+Comp		<-	l:Value op=('<=' / '<' / '>=' / '>' / '!=' / '==')_ r:Value { append(@$$parser.stack, $op # ' ' # $l # ',' # $r) } / Not
+Not			<-	('!'_ Not { append(@$$parser.stack, '!'); } ) / BoolGroup
+BoolGroup	<-	'('_ BoolExpr ')' _
+Value		<-	Variable / Number
+Variable	<-	$$=([A-Za-z_$] ([A-Za-z_$0-9]*)) _
+Number		<-	$$=[0-9]+ _
+_			<-	[ \t\n\r]*
