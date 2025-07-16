@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -e -o pipefail -u
+cd "$(dirname "$0")"
 
 if [ -e ./PikaCmd ]; then
 	chmod +x ./PikaCmd >/dev/null 2>&1

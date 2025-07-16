@@ -1,6 +1,6 @@
-#!/bin/bash
-
-cd "${0%/*}"
+#!/usr/bin/env bash
+set -e -o pipefail -u
+cd "$(dirname "$0")"
 
 chmod +x ./BuildPikaCmd.sh >/dev/null 2>&1
 
