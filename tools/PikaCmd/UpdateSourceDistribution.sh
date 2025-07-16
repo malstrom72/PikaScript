@@ -1,14 +1,11 @@
-#!/bin/bash
-
-cd "${0%/*}"
-
-chmod +x ./BuildPikaCmd.sh >/dev/null 2>&1
+#!/usr/bin/env bash
+set -e -o pipefail -u
+cd "$(dirname "$0")"
 
 if [ -e ./PikaCmd ]; then
-	chmod +x ./PikaCmd >/dev/null 2>&1
+        :
 else
-	chmod +x ./BuildCpp.sh >/dev/null 2>&1
-	./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../src/*.cpp
+        bash ./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../src/*.cpp
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
@@ -27,14 +24,14 @@ if [ $? -ne 0 ]; then
 fi
 
 cd SourceDistribution
-cp -f ../../tests/unittests.pika . && cp -f ../systools.pika . && cp -f ../systoolsTests.pika .
+cp -f ../../../tests/unittests.pika . && cp -f ../systools.pika . && cp -f ../../../tests/systoolsTests.pika .
 if [ $? -ne 0 ]; then
 	echo Failed copying files
 	exit 1
 fi
 
 rm -f ./PikaCmd
-./BuildPikaCmd.sh
+bash ./BuildPikaCmd.sh
 if [ $? -ne 0 ]; then
 	exit 1
 fi
