@@ -11,7 +11,7 @@ PikaScript grew out of experiments to create the tiniest possible scripting lang
 
 ```
 src/       - C++ source code of the PikaScript interpreter and standard library
-PikaCmd/   - command-line tool sources, build scripts, installation helpers
+tools/PikaCmd/   - command-line tool sources, build scripts, installation helpers
 examples/  - assorted PikaScript samples and experiments
 docs/      - generated documentation and helper scripts
 ```
@@ -21,10 +21,10 @@ Examples and test scripts can be found in `examples/`, while `docs/` contains HT
 
 ## Building PikaCmd
 
-The easiest way to build the command-line tool is to run the provided build script under `PikaCmd/SourceDistribution`:
+The easiest way to build the command-line tool is to run the provided build script under `tools/PikaCmd/SourceDistribution`:
 
 ```bash
-cd PikaCmd/SourceDistribution
+cd tools/PikaCmd/SourceDistribution
 ./BuildPikaCmd.sh       # builds PikaCmd and runs unit tests
 ```
 

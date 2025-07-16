@@ -2,7 +2,7 @@
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
 CD /D "%~dp0"
 
-PUSHD PikaCmd\SourceDistribution
+PUSHD tools\PikaCmd\SourceDistribution
 SET CPP_TARGET=beta
 DEL /Q PikaCmd.exe 2>NUL
 CALL BuildPikaCmd.cmd
