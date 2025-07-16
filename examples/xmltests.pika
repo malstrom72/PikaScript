@@ -1,7 +1,7 @@
 include('systools.pika');
-include('lab/parsing.pika');
+include('examples/parsing.pika');
 
-PARSING_SOURCE_ROOT = './lab/';
+PARSING_SOURCE_ROOT = './examples/';
 TEST_FILES_ROOT = '/Users/magnus/Downloads/xmlconf/xmltest/valid/sa/';
 
 /*

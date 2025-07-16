@@ -1,6 +1,6 @@
 include('stdlib.pika');
 include('debug.pika');
-include('lab/plotter.pika');
+include('examples/plotter.pika');
 
 compose(@geneNames, 
 	"env_time"

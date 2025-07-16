@@ -1,4 +1,4 @@
-include('lab/toC.pika');
+include('examples/toC.pika');
 
 s = TAB;
 for ({ lo = 0; i = 0; lu = 0; }; i < 256; i++) {

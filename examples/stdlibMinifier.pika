@@ -1,11 +1,11 @@
 include('stdlib.pika');
-include('lab/parsing.pika');
+include('examples/parsing.pika');
 
 args(@exe, @inputFile, @outputFile);
 
 src = load(inputFile);
 
-ok = ppeg.compileFunction(load('lab/stdlibMinifier.ppeg'), @minifier);
+ok = ppeg.compileFunction(load('examples/stdlibMinifier.ppeg'), @minifier);
 if (!ok) throw("Error compiling the command parser");
 
 ok = minifier(src, @minified, @i);

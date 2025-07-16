@@ -1,4 +1,4 @@
-SOURCE_ROOT = coalesce(@::SOURCE_ROOT, @::run.root, 'lab/');
+SOURCE_ROOT = coalesce(@::SOURCE_ROOT, @::run.root, 'examples/');
 include(SOURCE_ROOT # 'objects.pika');
 
 PIKA_COMMENTS['/*'] = '*/';

@@ -2,7 +2,7 @@
 
 include('systools.pika');
 
-	::run.root = 'lab/';
+        ::run.root = 'examples/';
 
 include('stdlib.pika');
 include('debug.pika');

@@ -9,7 +9,7 @@
 
 //include('debug.pika');
 include('stdlib.pika');
-SOURCE_ROOT = coalesce(@::SOURCE_ROOT, @::run.root, 'lab/');
+SOURCE_ROOT = coalesce(@::SOURCE_ROOT, @::run.root, 'examples/');
 include(SOURCE_ROOT # 'objects.pika');
 include(SOURCE_ROOT # 'parsing.pika');
 

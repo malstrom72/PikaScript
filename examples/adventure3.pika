@@ -69,11 +69,11 @@
 
 // include('debug.pika');
 include('stdlib.pika');
-include('lab/parsing.pika');
+include('examples/parsing.pika');
 
 WRAP_COLUMN = 80;
 
-ok = ppeg.compileFunction(load('lab/advScript.ppeg'), @scriptParser);
+ok = ppeg.compileFunction(load('examples/advScript.ppeg'), @scriptParser);
 if (!ok) throw("Error compiling the command parser");
 
 map(@LANGS.english
