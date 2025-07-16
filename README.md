@@ -88,6 +88,12 @@ exit                     exits
 
 HTML documentation for the standard library lives in `docs/help/`. Open `docs/help/index.html` to browse available functions and examples.
 
+## Testing
+
+The standard library examples shown in `docs/help` also serve as the unit tests.
+`tests/unittests.pika` loads each documentation page, extracts the example code, and executes it.
+This double-checking system keeps the docs accurate and ensures the library functions behave as documented.
+
 ## License
 
 PikaScript is released under the BSD 2-Clause license. See [LICENSE](LICENSE) for details.
