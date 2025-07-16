@@ -9,7 +9,7 @@ COPY PikaTest.tmp C:\WINDOWS\ >NUL 2>NUL
 IF ERRORLEVEL 1 (
 	ECHO Must run with administrator right. E.g.
 	ECHO.
-	ECHO runas.exe /savecred /user:administrator /noprofile "CMD /C CD /D %SOURCEDIR%&&DownloadAndInstallPika.bat"
+	ECHO runas.exe /savecred /user:administrator /noprofile "CMD /C CD /D %SOURCEDIR%&&DownloadAndInstallPika.cmd"
 	DEL /Q PikaTest.tmp
 	EXIT /b 1
 )
@@ -71,8 +71,8 @@ cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
 DEL PikaCmdSourceDistribution.zip
 CD SourceDistribution || GOTO error
 CALL BuildPikaCmd || GOTO error
-REM runas.exe /savecred /user:administrator /noprofile "CMD /K CD /D %TEMP%&&CD SourceDistribution&&InstallPika.bat C:\WINDOWS&&CD ..&&RMDIR /S /Q SourceDistribution" || GOTO error
-CALL InstallPika.bat C:\WINDOWS || GOTO error
+REM runas.exe /savecred /user:administrator /noprofile "CMD /K CD /D %TEMP%&&CD SourceDistribution&&InstallPika.cmd C:\WINDOWS&&CD ..&&RMDIR /S /Q SourceDistribution" || GOTO error
+CALL InstallPika.cmd C:\WINDOWS || GOTO error
 CD ..
 RMDIR /S /Q SourceDistribution
 ECHO SUCCESS!
