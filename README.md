@@ -9,11 +9,11 @@ This repository contains the language runtime, standard library, a command-line 
 src/       - C++ source code of the PikaScript interpreter and standard library
 PikaCmd/   - command-line tool sources, build scripts, installation helpers
 lab/       - assorted PikaScript samples and experiments
-dox/       - generated documentation and helper scripts
+docs/      - generated documentation and helper scripts
 ```
 
 The main runtime implementation is in `src/PikaScript.cpp`/`PikaScript.h`.
-Examples and test scripts can be found in `lab/`, while `dox/` contains HTML documentation describing the standard library.
+Examples and test scripts can be found in `lab/`, while `docs/` contains HTML documentation describing the standard library.
 
 ## Building PikaCmd
 
@@ -82,7 +82,7 @@ exit                     exits
 
 ## Documentation
 
-HTML documentation for the standard library lives in `dox/help/`. Open `dox/help/index.html` to browse available functions and examples.
+HTML documentation for the standard library lives in `docs/help/`. Open `docs/help/index.html` to browse available functions and examples.
 
 ## License
 
