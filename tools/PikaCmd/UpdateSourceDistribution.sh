@@ -1,14 +1,11 @@
-#!/bin/bash
-
-cd "${0%/*}"
-
-chmod +x ./BuildPikaCmd.sh >/dev/null 2>&1
+#!/usr/bin/env bash
+set -e -o pipefail -u
+cd "$(dirname "$0")"
 
 if [ -e ./PikaCmd ]; then
-	chmod +x ./PikaCmd >/dev/null 2>&1
+        :
 else
-	chmod +x ./BuildCpp.sh >/dev/null 2>&1
-	./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../src/*.cpp
+        bash ./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../src/*.cpp
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
@@ -34,7 +31,7 @@ if [ $? -ne 0 ]; then
 fi
 
 rm -f ./PikaCmd
-./BuildPikaCmd.sh
+bash ./BuildPikaCmd.sh
 if [ $? -ne 0 ]; then
 	exit 1
 fi

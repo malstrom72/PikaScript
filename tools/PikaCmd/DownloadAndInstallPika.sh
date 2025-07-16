@@ -1,6 +1,5 @@
-#!/bin/sh
-
-set -e
+#!/usr/bin/env bash
+set -e -o pipefail -u
 
 if [ -z "${TMPDIR}" ]; then
 	TMPDIR="/tmp/"
@@ -14,8 +13,8 @@ rm -rf "SourceDistribution" || true
 tar -xzf "../PikaCmdSourceDistribution.tar.gz"
 rm -f PikaCmdSourceDistribution.tar.gz
 cd "SourceDistribution"
-sh BuildPikaCmd.sh
-sh InstallPika.sh
+bash BuildPikaCmd.sh
+bash InstallPika.sh
 cd ..
 rm -rf "SourceDistribution"
 echo SUCCESS

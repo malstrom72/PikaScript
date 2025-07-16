@@ -25,13 +25,13 @@ The easiest way to build the command-line tool is to run the provided build scri
 
 ```bash
 cd tools/PikaCmd/SourceDistribution
-./BuildPikaCmd.sh       # builds PikaCmd and runs unit tests
+bash BuildPikaCmd.sh       # builds PikaCmd and runs unit tests
 ```
 
 `BuildPikaCmd.sh` calls `BuildCpp.sh` internally to compile `PikaCmdAmalgam.cpp` and execute available unit tests. The relevant lines show the build step and tests:
 
 ```
-6  ./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmdAmalgam.cpp
+6  bash BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmdAmalgam.cpp
 10 echo Testing...
 12 ./PikaCmd unittests.pika >/dev/null
 18 if [ -e ./systoolsTests.pika ]; then
