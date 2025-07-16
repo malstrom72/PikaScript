@@ -140,4 +140,4 @@ Third attempt   :   wooh, we are getting close now
 Fourth attempt  :   oh no, back to square 1
 
 
-    // run('lab/htmlify.pika'); save('lab/test.html', htmlify(load('lab/test.txt')))
+    // run('examples/htmlify.pika'); save('examples/test.html', htmlify(load('examples/test.txt')))

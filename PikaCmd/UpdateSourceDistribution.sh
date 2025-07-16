@@ -27,7 +27,7 @@ if [ $? -ne 0 ]; then
 fi
 
 cd SourceDistribution
-cp -f ../../src/unittests.pika . && cp -f ../systools.pika . && cp -f ../systoolsTests.pika .
+cp -f ../../tests/unittests.pika . && cp -f ../systools.pika . && cp -f ../systoolsTests.pika .
 if [ $? -ne 0 ]; then
 	echo Failed copying files
 	exit 1

@@ -7,7 +7,7 @@ YEAR            :   2008
 STRENGTHS       :   Tiny, only standard C++, multi-threadable (out of the box), easy to integrate
 WEAKNESSES      :   Slow (100% interpreting), no heap = no automatic garbage collection on references
 USED            :   not yet
-SVN             :   svn://svn.elysian.se:7404/NuEdgeSVN/lab/trunk/ScriptLab/PikaScript
+SVN             :   svn://svn.elysian.se:7404/NuEdgeSVN/examples/trunk/ScriptLab/PikaScript
 DOXYGEN         :   http://www.nuedge.net/doxygen/PikaScript
 LIBRARY HELP    :   http://www.nuedge.net/doxygen/PikaScript/Library
 

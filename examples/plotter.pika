@@ -1,6 +1,6 @@
 #! /usr/local/bin/PikaCmd
 
-run('lab/parsing.pika');
+run('examples/parsing.pika');
 
 VERTICAL_TICK_MARKS = 4;
 HORIZONTAL_TICK_MARKS = 4;
@@ -113,7 +113,7 @@ plot = function {
 			} else bg);
 			
 	Doesn't look good to weigh this simply. Would be better to match min/max with bottom/top of different chars like:
-	_.=-"`¨ and so on...
+	_.=-"`Â¨ and so on...
 */
 
 generate = function {
@@ -215,7 +215,7 @@ secant = function {
 	precision(x1, 13);
 };
 
-// simpsons is a 2nd degree Newton–Cotes numerical integration algorithm, https://en.wikipedia.org/wiki/Simpson%27s_rule
+// simpsons is a 2nd degree Newtonâ€“Cotes numerical integration algorithm, https://en.wikipedia.org/wiki/Simpson%27s_rule
 simpsons = function {
 	args(@fn, @x0, @x1, @n);
 	h = (x1 - x0) / n;
