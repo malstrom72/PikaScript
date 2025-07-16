@@ -3,6 +3,10 @@
 PikaScript is a minimal interpreted scripting language implemented in C++.
 This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation.
 
+## History
+
+PikaScript grew out of experiments to create the tiniest possible scripting language. The first prototype, *PicoScript*, was written in just a few days and represented all values as strings. It soon evolved into *PikoScript*, which added a variant type and a rudimentary frame system for references. Complexity crept in, so the code was simplified again as *YoctoScript* by dropping local frames and limiting everything to globals. Ultimately the useful ideas from each iteration were combined, yielding today's PikaScript with unique frame identifiers and enough structure to implement features like `foreach` while remaining lightweight.
+
 ## Repository Layout
 
 ```
