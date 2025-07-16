@@ -1,5 +1,6 @@
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+CD /D "%~dp0"
 
 IF NOT EXIST PikaCmd.exe (
 	CALL BuildCpp PikaCmd.exe -DPLATFORM_STRING=WINDOWS PikaCmd.cpp BuiltIns.cpp ..\src\*.cpp
