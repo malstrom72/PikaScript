@@ -5,7 +5,7 @@ This repository contains the language runtime, standard library, a command-line 
 
 ## History
 
-PikaScript grew out of experiments to create the tiniest possible scripting language. The first prototype, *PicoScript*, was written in just a few days and represented all values as strings. It soon evolved into *PikoScript*, which added a variant type and a rudimentary frame system for references. Complexity crept in, so the code was simplified again as *YoctoScript* by dropping local frames and limiting everything to globals. Ultimately the useful ideas from each iteration were combined, yielding today's PikaScript with unique frame identifiers and enough structure to implement features like `foreach` while remaining lightweight.
+PikaScript began as a tiny scripting experiment and has hardly changed since 2008. It is now something of a legacy technology, but it remains very stable and is still maintained and used at Sonic Charge. See [docs/PikaScript History.txt](docs/PikaScript%20History.txt) for more background.
 
 ## Repository Layout
 
