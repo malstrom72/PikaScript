@@ -1,0 +1,9 @@
+include('stdlib.pika');
+run('tools/initPPEG.pika');
+
+success = ppeg.compileFunction(src=load('tests/digits.ppeg'), @parseDigits);
+if (!success) throw('compile failed');
+
+assert(> parseDigits('12345'));
+assert(> !parseDigits('12a45'));
+print('OK!');

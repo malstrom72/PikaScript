@@ -7,14 +7,14 @@ SET CPP_TARGET=beta
 DEL /Q PikaCmd.exe 2>NUL
 CALL BuildPikaCmd.cmd
 IF ERRORLEVEL 1 GOTO error
-.\PikaCmd ..\..\tools\ppeg\ppegTest.pika
+.\PikaCmd ..\..\tests\ppegTest.pika
 IF ERRORLEVEL 1 GOTO error
 
 DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release
 CALL BuildPikaCmd.cmd
 IF ERRORLEVEL 1 GOTO error
-.\PikaCmd ..\..\tools\ppeg\ppegTest.pika
+.\PikaCmd ..\..\tests\ppegTest.pika
 IF ERRORLEVEL 1 GOTO error
 
 POPD
