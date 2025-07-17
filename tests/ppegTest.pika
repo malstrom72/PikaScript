@@ -1,0 +1,46 @@
+include('stdlib.pika');
+run('tools/ppeg/initPPEG.pika');
+
+PPEG = function {
+        this = this();
+        [this].source = $0;
+        [this].parse = function { vargs(@source, , @dd, @rule); defaults(@dd, @o, @rule, 'root'); ppeg.parse(@[this()].grammar, source, dd, rule) };
+        [this].trace = function { vargs(@source, , @dd, @rule); defaults(@dd, @o, @rule, 'root'); ppeg.trace(g = @[this()].grammar); ppeg.parse(g, source, dd, rule); trace() };
+        [this].clone = function { construct($0, PPEG, [this()].source) };
+        ppeg.compile(@[this].grammar, [this].source)
+};
+
+digitsFile = 'examples/digits.ppeg';
+
+testDigits = function {
+        success = ppeg.compileFunction(src=load(digitsFile), @parseDigits);
+        if (!success) throw('compile failed');
+        assert(> parseDigits('12345'));
+        assert(> !parseDigits('12a45'));
+};
+
+testDigits();
+
+// self-compile the PPEG compiler
+oldSource = newSource = load('examples/ppegGlobal.ppeg');
+construct(@test1, PPEG, oldSource);
+test1.grammar.$compileTo = @test2;
+test1.parse(newSource);
+prune(@test1);
+test2.$compileTo = @::ppeg;
+ppeg.parse(@test2, newSource);
+delete(@::ppeg.$compileTo);
+delete(@::ppeg.$target);
+
+localSource = load('examples/ppegLocal.ppeg');
+construct(@test1, PPEG, localSource);
+test1.grammar.$compileTo = @test2;
+newParser = test1.parse(localSource);
+prune(@test1);
+newParser(localSource, @regened);
+if (regened !== newParser) throw('Regenerated parser is not identical');
+::ppeg.compileFunction = regened;
+
+testDigits();
+print('OK!');
+
