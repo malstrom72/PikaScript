@@ -80,3 +80,14 @@ EXIT /b 0
 :error
 EXIT /b %ERRORLEVEL%
 ```
+
+## Generated source files
+
+Some files in the repository are produced by helper scripts and should not be edited manually.
+
+- `tools/PikaCmd/BuiltIns.cpp` is created by running `tools/PikaCmd/UpdateBuiltIns.pika` with `PikaCmd`.
+- `tools/PikaCmd/SourceDistribution/PikaCmdAmalgam.cpp` results from concatenating sources using `tools/PikaCmd/UpdateSourceDistribution.sh`.
+- `docs/PikaScript Documentation.html` is generated from `PikaScript Documentation.txt` via `docs/UpdateHtmlDox.pika`.
+
+Regenerate these files using the scripts whenever their inputs change.
+

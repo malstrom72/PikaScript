@@ -597,7 +597,7 @@ const char* BUILT_IN_STDLIB =
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
-	"\tCopyright (c) 2009-2024, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
