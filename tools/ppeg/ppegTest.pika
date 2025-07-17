@@ -1,0 +1,7 @@
+include('stdlib.pika');
+SOURCE_ROOT = './tools/ppeg/';
+include(SOURCE_ROOT # 'parsing.pika');
+
+result = json.parse('{ "a": 1, "b": [true, false] }');
+assert(> result.a == 1);
+print('PPEG JSON parse successful');
