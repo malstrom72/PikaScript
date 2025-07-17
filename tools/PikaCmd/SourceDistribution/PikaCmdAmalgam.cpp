@@ -5,13 +5,13 @@
 	
 	\version
 	
-	Version 0.96
+	Version 0.95
 	
 	\page Copyright
 	
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2024, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -23,8 +23,6 @@
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
 	disclaimer in the documentation and/or other materials provided with the distribution. 
 	
-	Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote
-	products derived from this software without specific prior written permission.
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -59,10 +57,10 @@ namespace Pika {
 
 #if (PIKA_UNICODE)
 	#define STR(s) L##s
-	#define PIKA_SCRIPT_VERSION L"0.96"
+	#define PIKA_SCRIPT_VERSION L"0.95"
 #else
 	#define STR(x) x
-	#define PIKA_SCRIPT_VERSION "0.96"
+	#define PIKA_SCRIPT_VERSION "0.95"
 #endif
 
 typedef unsigned char uchar;
@@ -600,13 +598,13 @@ typedef Script<StdConfig> StdScript;
 	                                                                           
 	\version
 	
-	Version 0.96
+	Version 0.95
 	
 	\page Copyright
 	
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2024, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -618,8 +616,6 @@ typedef Script<StdConfig> StdScript;
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
 	disclaimer in the documentation and/or other materials provided with the distribution. 
 	
-	Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote
-	products derived from this software without specific prior written permission.
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -664,10 +660,8 @@ template<typename T> inline T maxi(T a, T b) { return (a < b) ? b : a; }
 
 /* --- Utility Routines --- */
 
-inline ushort ushortChar(char c) { return static_cast<uchar>(c); }
-inline ushort ushortChar(wchar_t c) { return static_cast<ushort>(c); }
-inline ulong ulongChar(char c) { return static_cast<uchar>(c); }
-inline ulong ulongChar(wchar_t c) { return static_cast<ulong>(c); }
+inline ushort ushortChar(char c) { return uchar(c); }
+inline ushort ushortChar(wchar_t c) { return ushort(c); }
 template<class C> std::basic_ostream<C>& xcout();
 template<class C> std::basic_istream<C>& xcin();
 template<> inline std::basic_ostream<char>& xcout() { return std::cout; }
@@ -803,11 +797,10 @@ template<class S> S unescape(typename S::const_iterator& p, const typename S::co
 		if (*p == '\\' && e - p > 1) {
 			d += S(b, p);
 			const CHAR* f = std::find(ESCAPE_CHARS, ESCAPE_CHARS + ESCAPE_CODE_COUNT, *++p);
-			ulong l;
+			long l;
 			if (f != ESCAPE_CHARS + ESCAPE_CODE_COUNT) { ++p; l = ESCAPE_CODES[f - ESCAPE_CHARS]; }
 			else if (*p == 'x') { b = ++p; l = hexToLong<S>(p, (e - p > 2 ? p + 2 : e)); }
 			else if (*p == 'u') { b = ++p; l = hexToLong<S>(p, (e - p > 4 ? p + 4 : e)); }
-			else if (*p == 'U') { b = ++p; l = hexToLong<S>(p, (e - p > 8 ? p + 8 : e)); }
 			else { b = p; l = stringToLong<S>(p, e); }
 			if (p == b) throw Exception<S>(STR("Invalid escape character"));
 			b = p;
@@ -836,8 +829,7 @@ template<class S> S escape(const S& s) {
 		const CHAR* f = std::find(ESCAPE_CODES, ESCAPE_CODES + ESCAPE_CODE_COUNT, *b);
 		if (f != ESCAPE_CODES + ESCAPE_CODE_COUNT) (d += '\\') += ESCAPE_CHARS[f - ESCAPE_CODES];
 		else if (uchar(*b) == ushortChar(*b)) (d += STR("\\x")) += intToString<S>(uchar(*b), 16, 2);
-		else if (ushortChar(*b) == ulongChar(*b)) (d += STR("\\u")) += intToString<S>(ushortChar(*b), 16, 4);
-		else (d += STR("\\U")) += intToString<S>(ulongChar(*b), 16, 8);
+		else (d += STR("\\u")) += intToString<S>(ushortChar(*b), 16, 4);
 		l = ++b;
 	}
 	return (d += '\"');
@@ -1699,7 +1691,7 @@ TMPL Script<CFG>::Variables::~Variables() { }
 	
 	\page Copyright
 	
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
 	Copyright (c) 2009-2013, NuEdge Development
 	All rights reserved.
@@ -1713,8 +1705,6 @@ TMPL Script<CFG>::Variables::~Variables() { }
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
 	disclaimer in the documentation and/or other materials provided with the distribution. 
 	
-	Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote
-	products derived from this software without specific prior written permission.
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -2095,7 +2085,7 @@ bool unitTest();
 		
 	\page Copyright
 
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
 	Copyright (c) 2009-2013, NuEdge Development
 	All rights reserved.
@@ -2109,8 +2099,6 @@ bool unitTest();
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
 	disclaimer in the documentation and/or other materials provided with the distribution. 
 	
-	Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote
-	products derived from this software without specific prior written permission.
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -2193,13 +2181,13 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	
 	\version
 	
-	Version 0.96
+	Version 0.95
 	
 	\page Copyright
 	
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2024, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -3477,7 +3465,7 @@ int main(int argc, const char* argv[]) {
 	std::srand(static_cast<unsigned int>(std::time(0)) ^ static_cast<unsigned int>(std::clock()));
 	rand();
 	if (argc < 2)
-		std::cout << "PikaCmd version " << PIKA_SCRIPT_VERSION << ". (C) 2010-2019 NuEdge Development. "
+		std::cout << "PikaCmd version " << PIKA_SCRIPT_VERSION << ". (C) 2010-2024 NuEdge Development. "
 				"All rights reserved." << std::endl << "Run PikaCmd -h for command-line argument syntax."
 				<< std::endl << std::endl;
 	try {
