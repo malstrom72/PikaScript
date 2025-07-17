@@ -84,6 +84,13 @@ The interactive environment provides several special commands:
 exit                     exits
 ```
 
+## PPEG Parser Generator
+
+PPEG is a self-hosting parser generator used to build the PikaScript parser.
+All PPEG related files live under `tools/ppeg` and the folder contains both a
+global and a local compiler variant. For details on how they differ and how to
+run them, see [docs/PPEG Documentation.txt](docs/PPEG%20Documentation.txt).
+
 ## Documentation
 
 HTML documentation for the standard library lives in `docs/help/`. Open `docs/help/index.html` to browse available functions and examples.

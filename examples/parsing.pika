@@ -865,7 +865,7 @@ numbStruckTest = '{
    }';
 
 updatePPEGCompilers = function {
-	oldSource = newSource = load(SOURCE_ROOT # 'ppegGlobal.ppeg');
+    oldSource = newSource = load(run.root # '../tools/ppeg/ppegGlobal.ppeg');
 
 	construct(@test1, PPEG, oldSource);
 	print("Successfully compiled source (syntax is alright)");
@@ -879,7 +879,7 @@ updatePPEGCompilers = function {
 	delete(@::ppeg.$compileTo);
 	delete(@::ppeg.$target);
 	
-	localSource = load(SOURCE_ROOT # 'ppegLocal.ppeg');
+    localSource = load(run.root # '../tools/ppeg/ppegLocal.ppeg');
 	construct(@test1, PPEG, localSource);
 	print('Successfully compiled source for "local" version (syntax is alright)');
 	test1.grammar.$compileTo = @test2;
@@ -891,7 +891,7 @@ updatePPEGCompilers = function {
 	print("Successfully compiled itself twice (can regenerate)");
 	::ppeg.compileFunction = regened;
 	
-	save(SOURCE_ROOT # 'initPPEG.pika', sourceFor(@::ppeg));
+    save(run.root # '../tools/ppeg/initPPEG.pika', sourceFor(@::ppeg));
 	print("initPPEG.pika replaced");
 };
 

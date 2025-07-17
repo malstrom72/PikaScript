@@ -2,7 +2,7 @@ include('systools.pika');
 include('stdlib.pika');
 include('ppeg.pika');
 
-SRC_ROOT = run.root # '../../examples/';
+SRC_ROOT = run.root # './';
 
 oldSource = newSource = load(SRC_ROOT # 'ppegGlobal.ppeg');
 construct(@test1, PPEG, oldSource);
