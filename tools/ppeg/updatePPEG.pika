@@ -1,5 +1,5 @@
 include('stdlib.pika');
-run('tools/initPPEG.pika');
+run('tools/ppeg/initPPEG.pika');
 
 SRC_ROOT = 'examples/';
 
@@ -28,6 +28,6 @@ if (regened !== newParser) throw('Regenerated parser is not identical');
 print('Successfully compiled itself twice (can regenerate)');
 ::ppeg.compileFunction = regened;
 
-save('tools/initPPEG.pika', sourceFor(@::ppeg));
+save('tools/ppeg/initPPEG.pika', sourceFor(@::ppeg));
 print('initPPEG.pika replaced');
 

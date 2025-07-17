@@ -1,5 +1,5 @@
 include('stdlib.pika');
-run('tools/initPPEG.pika');
+run('tools/ppeg/initPPEG.pika');
 
 PPEG = function {
         this = this();
