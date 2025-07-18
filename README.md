@@ -46,6 +46,10 @@ After building, `PikaCmd` can be installed system-wide using `InstallPika.sh`, w
 18 sudo cp systools.pika /usr/local/bin/
 ```
 
+For a detailed overview of `PikaCmd`, the helper script `systools.pika` and how
+to write portable build scripts, see
+[docs/PikaCmd Documentation.txt](docs/PikaCmd%20Documentation.txt).
+
 The file `DownloadAndInstallReadMe.txt` also provides one-line boot-strap commands for Windows or Unix systems to download and install PikaScript:
 
 ```
