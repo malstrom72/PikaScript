@@ -1,0 +1,45 @@
+htmlify
+#######
+
+What is htmlify?
+================
+
+ htmlify is a lightweight text to HTML converter implemented in PikaScript. It takes plain
+ text formatted with a minimal markup language and outputs corresponding HTML. The script is
+ mainly used to convert the documentation in this repository from `.txt` sources into the
+ `docs/help` HTML pages and `PikaScript Documentation.html`.
+
+Markup Syntax
+-------------
+
+ The converter recognizes a small set of conventions:
+
+ -  Lines consisting solely of `#`, `=` or `-` create headers `<h1>`, `<h2>` and `<h3>`.
+ -  `*bold*`, `/italic/` and `_underline_` produce `<b>`, `<i>` and `<u>` respectively.
+ -  Backtick quoted sections ``code`` become `<tt>` blocks.
+ -  `name.txt` and `name.html` are turned into links to `name.html`.
+ -  Lists start with `*`, `-` or digits followed by `.` and may be nested using indentation.
+ -  Tables are created by aligning columns with two spaces or more.
+ -  `==========` inserts a horizontal rule.
+
+ Any text that does not match a special pattern is HTML escaped to ensure valid output.
+
+Example Usage
+-------------
+
+ To convert a document you load `htmlify.pika` and call the `htmlify` function with the
+ text to process. Below is the minimal command used by this project to generate the main
+ documentation:
+
+     include('docs/htmlify.pika');
+     src = load('docs/PikaScript Documentation.txt');
+     html = htmlify(src);
+     save('docs/PikaScript Documentation.html', html);
+
+Known Limitations
+-----------------
+
+ -  Trailing spaces may affect formatting, particularly inside preformatted blocks.
+ -  The implementation is tuned for this repository and may require adjustments for other
+    input conventions.
+
