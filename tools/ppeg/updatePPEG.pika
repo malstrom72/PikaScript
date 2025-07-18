@@ -29,6 +29,7 @@ if (regened !== newParser) throw('Regenerated parser is not identical');
 print('Successfully compiled itself twice (can regenerate)');
 ::ppeg.compileFunction = regened;
 
+delete(@::ppeg.$compileTo);
+delete(@::ppeg.$target);
 save(run.root # 'initPPEG.pika', sourceFor(@::ppeg));
 print('initPPEG.pika replaced');
-

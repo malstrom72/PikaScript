@@ -12,6 +12,8 @@
 	 - output table of contents so you can paste it into your source text file
 */
 
+include('stdlib.pika');
+
 prune(@::HTML_XLATE_PAIRS);
 prune(@::HEADERS);
 prune(@::STD_PATTERNS);
