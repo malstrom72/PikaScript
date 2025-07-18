@@ -31,10 +31,15 @@ Example Usage
  text to process. Below is the minimal command used by this project to generate the main
  documentation:
 
-     include('docs/htmlify.pika');
+     include('tools/htmlify.pika');
      src = load('docs/PikaScript Documentation.txt');
      html = htmlify(src);
      save('docs/PikaScript Documentation.html', html);
+
+ A helper script `tools/htmlifyFile.pika` performs the same conversion from the command line. Pass the text file and optionally a CSS file:
+
+     PikaCmd tools/htmlifyFile.pika README.txt custom.css
+
 
 Known Limitations
 -----------------
