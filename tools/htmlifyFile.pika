@@ -4,14 +4,12 @@ include('stdlib.pika');
 include('systools.pika');
 include(run.root # 'htmlify.pika');
 
-args(@srcPath, @cssPath);
-
+vargs(@self, @srcPath, , @cssPath);
 if (srcPath === void) {
     print('Usage: htmlifyFile.pika <input.txt> [style.css]');
     exit(1);
-}
-
-if (cssPath === void) cssPath = run.root # 'docstyle.css';
+};
+defaults(@cssPath, run.root # '../docs/docstyle.css');
 
 css = load(cssPath);
 text = load(srcPath);
