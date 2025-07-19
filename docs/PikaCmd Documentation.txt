@@ -86,6 +86,15 @@ Command-line Usage
  the directory of `PikaCmd` for this file before using the built-in
  version which simply starts the interactive shell.
 
+Interactive Shell
+-----------------
+
+ Launching PikaCmd without arguments brings up a simple REPL implemented
+ by `interactive.pika`. Each line is evaluated immediately. End a line
+ with an opening `{` to start a multi-line block and finish it with a
+ single `}`. The variable `_` holds the result of the last evaluation.
+ Use `?` for help, `%` to run scripts and `exit` to quit.
+
       PikaCmd [ -h | <filename> [<arguments> ...] | '{' <code> '}' ]
 
  The command line arguments following `<filename>` become available as
@@ -114,6 +123,16 @@ Parsing Command-line Parameters
 
  Running `PikaCmd echo.pika Hello 3` prints `Hello` three times. Using
  `args()` instead would require exactly the specified parameters.
+
+Setting Defaults
+----------------
+
+ Use the standard `defaults()` function to assign fallback values only
+ when variables do not yet exist. This is handy after `vargs()` to
+ initialize optional parameters or to set globals once.
+
+      vargs(@file, , @mode);
+      defaults(@mode, 'r');
 
 Exceptions and Return Code
 --------------------------
