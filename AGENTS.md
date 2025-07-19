@@ -87,7 +87,7 @@ Some files in the repository are produced by helper scripts and should not be ed
 
 - `tools/PikaCmd/BuiltIns.cpp` is created by running `tools/PikaCmd/UpdateBuiltIns.pika` with `PikaCmd`.
 - `tools/PikaCmd/SourceDistribution/PikaCmdAmalgam.cpp` results from concatenating sources using `tools/PikaCmd/UpdateSourceDistribution.sh`.
-- `docs/PikaScript Documentation.html` is generated from `PikaScript Documentation.txt` via `docs/UpdateHtmlDox.pika`.
+- `docs/PikaScript Documentation.html` is generated from `PikaScript Documentation.txt` via `tools/UpdateHtmlDox.pika`.
 
 Regenerate these files using the scripts whenever their inputs change.
 

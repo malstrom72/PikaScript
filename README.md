@@ -88,6 +88,19 @@ The interactive environment provides several special commands:
 exit                     exits
 ```
 
+## Debugging
+
+To enable assertions and debugging helpers, include the built-in `debug.pika` script at the start of your
+program:
+
+```pika
+include('debug.pika');
+```
+
+This installs a tracer that prints error offsets and a short call stack whenever an exception is caught.
+It also defines the `debug()` function for step-by-step execution and exposes `trace()` helpers for more
+verbose output.
+
 ## PPEG Parser Generator
 
 PPEG is a self-hosting parser generator used to build the PikaScript parser.

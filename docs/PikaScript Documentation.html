@@ -339,7 +339,20 @@ under <tt>a</tt>.</p>
 <pre>[[new(Point, 7, 6)].subtract(new(Point, 3, 5))].print();<br></pre>
 <p>Finally, the standard library function gc() iterates all variables "on the heap" (that is variables with numerical names) and deletes any object that is "unreachable" through other references. It deletes the object by calling 'destruct' which first invokes any 'destruct' member of the object and then "prunes" it.</p>
 <h2><a name="C++_Interface">C++ Interface</a></h2>
-<p><font color="red">?? To be written. Include info on custom string class etc, qstrings, quickvars, how to sandbox, object interfacing ??</font></p>
+<p>PikaScript is entirely implemented in C++ and exposes a small template API. <br>
+The interpreter is defined by <tt>Pika::Script</tt>, parameterised by a configuration <br>
+struct that specifies which string type and variable container to use. The <br>
+typedef <tt>StdScript</tt> selects the reference implementation based on <br>
+<tt>std::string</tt> and the simple <tt>STLVariables</tt> storage.</p>
+<p>For better performance you may combine the interpreter with the fast <br>
+<tt>QString</tt> class from <tt>QStrings.h</tt> and the <tt>QuickVars</tt> variable cache. These <br>
+replacements trade memory for speed and are drop in compatible. <br>
+<tt>QString</tt> relies on a shared memory pool and is not thread-safe, so it must only be used from one thread at a time.</p>
+<p>Host applications create a <tt>FullRoot</tt> instance and can register custom <br>
+functions by deriving from <tt>Script::Native</tt> and calling <tt>assignNative</tt>. You can <br>
+also supply your own <tt>Variables</tt> subclass to sandbox execution or share globals <br>
+between multiple interpreters. See the generated C++ API reference for <br>
+details.</p>
 <h2><a name="Standard_Native_Functions">Standard Native Functions</a></h2>
 <p>Here is a list of standard library functions that have native implementations. These are declared by the <tt>addLibraryNatives</tt> C++ function which means they are available without having to run / include <tt>stdlib.pika</tt>. Naturally they also execute much much faster than functions written in PikaScript. Please see the PikaScript Standard Library Reference (<a href="help/index.html">help/index</a>) for full documentation on all standard library functions.</p>
 <p><tt>abs</tt>, <tt>acos</tt>, <tt>asin</tt>, <tt>atan</tt>, <tt>atan2</tt>, <tt>ceil</tt>, <tt>char</tt>, <tt>cos</tt>, <tt>cosh</tt>, <tt>delete</tt>, <tt>escape</tt>, <tt>exists</tt>, <tt>elevate</tt>, <tt>evaluate</tt>, <tt>exp</tt>, <tt>find</tt>, <tt>floor</tt>, <tt>foreach</tt>, <tt>input</tt>*, <tt>invoke</tt>, <tt>length</tt>, <tt>log</tt>, <tt>log10</tt>, <tt>load</tt>*, <tt>lower</tt>, <tt>mismatch</tt>, <tt>ordinal</tt>, <tt>pow</tt>, <tt>parse</tt>, <tt>precision</tt>, <tt>print</tt>*, <tt>radix</tt>, <tt>random</tt>, <tt>reverse</tt>, <tt>sin</tt>, <tt>sinh</tt>, <tt>save</tt>*, <tt>search</tt>, <tt>span</tt>, <tt>sqrt</tt>, <tt>system</tt>*, <tt>tan</tt>, <tt>tanh</tt>, <tt>time</tt>, <tt>throw</tt>, <tt>trace</tt>, <tt>try</tt>, <tt>upper</tt></p>
@@ -355,7 +368,7 @@ under <tt>a</tt>.</p>
 <h2><a name="Copyrights_and_Trademarks">Copyrights and Trademarks</a></h2>
 <p>PikaScript is released under the "New Simplified BSD License". <br>
 <a href="http://www.opensource.org/licenses/bsd-license.php">http://www.opensource.org/licenses/bsd-license.php</a></p>
-<p>Copyright (c) 2011-2014, NuEdge Development / Magnus Lidstr&ouml;m <br>
+<p>Copyright (c) 2011-2014, NuEdge Development / Magnus Lidstrm <br>
 All rights reserved.</p>
 
 <ul>

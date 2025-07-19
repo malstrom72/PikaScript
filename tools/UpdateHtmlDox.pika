@@ -1,9 +1,10 @@
 #! /usr/local/bin/PikaCmd
 
 include('stdlib.pika');
-include(run.root # '../tools/htmlify.pika');
+include('systools.pika');
+include(run.root # 'htmlify.pika');
 
-css = replace(load('docstyle.css'), "\r\n\t", '', find, 1);
+css = replace(load(run.root # 'docstyle.css'), "\r\n\t", '', find, 1);
 head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
@@ -26,5 +27,6 @@ tail = '
 map(@::STD_PATTERNS, "[?][?]{*}[?][?]" # STD_PATTERN_SUFFIX, '<font color="red">??{$1}??</font>');
 map(@::STD_PATTERNS, "=== {*} ===" # STD_PATTERN_SUFFIX, '<b>{$1}</b>');
 map(@::HTML_XLATE_PAIRS, 'å', '&aring;', 'ä', '&auml;', 'ö', '&ouml;', 'Å', '&Aring;', 'Ä', '&Auml;', 'Ö', '&Ouml;');
-save('PikaScript Documentation.html', head # htmlify(load('PikaScript Documentation.txt')) # tail);
+save(run.root # '../docs/PikaScript Documentation.html',
+     head # htmlify(load(run.root # '../docs/PikaScript Documentation.txt')) # tail);
 print(LF # '***** DONE *****' # LF);
