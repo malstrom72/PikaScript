@@ -8,9 +8,8 @@ vargs(@self, @srcPath, , @cssPath);
 if (srcPath === void) {
     print('Usage: htmlifyFile.pika <input.txt> [style.css]');
     exit(1);
-}
-
-if (cssPath === void) cssPath = run.root # '../docs/docstyle.css';
+};
+defaults(@cssPath, run.root # '../docs/docstyle.css');
 
 css = load(cssPath);
 text = load(srcPath);
