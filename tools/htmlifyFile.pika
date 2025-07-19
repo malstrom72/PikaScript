@@ -11,7 +11,7 @@ if (srcPath === void) {
     exit(1);
 }
 
-if (cssPath === void) cssPath = run.root # '../docs/docstyle.css';
+if (cssPath === void) cssPath = run.root # 'docstyle.css';
 
 css = load(cssPath);
 text = load(srcPath);

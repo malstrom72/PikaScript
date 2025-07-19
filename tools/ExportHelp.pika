@@ -1,10 +1,11 @@
 #! /usr/local/bin/PikaCmd
 
-DICTIONARY_PATH = 'dictionary.txt';
-OUTPUT_PATH = 'help/';
-
 include('stdlib.pika');
+include('systools.pika');
 include('debug.pika');
+
+DICTIONARY_PATH = run.root # '../docs/dictionary.txt';
+OUTPUT_PATH = run.root # '../docs/help/';
 include('help.pika');
 
 foreach(@::, >{
