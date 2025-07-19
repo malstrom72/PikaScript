@@ -4,14 +4,14 @@ include('stdlib.pika');
 include('systools.pika');
 include('htmlify.pika');
 
-vargs(@script, @srcPath, , @cssPath);
+args(@srcPath, @cssPath);
 
 if (srcPath === void) {
     print('Usage: htmlifyFile.pika <input.txt> [style.css]');
     exit(1);
 }
 
-if (!exists(@cssPath)) cssPath = run.root # '../docs/docstyle.css';
+if (cssPath === void) cssPath = run.root # '../docs/docstyle.css';
 
 css = load(cssPath);
 text = load(srcPath);
@@ -33,4 +33,3 @@ outPath = (if ((i = rfind(srcPath, '.')) >= 0) srcPath{:i} else srcPath) # '.htm
 
 save(outPath, html);
 print('Saved ' # outPath);
-
