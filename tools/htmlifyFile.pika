@@ -4,33 +4,32 @@ include('stdlib.pika');
 include('systools.pika');
 include(run.root # 'htmlify.pika');
 
-main = function {
-    vargs(@srcPath, @cssPath);
-    if (srcPath === void || cssPath === void) {
-        print('Usage: htmlifyFile.pika <input.txt> <style.css>');
-        exit(1);
-    }
+vargs(@self, @srcPath, , @cssPath);
+if (srcPath === void) {
+    print('Usage: htmlifyFile.pika <input.txt> [style.css]');
+    exit(1);
+}
 
-    css = load(cssPath);
-    text = load(srcPath);
+if (cssPath === void) cssPath = run.root # '../docs/docstyle.css';
 
-    head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">' # LF #
-    '<html>' # LF #
-    '  <head>' # LF #
-    '    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">' # LF #
-    '    <meta http-equiv="Content-Style-Type" content="text/css">' # LF #
-    '    <style type="text/css">' # LF # css # LF # '    </style>' # LF #
-    '  </head>' # LF #
-    '  <body>' # LF;
+css = load(cssPath);
+text = load(srcPath);
 
-    tail = '  </body>' # LF # '</html>' # LF;
+head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">' # LF #
+'<html>' # LF #
+'  <head>' # LF #
+'    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">' # LF #
+'    <meta http-equiv="Content-Style-Type" content="text/css">' # LF #
+'    <style type="text/css">' # LF # css # LF # '    </style>' # LF #
+'  </head>' # LF #
+'  <body>' # LF;
 
-    html = head # htmlify(text) # tail;
+tail = '  </body>' # LF # '</html>' # LF;
 
-    outPath = (if ((i = rfind(srcPath, '.')) >= 0) srcPath{:i} else srcPath) # '.html';
+html = head # htmlify(text) # tail;
 
-    save(outPath, html);
-    print('Saved ' # outPath);
-};
+outPath = (if ((i = rfind(srcPath, '.')) >= 0) srcPath{:i} else srcPath) # '.html';
 
-main($1, $2);
+save(outPath, html);
+print('Saved ' # outPath);
+
