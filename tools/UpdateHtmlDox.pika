@@ -26,7 +26,6 @@ tail = '
 ';
 map(@::STD_PATTERNS, "[?][?]{*}[?][?]" # STD_PATTERN_SUFFIX, '<font color="red">??{$1}??</font>');
 map(@::STD_PATTERNS, "=== {*} ===" # STD_PATTERN_SUFFIX, '<b>{$1}</b>');
-map(@::HTML_XLATE_PAIRS, 'å', '&aring;', 'ä', '&auml;', 'ö', '&ouml;', 'Å', '&Aring;', 'Ä', '&Auml;', 'Ö', '&Ouml;');
 save(run.root # '../docs/PikaScript Documentation.html',
      head # htmlify(load(run.root # '../docs/PikaScript Documentation.txt')) # tail);
 print(LF # '***** DONE *****' # LF);
