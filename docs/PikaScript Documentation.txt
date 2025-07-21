@@ -493,21 +493,21 @@ C++ Interface
 =============
 
  PikaScript is entirely implemented in C++ and exposes a small template API.
- The interpreter is defined by `Pika::Script`, parameterised by a configuration
- struct that specifies which string type and variable container to use. The
- typedef `StdScript` selects the reference implementation based on
- `std::string` and the simple `STLVariables` storage.
+The interpreter is defined by `Pika::Script`, parameterised by a configuration
+struct that specifies which string type and variable container to use. The
+typedef `StdScript` selects the reference implementation based on
+`std::string` and the simple `STLVariables` storage.
 
  For better performance you may combine the interpreter with the fast
- `QString` class from `QStrings.h` and the `QuickVars` variable cache. These
- replacements trade memory for speed and are drop in compatible.
- `QString` relies on a shared memory pool and is not thread-safe, so it must only be used from one thread at a time.
+`QString` class from `QStrings.h` and the `QuickVars` variable cache. These
+replacements trade memory for speed and are drop in compatible.
+`QString` relies on a shared memory pool and is not thread-safe, so it must only be used from one thread at a time.
 
  Host applications create a `FullRoot` instance and can register custom
- functions by deriving from `Script::Native` and calling `assignNative`. You can
- also supply your own `Variables` subclass to sandbox execution or share globals
- between multiple interpreters. See the generated C++ API reference for
- details.
+functions by deriving from `Script::Native` and calling `assignNative`. You can
+also supply your own `Variables` subclass to sandbox execution or share globals
+between multiple interpreters. See the generated C++ API reference for
+details.
 
 Standard Native Functions
 =========================
@@ -542,7 +542,7 @@ Copyrights and Trademarks
  PikaScript is released under the "New Simplified BSD License".
  http://www.opensource.org/licenses/bsd-license.php
 
- Copyright (c) 2011-2014, NuEdge Development / Magnus Lidström
+ Copyright (c) 2011-2025, NuEdge Development / Magnus Lidström
  All rights reserved.
 
  *)  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
