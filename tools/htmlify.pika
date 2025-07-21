@@ -232,7 +232,17 @@ map(@::STD_PATTERNS
        nextSectionEnd => {
                args(@txt, @lead);
                for (i = search(txt, "\n\n");
-                                i < length(txt) && lead >= 4 && span(txt{i + 2:}, ' ') >= 4;
+                                i < length(txt) && {
+                                       nextIndent = span(txt{i + 2:}, ' ');
+                                       prevLineStart = rsearch(txt{:i}, "\n");
+                                       if (prevLineStart < 0) prevLineStart = -1;
+                                       prevLine = txt{prevLineStart + 1:i - prevLineStart - 1};
+                                       prevIndent = span(prevLine, ' ');
+                                       bullet = wildmatch(prevLine{prevIndent:}, '[ ]*[0-9*]?*)[ ]*[^ ]?[]*')
+                                                         || wildmatch(prevLine{prevIndent:}, '[ ]*-[ ]?*[^ ]?[]*');
+                                       (lead >= 4 && nextIndent >= 4)
+                                               || (nextIndent >= 4 && (prevIndent >= 4 || bullet));
+                               };
                                 i += 1 + search(txt{i + 1:}, "\n\n")) {
                        if (i + 1 >= length(txt)) { i = length(txt); break }
                };
