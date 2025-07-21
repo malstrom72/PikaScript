@@ -229,6 +229,12 @@ map(@::STD_PATTERNS
        src = replace(src, "\r\n", "\n");
        src = expandTabs(src, 4);
 
+       // Search for the end of the current section.  Normally a blank line
+       // (two consecutive LFs) terminates a section.  However a blank line
+       // that precedes a continued indented block or bullet item should be
+       // included with the current section so that lists and <pre> blocks are
+       // preserved across blank lines.  The `lead` argument is the indentation
+       // level of the first line in the section being scanned.
        nextSectionEnd => {
                args(@txt, @lead);
                for (i = search(txt, "\n\n");
@@ -240,6 +246,12 @@ map(@::STD_PATTERNS
                                        prevIndent = span(prevLine, ' ');
                                        bullet = wildmatch(prevLine{prevIndent:}, '[ ]*[0-9*]?*)[ ]*[^ ]?[]*')
                                                          || wildmatch(prevLine{prevIndent:}, '[ ]*-[ ]?*[^ ]?[]*');
+                                       // Continue scanning past the blank line when
+                                       //   * the section started indented four or more
+                                       //     spaces and the next line is indented too, or
+                                       //   * the next line is indented four or more spaces
+                                       //     and the previous line was also indented or
+                                       //     was a list item marker.
                                        (lead >= 4 && nextIndent >= 4)
                                                || (nextIndent >= 4 && (prevIndent >= 4 || bullet));
                                };
