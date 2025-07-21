@@ -212,17 +212,23 @@ map(@::STD_PATTERNS
 					++lineIndex;
 				};
 				$spaces >= $d;
-			} else {
-				if ($spaces > $d) {
-					if ($l === '') { body #= $brk; $i =$d; } else {
-						if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
-						body #= format($l) # LF
-					};
-					$brk = '<br>';
-					++lineIndex;
-				};
-				$spaces > $d;
-			}
+                        } else {
+                                if ($spaces > $d) {
+                                        if ($l === '') { body #= $brk; $i = $d; }
+                                        else {
+                                                if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
+                                                body #= format($l) # LF
+                                        };
+                                        $brk = '<br>';
+                                        ++lineIndex;
+                                } else if ($l === '' && lineIndex + 1 < lines.n && span(lines[lineIndex + 1], ' ') >= $i + 1) {
+                                        body #= $brk;
+                                        ++lineIndex;
+                                        $spaces = span(lines[lineIndex], ' ');
+                                        $brk = '<br>';
+                                };
+                                $spaces > $d;
+                        }
 		}; )
 	};
 	
@@ -237,30 +243,31 @@ map(@::STD_PATTERNS
        // level of the first line in the section being scanned.
        nextSectionEnd => {
                args(@txt, @lead, @bLead);
-               for (i = search(txt, "\n\n");
-                                i < length(txt) && {
-                                       nextIndent = span(txt{i + 2:}, ' ');
-                                       prevLineStart = rsearch(txt{:i}, "\n");
-                                       if (prevLineStart < 0) prevLineStart = -1;
-                                       prevLine = txt{prevLineStart + 1:i - prevLineStart - 1};
-                                       prevIndent = span(prevLine, ' ');
-                                       bulletLine = wildmatch(prevLine{prevIndent:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @pLead, @rest)
+               pos = search(txt, "\n");
+               for (; pos >= 0 && pos < length(txt); ) {
+                       j = pos + 1;
+                       for (; j < length(txt) && txt{j} === ' '; ++j);
+                       if (j < length(txt) && txt{j} === "\n") {
+                               nextIndent = span(txt{j + 1:}, ' ');
+                               prevLineStart = rsearch(txt{:pos}, "\n");
+                               if (prevLineStart < 0) prevLineStart = -1;
+                               prevLine = txt{prevLineStart + 1:pos - prevLineStart - 1};
+                               prevIndent = span(prevLine, ' ');
+                               bulletLine = wildmatch(prevLine{prevIndent:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @pLead, @rest)
                                                          || wildmatch(prevLine{prevIndent:}, '{{-}[ ]?*}{[^ ]?[]*}', @pLead, @rest);
-                                       prevBullet = (if (bulletLine) prevIndent + length(pLead) + 1 else -1);
-                                       // Continue scanning past the blank line when
-                                       //   * the section started indented four spaces and the next line is indented too,
-                                       //   * the section started with a bullet and the next line is indented at least as far,
-                                       //   * the previous line was a bullet and the next line matches that indentation, or
-                                       //   * the previous line and next line are both indented four or more spaces.
-                                       (lead >= 4 && nextIndent >= 4)
-                                               || (bLead >= 0 && nextIndent >= bLead)
-                                               || (prevBullet >= 0 && nextIndent >= prevBullet)
-                                               || (nextIndent >= 4 && prevIndent >= 4);
-                               };
-                                i += 1 + search(txt{i + 1:}, "\n\n")) {
-                       if (i + 1 >= length(txt)) { i = length(txt); break }
+                               prevBullet = (if (bulletLine) prevIndent + length(pLead) + 1 else -1);
+                               if (!((lead >= 4 && nextIndent >= 4)
+                                       || (bLead >= 0 && nextIndent >= bLead)
+                                       || (prevBullet >= 0 && nextIndent >= prevBullet)
+                                       || (nextIndent >= 4 && prevIndent >= 4))) break;
+                               next = search(txt{j + 1:}, "\n");
+                               if (next === void) { pos = length(txt); break } else { pos = j + 1 + next };
+                       } else {
+                               next = search(txt{pos + 1:}, "\n");
+                               if (next === void) { pos = length(txt); break } else { pos = pos + 1 + next };
+                       };
                };
-               if (i >= length(txt)) length(txt) else i
+               if (pos >= length(txt) || pos === void) length(txt) else pos
        };
 	
 	body = '';
@@ -276,7 +283,8 @@ map(@::STD_PATTERNS
                first = xsrc{:firstEnd};
                bulletLead = -1;
                if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
-                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r)) bulletLead = leading + length(b) + 1;
+                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r))
+                       bulletLead = leading + rspan(b, ' ') + 2;
                section = xsrc{:i = nextSectionEnd(xsrc, leading, bulletLead)};
                xsrc = xsrc{i:};
                xsrc = xsrc{span(xsrc, "\n"):};
@@ -298,7 +306,8 @@ map(@::STD_PATTERNS
                first = src{:firstEnd};
                bulletLead = -1;
                if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
-                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r)) bulletLead = leading + length(b) + 1;
+                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r))
+                       bulletLead = leading + rspan(b, ' ') + 2;
                section = src{:i = nextSectionEnd(src, leading, bulletLead)};
                src = src{i:};
                src = src{span(src, "\n"):};

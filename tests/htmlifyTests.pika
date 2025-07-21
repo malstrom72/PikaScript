@@ -1,0 +1,21 @@
+include('stdlib.pika');
+include('systools.pika');
+include(run.root # '../tools/htmlify.pika');
+
+check = function {
+        args(@base);
+        text1 = load(run.root # bake('{base}_with_spaces.txt'));
+        text2 = load(run.root # bake('{base}_without_spaces.txt'));
+        golden = load(run.root # bake('golden/{base}.golden'));
+        html1 = htmlify(text1);
+        html2 = htmlify(text2);
+        assert(> html1 == html2, base # ' mismatch between with/without spaces');
+        assert(> html1 == golden, base # ' output no longer matches golden');
+};
+
+check('htmlifyBullet');
+check('htmlifyComplexBullet');
+check('htmlifyDashBullet');
+check('htmlifyIndent');
+
+print('OK!');
