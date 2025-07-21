@@ -49,18 +49,18 @@
 #include <iostream>
 #include <fstream>
 #if !defined(PikaScript_h)
-#include "../src/PikaScript.h"
+#include "../../src/PikaScript.h"
 #endif
 
 #if (QUICKER_SCRIPT)
 	#if !defined(QStrings_h)
-	#include "../src/QStrings.h"
+	#include "../../src/QStrings.h"
 	#endif
 	#if !defined(PikaScriptImpl_h)
-	#include "../src/PikaScriptImpl.h"
+	#include "../../src/PikaScriptImpl.h"
 	#endif
 	#if !defined(QuickVars_h)
-	#include "../src/QuickVars.h"
+	#include "../../src/QuickVars.h"
 	#endif
 
 	struct QuickerScriptConfig;

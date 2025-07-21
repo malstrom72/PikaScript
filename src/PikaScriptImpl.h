@@ -569,7 +569,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 	switch (p < e ? *p : 0) {
 		case 0:		return false;
 		case ' ': case '\t': case '\r': case '\n':
-					if (thres < DEFINITION) { Char c = *p; while (++p < e && *p == c); return true; } break;			// <-- white spaces
+					if (thres < DEFINITION) { Char c = *p; while (++p < e && *p == c) { } return true; } break;			// <-- white spaces
 		case '/':	if (thres < DEFINITION && e - p > 1 && (p[1] == '/' || p[1] == '*')) { white(p, e); return true; }	// <-- comment
 					return assignableOp(p, e, v, dry, thres, 1, MUL_DIV, std::divides<double>());						// <-- divide
 		case '+':	return addSubOp(p, e, v, dry, thres, std::plus<double>());											// <-- add

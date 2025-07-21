@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1620"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F74062DF10E989D40044ADBD"
+               BlueprintIdentifier = "F79BE9AA2E2E362800EC4BBE"
                BuildableName = "PikaCmd"
-               BlueprintName = "PikaCmd GCC Small x86"
+               BlueprintName = "PikaCmd"
                ReferencedContainer = "container:PikaCmd.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,7 +35,8 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
-      useCustomWorkingDirectory = "NO"
+      useCustomWorkingDirectory = "YES"
+      customWorkingDirectory = "/Users/magnus/git/PikaScript"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -45,21 +46,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F7E8546616B83B3D009B0B05"
-            BuildableName = "PikaCmd GCC 64-bit"
-            BlueprintName = "PikaCmd GCC 64-bit"
+            BlueprintIdentifier = "F79BE9AA2E2E362800EC4BBE"
+            BuildableName = "PikaCmd"
+            BlueprintName = "PikaCmd"
             ReferencedContainer = "container:PikaCmd.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F74062DF10E989D40044ADBD"
-            BuildableName = "PikaCmd"
-            BlueprintName = "PikaCmd GCC Small x86"
-            ReferencedContainer = "container:PikaCmd.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -71,9 +63,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F74062DF10E989D40044ADBD"
+            BlueprintIdentifier = "F79BE9AA2E2E362800EC4BBE"
             BuildableName = "PikaCmd"
-            BlueprintName = "PikaCmd GCC Small x86"
+            BlueprintName = "PikaCmd"
             ReferencedContainer = "container:PikaCmd.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

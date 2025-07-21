@@ -3,87 +3,42 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F74062E210E989D40044ADBD /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
-		F74062E310E989D40044ADBD /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
-		F74062E410E989D40044ADBD /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
-		F74062E510E989D40044ADBD /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
-		F7905AFE10C47FBF00FF4A18 /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
-		F7905B1010C47FD100FF4A18 /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
-		F7905B1310C47FD100FF4A18 /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
-		F7B2F97C10C48AD800CD08A4 /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
-		F7E8546916B83B3D009B0B05 /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */; };
-		F7E8546A16B83B3D009B0B05 /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0510C47FD100FF4A18 /* PikaScript.cpp */; };
-		F7E8546B16B83B3D009B0B05 /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7905B0810C47FD100FF4A18 /* QStrings.cpp */; };
-		F7E8546C16B83B3D009B0B05 /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */; };
+		F7CC25782E2E365900FAD996 /* QStrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CC25762E2E365900FAD996 /* QStrings.cpp */; };
+		F7CC25792E2E365900FAD996 /* PikaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CC25732E2E365900FAD996 /* PikaScript.cpp */; };
+		F7CC257C2E2E366E00FAD996 /* PikaCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CC257B2E2E366E00FAD996 /* PikaCmd.cpp */; };
+		F7CC257D2E2E366E00FAD996 /* BuiltIns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CC257A2E2E366E00FAD996 /* BuiltIns.cpp */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildRule section */
-		F74062ED10E989D40044ADBD /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.gcc;
-			fileType = sourcecode.c;
-			inputFiles = (
+/* Begin PBXCopyFilesBuildPhase section */
+		F79BE9A92E2E362800EC4BBE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
 			);
-			isEditable = 1;
-			outputFiles = (
-			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
-		F7E8546E16B83B3D009B0B05 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.gcc;
-			fileType = sourcecode.c;
-			inputFiles = (
-			);
-			isEditable = 1;
-			outputFiles = (
-			);
-		};
-		F7FC4CFE0D63BC0A00589F5D /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.gcc;
-			fileType = sourcecode.c;
-			inputFiles = (
-			);
-			isEditable = 1;
-			outputFiles = (
-			);
-		};
-/* End PBXBuildRule section */
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PikaCmd.cpp; sourceTree = SOURCE_ROOT; };
-		F7905B0510C47FD100FF4A18 /* PikaScript.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = PikaScript.cpp; path = ../src/PikaScript.cpp; sourceTree = SOURCE_ROOT; };
-		F7905B0610C47FD100FF4A18 /* PikaScript.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PikaScript.h; path = ../src/PikaScript.h; sourceTree = SOURCE_ROOT; };
-		F7905B0810C47FD100FF4A18 /* QStrings.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = QStrings.cpp; path = ../src/QStrings.cpp; sourceTree = SOURCE_ROOT; };
-		F7905B0910C47FD100FF4A18 /* QStrings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QStrings.h; path = ../src/QStrings.h; sourceTree = SOURCE_ROOT; };
-		F79520E816B83C2100F0485E /* PikaCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = PikaCmd; path = /Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCC/Debug/PikaCmd; sourceTree = "<absolute>"; };
-		F79520EA16B83C2200F0485E /* PikaCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = PikaCmd; path = /Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCCSmall/Debug/PikaCmd; sourceTree = "<absolute>"; };
-		F79520EC16B83C2200F0485E /* PikaCmd GCC 64-bit */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "PikaCmd GCC 64-bit"; path = "/Users/magnus/projects/PikaScript/PikaCmd/build/Mac/GCC/Debug/PikaCmd GCC 64-bit"; sourceTree = "<absolute>"; };
-		F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BuiltIns.cpp; sourceTree = SOURCE_ROOT; };
-		F7B8C1F910CC7DCD00EC2AE3 /* PikaScriptImpl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PikaScriptImpl.h; path = ../src/PikaScriptImpl.h; sourceTree = SOURCE_ROOT; };
-		F7E8EF6410C49136003BD514 /* QuickVars.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QuickVars.h; path = ../src/QuickVars.h; sourceTree = SOURCE_ROOT; };
+		F79BE9AB2E2E362800EC4BBE /* PikaCmd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PikaCmd; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7CC25722E2E365900FAD996 /* PikaScript.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PikaScript.h; path = ../src/PikaScript.h; sourceTree = SOURCE_ROOT; };
+		F7CC25732E2E365900FAD996 /* PikaScript.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PikaScript.cpp; path = ../src/PikaScript.cpp; sourceTree = SOURCE_ROOT; };
+		F7CC25742E2E365900FAD996 /* PikaScriptImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PikaScriptImpl.h; path = ../src/PikaScriptImpl.h; sourceTree = SOURCE_ROOT; };
+		F7CC25752E2E365900FAD996 /* QStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QStrings.h; path = ../src/QStrings.h; sourceTree = SOURCE_ROOT; };
+		F7CC25762E2E365900FAD996 /* QStrings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = QStrings.cpp; path = ../src/QStrings.cpp; sourceTree = SOURCE_ROOT; };
+		F7CC25772E2E365900FAD996 /* QuickVars.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QuickVars.h; path = ../src/QuickVars.h; sourceTree = SOURCE_ROOT; };
+		F7CC257A2E2E366E00FAD996 /* BuiltIns.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BuiltIns.cpp; path = ../tools/PikaCmd/BuiltIns.cpp; sourceTree = SOURCE_ROOT; };
+		F7CC257B2E2E366E00FAD996 /* PikaCmd.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PikaCmd.cpp; path = ../tools/PikaCmd/PikaCmd.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8DD76F660486A84900D96B5E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F74062E610E989D40044ADBD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F7E8546D16B83B3D009B0B05 /* Frameworks */ = {
+		F79BE9A82E2E362800EC4BBE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -93,354 +48,254 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08FB7794FE84155DC02AAC07 /* YoctoScript */ = {
+		F79BE9A22E2E362800EC4BBE = {
 			isa = PBXGroup;
 			children = (
-				F7B2F97B10C48AD800CD08A4 /* BuiltIns.cpp */,
-				F7905B0510C47FD100FF4A18 /* PikaScript.cpp */,
-				F7905B0610C47FD100FF4A18 /* PikaScript.h */,
-				F7B8C1F910CC7DCD00EC2AE3 /* PikaScriptImpl.h */,
-				F7905B0810C47FD100FF4A18 /* QStrings.cpp */,
-				F7905B0910C47FD100FF4A18 /* QStrings.h */,
-				F7E8EF6410C49136003BD514 /* QuickVars.h */,
-				F7905AFD10C47FBF00FF4A18 /* PikaCmd.cpp */,
+				F7CC257A2E2E366E00FAD996 /* BuiltIns.cpp */,
+				F7CC257B2E2E366E00FAD996 /* PikaCmd.cpp */,
+				F7CC25722E2E365900FAD996 /* PikaScript.h */,
+				F7CC25732E2E365900FAD996 /* PikaScript.cpp */,
+				F7CC25742E2E365900FAD996 /* PikaScriptImpl.h */,
+				F7CC25752E2E365900FAD996 /* QStrings.h */,
+				F7CC25762E2E365900FAD996 /* QStrings.cpp */,
+				F7CC25772E2E365900FAD996 /* QuickVars.h */,
+				F79BE9AC2E2E362800EC4BBE /* Products */,
 			);
-			name = YoctoScript;
+			sourceTree = "<group>";
+		};
+		F79BE9AC2E2E362800EC4BBE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F79BE9AB2E2E362800EC4BBE /* PikaCmd */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DD76F620486A84900D96B5E /* PikaCmd GCC */ = {
+		F79BE9AA2E2E362800EC4BBE /* PikaCmd */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "PikaCmd GCC" */;
+			buildConfigurationList = F79BE9B22E2E362800EC4BBE /* Build configuration list for PBXNativeTarget "PikaCmd" */;
 			buildPhases = (
-				F7B2F98510C48B1800CD08A4 /* ShellScript */,
-				8DD76F640486A84900D96B5E /* Sources */,
-				8DD76F660486A84900D96B5E /* Frameworks */,
+				F79BE9A72E2E362800EC4BBE /* Sources */,
+				F79BE9A82E2E362800EC4BBE /* Frameworks */,
+				F79BE9A92E2E362800EC4BBE /* CopyFiles */,
 			);
 			buildRules = (
-				F7FC4CFE0D63BC0A00589F5D /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
-			name = "PikaCmd GCC";
-			productInstallPath = "$(HOME)/bin";
-			productName = YoctoScript;
-			productReference = F79520E816B83C2100F0485E /* PikaCmd */;
-			productType = "com.apple.product-type.tool";
-		};
-		F74062DF10E989D40044ADBD /* PikaCmd GCC Small x86 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F74062EE10E989D40044ADBD /* Build configuration list for PBXNativeTarget "PikaCmd GCC Small x86" */;
-			buildPhases = (
-				F74062E010E989D40044ADBD /* ShellScript */,
-				F74062E110E989D40044ADBD /* Sources */,
-				F74062E610E989D40044ADBD /* Frameworks */,
+			name = PikaCmd;
+			packageProductDependencies = (
 			);
-			buildRules = (
-				F74062ED10E989D40044ADBD /* PBXBuildRule */,
-			);
-			dependencies = (
-			);
-			name = "PikaCmd GCC Small x86";
-			productInstallPath = "$(HOME)/bin";
-			productName = YoctoScript;
-			productReference = F79520EA16B83C2200F0485E /* PikaCmd */;
-			productType = "com.apple.product-type.tool";
-		};
-		F7E8546616B83B3D009B0B05 /* PikaCmd GCC 64-bit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F7E8546F16B83B3D009B0B05 /* Build configuration list for PBXNativeTarget "PikaCmd GCC 64-bit" */;
-			buildPhases = (
-				F7E8546716B83B3D009B0B05 /* ShellScript */,
-				F7E8546816B83B3D009B0B05 /* Sources */,
-				F7E8546D16B83B3D009B0B05 /* Frameworks */,
-			);
-			buildRules = (
-				F7E8546E16B83B3D009B0B05 /* PBXBuildRule */,
-			);
-			dependencies = (
-			);
-			name = "PikaCmd GCC 64-bit";
-			productInstallPath = "$(HOME)/bin";
-			productName = YoctoScript;
-			productReference = F79520EC16B83C2200F0485E /* PikaCmd GCC 64-bit */;
+			productName = PikaCmd;
+			productReference = F79BE9AB2E2E362800EC4BBE /* PikaCmd */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		08FB7793FE84155DC02AAC07 /* Project object */ = {
+		F79BE9A32E2E362800EC4BBE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					F79BE9AA2E2E362800EC4BBE = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
 			};
-			buildConfigurationList = 1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "PikaCmd" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 1;
+			buildConfigurationList = F79BE9A62E2E362800EC4BBE /* Build configuration list for PBXProject "PikaCmd" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				Base,
 			);
-			mainGroup = 08FB7794FE84155DC02AAC07 /* YoctoScript */;
-			productRefGroup = 08FB7794FE84155DC02AAC07 /* YoctoScript */;
+			mainGroup = F79BE9A22E2E362800EC4BBE;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F79BE9AC2E2E362800EC4BBE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DD76F620486A84900D96B5E /* PikaCmd GCC */,
-				F74062DF10E989D40044ADBD /* PikaCmd GCC Small x86 */,
-				F7E8546616B83B3D009B0B05 /* PikaCmd GCC 64-bit */,
+				F79BE9AA2E2E362800EC4BBE /* PikaCmd */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		F74062E010E989D40044ADBD /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../src/debug.pika",
-				"$(SRCROOT)/../src/help.pika",
-				"$(SRCROOT)/../src/interactive.pika",
-				"$(SRCROOT)/../src/objects.pika",
-				"$(SRCROOT)/../src/stdlib.pika",
-			);
-			outputPaths = (
-				"$(SRCROOT)/BuiltIns.cpp",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
-		};
-		F7B2F98510C48B1800CD08A4 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../src/debug.pika",
-				"$(SRCROOT)/../src/help.pika",
-				"$(SRCROOT)/../src/interactive.pika",
-				"$(SRCROOT)/../src/objects.pika",
-				"$(SRCROOT)/../src/stdlib.pika",
-			);
-			outputPaths = (
-				"$(SRCROOT)/BuiltIns.cpp",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
-		};
-		F7E8546716B83B3D009B0B05 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../src/debug.pika",
-				"$(SRCROOT)/../src/help.pika",
-				"$(SRCROOT)/../src/interactive.pika",
-				"$(SRCROOT)/../src/objects.pika",
-				"$(SRCROOT)/../src/stdlib.pika",
-			);
-			outputPaths = (
-				"$(SRCROOT)/BuiltIns.cpp",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "pikacmd=$PROJECT_DIR/build/Mac/GCC/Release/$EXECUTABLE_PATH\nif [ -x \"$pikacmd\" ]\nthen\n\tchmod +x \"$pikacmd\"\n\t\"$pikacmd\" \"$PROJECT_DIR/UpdateBuiltIns.pika\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		8DD76F640486A84900D96B5E /* Sources */ = {
+		F79BE9A72E2E362800EC4BBE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7905AFE10C47FBF00FF4A18 /* PikaCmd.cpp in Sources */,
-				F7905B1010C47FD100FF4A18 /* PikaScript.cpp in Sources */,
-				F7905B1310C47FD100FF4A18 /* QStrings.cpp in Sources */,
-				F7B2F97C10C48AD800CD08A4 /* BuiltIns.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F74062E110E989D40044ADBD /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F74062E210E989D40044ADBD /* PikaCmd.cpp in Sources */,
-				F74062E310E989D40044ADBD /* PikaScript.cpp in Sources */,
-				F74062E410E989D40044ADBD /* QStrings.cpp in Sources */,
-				F74062E510E989D40044ADBD /* BuiltIns.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F7E8546816B83B3D009B0B05 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F7E8546916B83B3D009B0B05 /* PikaCmd.cpp in Sources */,
-				F7E8546A16B83B3D009B0B05 /* PikaScript.cpp in Sources */,
-				F7E8546B16B83B3D009B0B05 /* QStrings.cpp in Sources */,
-				F7E8546C16B83B3D009B0B05 /* BuiltIns.cpp in Sources */,
+				F7CC257C2E2E366E00FAD996 /* PikaCmd.cpp in Sources */,
+				F7CC257D2E2E366E00FAD996 /* BuiltIns.cpp in Sources */,
+				F7CC25782E2E365900FAD996 /* QStrings.cpp in Sources */,
+				F7CC25792E2E365900FAD996 /* PikaScript.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB923208733DC60010E9CD /* Debug */ = {
+		F79BE9B02E2E362800EC4BBE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
-			};
-			name = Debug;
-		};
-		1DEB923308733DC60010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
-			};
-			name = Release;
-		};
-		1DEB923608733DC60010E9CD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				GCC_DEBUGGING_SYMBOLS = full;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "PLATFORM_STRING=UNIX";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PRODUCT_NAME = PikaCmd;
-			};
-			name = Debug;
-		};
-		1DEB923708733DC60010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				DEAD_CODE_STRIPPING = YES;
-				GCC_DYNAMIC_NO_PIC = YES;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_FAST_MATH = YES;
-				GCC_FEEDBACK_DIRECTED_OPTIMIZATION = Off;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"PLATFORM_STRING=UNIX",
-					NDEBUG,
+					"DEBUG=1",
+					"$(inherited)",
 				);
-				GCC_STRICT_ALIASING = YES;
-				GCC_THREADSAFE_STATICS = NO;
-				GCC_UNROLL_LOOPS = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ICC_DATA_ARG_ALIAS = NO;
-				ICC_DATA_NO_ALIAS = YES;
-				ICC_DIAG_NON_VIRTUAL_DESTRUCTOR = YES;
-				ICC_OPTLEVEL = speedHLO;
-				ICC_OPT_INLINE = any;
-				ICC_OPT_IPO_FOR_SINGLE_FILE_COMPILATION = YES;
-				ICC_OPT_REQUIRE_ARCH_IA32 = archP;
-				ICC_OPT_USE_ARCH_IA32 = archP;
-				ICC_OTHER_CFLAGS = "$(OTHER_CFLAGS) -ipo";
-				ICC_RT_LIBRARY = static;
-				PRODUCT_NAME = PikaCmd;
-				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static;
-			};
-			name = Release;
-		};
-		F74062EF10E989D40044ADBD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = i386;
-				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = "";
-				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCCSmall";
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		F74062F010E989D40044ADBD /* Release */ = {
+		F79BE9B12E2E362800EC4BBE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_UNROLL_LOOPS = NO;
-				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCCSmall";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "PLATFORM_STRING=UNIX";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
-		F7E8547016B83B3D009B0B05 /* Debug */ = {
+		F79BE9B32E2E362800EC4BBE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				PRODUCT_NAME = "PikaCmd GCC 64-bit";
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		F7E8547116B83B3D009B0B05 /* Release */ = {
+		F79BE9B42E2E362800EC4BBE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				PRODUCT_NAME = "PikaCmd GCC 64-bit";
-				SYMROOT = "$(PROJECT_DIR)/build/Mac/GCC";
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "PikaCmd GCC" */ = {
+		F79BE9A62E2E362800EC4BBE /* Build configuration list for PBXProject "PikaCmd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB923208733DC60010E9CD /* Debug */,
-				1DEB923308733DC60010E9CD /* Release */,
+				F79BE9B02E2E362800EC4BBE /* Debug */,
+				F79BE9B12E2E362800EC4BBE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB923508733DC60010E9CD /* Build configuration list for PBXProject "PikaCmd" */ = {
+		F79BE9B22E2E362800EC4BBE /* Build configuration list for PBXNativeTarget "PikaCmd" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB923608733DC60010E9CD /* Debug */,
-				1DEB923708733DC60010E9CD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F74062EE10E989D40044ADBD /* Build configuration list for PBXNativeTarget "PikaCmd GCC Small x86" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F74062EF10E989D40044ADBD /* Debug */,
-				F74062F010E989D40044ADBD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F7E8546F16B83B3D009B0B05 /* Build configuration list for PBXNativeTarget "PikaCmd GCC 64-bit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F7E8547016B83B3D009B0B05 /* Debug */,
-				F7E8547116B83B3D009B0B05 /* Release */,
+				F79BE9B32E2E362800EC4BBE /* Debug */,
+				F79BE9B42E2E362800EC4BBE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+	rootObject = F79BE9A32E2E362800EC4BBE /* Project object */;
 }

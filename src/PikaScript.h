@@ -514,7 +514,6 @@ template<class Config> struct Script {
 		"method" name as a string.
 		
 		\details
-		
 		Notice that if the $callee variable does not begin with a "frame specifier", it is assumed that the object
 		belongs to the previous frame (e.g. the caller of the method). This holds true even if the method is actually
 		defined in the root frame. For example \code function { obj.meth() } \endcode would trigger an error even if
