@@ -120,17 +120,42 @@ map(@::STD_PATTERNS
 };
 
 ::expandTabs = function {
-	args(@in, @tabWidth);
-	for ({ out = ''; x = 0 }; in !== '';) {
-		x += (i = find(in, "\t\n"));
-		out #= in{:i};
-		in = in{i:};
-		if (in{0} === "\t") { spaces = tabWidth - x % tabWidth; out #= repeat(' ', spaces); x += spaces }
-		else if (in{0} === "\n") { out #= LF; x = 0 };
-		in = in{1:};
-	};
-	out
+        args(@in, @tabWidth);
+        for ({ out = ''; x = 0 }; in !== '';) {
+                x += (i = find(in, "\t\n"));
+                out #= in{:i};
+                in = in{i:};
+                if (in{0} === "\t") { spaces = tabWidth - x % tabWidth; out #= repeat(' ', spaces); x += spaces }
+                else if (in{0} === "\n") { out #= LF; x = 0 };
+                in = in{1:};
+        };
+        out
 };
+
+       // Determine the end of the current section. Blank lines continue
+       // a list item or pre block if the following line is indented enough.
+       nextSectionEnd => {
+               args(@text, @off, @listIndent, @preIndent);
+               end = off + search(text{off:}, "\n\n");
+               for (; end < length(text);) {
+                       pos = end + 2;
+                       spaces = span(text{pos:}, ' ');
+                       if (pos + spaces >= length(text)) break;
+                       if (text{pos + spaces} == '\n') {
+                               after = pos + spaces + 1;
+                               ind = span(text{after:}, ' ');
+                               if ((preIndent >= 0 && ind >= preIndent) ||
+                                       (listIndent >= 0 && ind >= listIndent)) {
+                                       off = after;
+                                       end = off + search(text{off:}, "\n\n");
+                                       continue;
+                               };
+                       };
+                       break;
+               };
+               if (end > length(text)) end = length(text);
+               end
+       };
 
 ::htmlify = function {
 	args(@src);
@@ -213,18 +238,19 @@ map(@::STD_PATTERNS
 				};
 				$spaces >= $d;
 			} else {
-				if ($spaces > $d) {
-					if ($l === '') { body #= $brk; $i =$d; } else {
-						if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
-						body #= format($l) # LF
-					};
-					$brk = '<br>';
-					++lineIndex;
-				};
-				$spaces > $d;
-			}
-		}; )
-	};
+                               nextSpaces = (if (lineIndex + 1 < lines.n) span(lines[lineIndex + 1], ' ') else 0);
+                               if ($spaces > $d || ($l === '' && nextSpaces > $d)) {
+                                       if ($l === '') { body #= $brk; $i = $d; } else {
+                                               if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
+                                               body #= format($l) # LF
+                                       };
+                                       $brk = '<br>';
+                                       ++lineIndex;
+                               };
+                               $spaces > $d || ($l === '' && nextSpaces > $d);
+                       }
+               }; )
+       };
 	
 	src = replace(src, "\r\n", "\n");
 	src = expandTabs(src, 4);
@@ -235,12 +261,23 @@ map(@::STD_PATTERNS
 	// Find headers
 // Fix : either save the sections here for later processing, or make a subroutine of this split
 
-	for (xsrc = src; xsrc !== '';) {
-		section = xsrc{:search(xsrc, "\n\n")};
-		xsrc = xsrc{length(section):};
-		xsrc = xsrc{span(xsrc, "\n"):};
-		lines.n = 0;
-		tokenize(section, >append(@lines, $0));
+       for (xsrc = src; xsrc !== '';) {
+               firstLine = xsrc{:search(xsrc, "\n")};
+               leadSpaces = span(firstLine, ' ');
+               line0 = firstLine{leadSpaces:};
+               listIndent = -1;
+               preIndent = -1;
+               if (wildmatch(line0, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @tmp, @tmp2, @tmp3) ||
+                               wildmatch(line0, '{{-}[ ]?*}{[^ ]?[]*}', @tmp, @tmp2, @tmp3)) {
+                       listIndent = leadSpaces + length(tmp);
+               } else if (wildmatch(line0, '{[ ]?*}[^ ]?[]*', @s) && (length(s) >= 4)) {
+                       preIndent = length(s);
+               };
+               section = xsrc{:nextSectionEnd(xsrc, 0, listIndent, preIndent)};
+               xsrc = xsrc{length(section):};
+               xsrc = xsrc{span(xsrc, "\n"):};
+               lines.n = 0;
+               tokenize(section, >append(@lines, $0));
 		if (lines.n == 2 && (foundHeader = findHeader(lines[0], lines[1])) !== void) {
 			head = html(lines[0]);
 			pattern = '{' # wildEscape(head) # '}' # STD_PATTERN_SUFFIX;
@@ -250,13 +287,24 @@ map(@::STD_PATTERNS
 	
 	// Process ...
 
-	for (; src !== '';) {
-		section = src{:search(src, "\n\n")};
-		src = src{length(section):};
-		src = src{span(src, "\n"):};
-		lines.n = 0;
+       for (; src !== '';) {
+               firstLine = src{:search(src, "\n")};
+               leadSpaces = span(firstLine, ' ');
+               line0 = firstLine{leadSpaces:};
+               listIndent = -1;
+               preIndent = -1;
+               if (wildmatch(line0, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @tmp, @tmp2, @tmp3) ||
+                               wildmatch(line0, '{{-}[ ]?*}{[^ ]?[]*}', @tmp, @tmp2, @tmp3)) {
+                       listIndent = leadSpaces + length(tmp);
+               } else if (wildmatch(line0, '{[ ]?*}[^ ]?[]*', @s) && (leadingSpaces = length(s)) >= 4) {
+                       preIndent = leadingSpaces;
+               };
+               section = src{:nextSectionEnd(src, 0, listIndent, preIndent)};
+               src = src{length(section):};
+               src = src{span(src, "\n"):};
+               lines.n = 0;
 
-		tokenize(section, >append(@lines, $0));
+               tokenize(section, >append(@lines, $0));
 		leadingSpaces = 0;
 		if (lines.n == 2 && (foundHeader = findHeader(lines[0], lines[1])) !== void) {
 			head = html(lines[0]);
