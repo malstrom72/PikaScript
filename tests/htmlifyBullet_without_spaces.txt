@@ -1,4 +1,4 @@
-1)  Apple
-    Is `good`
+- Apple
+  Is `good`
 
-    /for/ *you*
+  /for/ *you*

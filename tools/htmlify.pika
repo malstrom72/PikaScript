@@ -236,7 +236,7 @@ map(@::STD_PATTERNS
        // preserved across blank lines.  The `lead` argument is the indentation
        // level of the first line in the section being scanned.
        nextSectionEnd => {
-               args(@txt, @lead);
+               args(@txt, @lead, @bLead);
                for (i = search(txt, "\n\n");
                                 i < length(txt) && {
                                        nextIndent = span(txt{i + 2:}, ' ');
@@ -244,16 +244,18 @@ map(@::STD_PATTERNS
                                        if (prevLineStart < 0) prevLineStart = -1;
                                        prevLine = txt{prevLineStart + 1:i - prevLineStart - 1};
                                        prevIndent = span(prevLine, ' ');
-                                       bullet = wildmatch(prevLine{prevIndent:}, '[ ]*[0-9*]?*)[ ]*[^ ]?[]*')
-                                                         || wildmatch(prevLine{prevIndent:}, '[ ]*-[ ]?*[^ ]?[]*');
+                                       bulletLine = wildmatch(prevLine{prevIndent:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @pLead, @rest)
+                                                         || wildmatch(prevLine{prevIndent:}, '{{-}[ ]?*}{[^ ]?[]*}', @pLead, @rest);
+                                       prevBullet = (if (bulletLine) prevIndent + length(pLead) + 1 else -1);
                                        // Continue scanning past the blank line when
-                                       //   * the section started indented four or more
-                                       //     spaces and the next line is indented too, or
-                                       //   * the next line is indented four or more spaces
-                                       //     and the previous line was also indented or
-                                       //     was a list item marker.
+                                       //   * the section started indented four spaces and the next line is indented too,
+                                       //   * the section started with a bullet and the next line is indented at least as far,
+                                       //   * the previous line was a bullet and the next line matches that indentation, or
+                                       //   * the previous line and next line are both indented four or more spaces.
                                        (lead >= 4 && nextIndent >= 4)
-                                               || (nextIndent >= 4 && (prevIndent >= 4 || bullet));
+                                               || (bLead >= 0 && nextIndent >= bLead)
+                                               || (prevBullet >= 0 && nextIndent >= prevBullet)
+                                               || (nextIndent >= 4 && prevIndent >= 4);
                                };
                                 i += 1 + search(txt{i + 1:}, "\n\n")) {
                        if (i + 1 >= length(txt)) { i = length(txt); break }
@@ -269,7 +271,13 @@ map(@::STD_PATTERNS
 
        for (xsrc = src; xsrc !== '';) {
                leading = span(xsrc, ' ');
-               section = xsrc{:i = nextSectionEnd(xsrc, leading)};
+               firstEnd = search(xsrc, "\n");
+               if (firstEnd < 0) firstEnd = length(xsrc);
+               first = xsrc{:firstEnd};
+               bulletLead = -1;
+               if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
+                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r)) bulletLead = leading + length(b) + 1;
+               section = xsrc{:i = nextSectionEnd(xsrc, leading, bulletLead)};
                xsrc = xsrc{i:};
                xsrc = xsrc{span(xsrc, "\n"):};
                lines.n = 0;
@@ -285,7 +293,13 @@ map(@::STD_PATTERNS
 
        for (; src !== '';) {
                leading = span(src, ' ');
-               section = src{:i = nextSectionEnd(src, leading)};
+               firstEnd = search(src, "\n");
+               if (firstEnd < 0) firstEnd = length(src);
+               first = src{:firstEnd};
+               bulletLead = -1;
+               if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
+                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r)) bulletLead = leading + length(b) + 1;
+               section = src{:i = nextSectionEnd(src, leading, bulletLead)};
                src = src{i:};
                src = src{span(src, "\n"):};
                lines.n = 0;
