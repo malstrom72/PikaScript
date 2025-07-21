@@ -2,20 +2,16 @@ include('stdlib.pika');
 include('systools.pika');
 include(run.root # '../tools/htmlify.pika');
 
-check = function {
-        args(@base);
-        text1 = load(run.root # bake('{base}_with_spaces.txt'));
-        text2 = load(run.root # bake('{base}_without_spaces.txt'));
-        golden = load(run.root # bake('golden/{base}.golden'));
-        html1 = htmlify(text1);
-        html2 = htmlify(text2);
-        assert(> html1 == html2, base # ' mismatch between with/without spaces');
-        assert(> html1 == golden, base # ' output no longer matches golden');
+checkPikaDoc = function {
+       css = replace(load(run.root # '../tools/docstyle.css'), "\r\n\t", '', find, 1);
+       head = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n      <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n        <title>PikaScript</title>\n        <style type=\"text/css\">\n          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }\n          th { text-align: left }\n          img { border: 0 none }\n                " # css # "\n        </style>\n      </head>\n          <body>\n";
+       tail = "\n        </body>\n</html>\n";
+       text = load(run.root # 'htmlifyPikaDoc.txt');
+       golden = load(run.root # 'golden/htmlifyPikaDoc.golden');
+       html = head # htmlify(text) # tail;
+       assert(> html == golden, 'htmlifyPikaDoc output no longer matches golden');
 };
 
-check('htmlifyBullet');
-check('htmlifyComplexBullet');
-check('htmlifyDashBullet');
-check('htmlifyIndent');
+checkPikaDoc();
 
 print('OK!');

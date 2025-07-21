@@ -212,63 +212,22 @@ map(@::STD_PATTERNS
 					++lineIndex;
 				};
 				$spaces >= $d;
-                        } else {
-                                if ($spaces > $d) {
-                                        if ($l === '') { body #= $brk; $i = $d; }
-                                        else {
-                                                if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
-                                                body #= format($l) # LF
-                                        };
-                                        $brk = '<br>';
-                                        ++lineIndex;
-                                } else if ($l === '' && lineIndex + 1 < lines.n && span(lines[lineIndex + 1], ' ') >= $i + 1) {
-                                        body #= $brk;
-                                        ++lineIndex;
-                                        $spaces = span(lines[lineIndex], ' ');
-                                        $brk = '<br>';
-                                };
-                                $spaces > $d;
-                        }
+			} else {
+				if ($spaces > $d) {
+					if ($l === '') { body #= $brk; $i =$d; } else {
+						if ($spaces < $i) body #= ' ' else { body #= $brk; $i = $spaces };
+						body #= format($l) # LF
+					};
+					$brk = '<br>';
+					++lineIndex;
+				};
+				$spaces > $d;
+			}
 		}; )
 	};
 	
-       src = replace(src, "\r\n", "\n");
-       src = expandTabs(src, 4);
-
-       // Search for the end of the current section.  Normally a blank line
-       // (two consecutive LFs) terminates a section.  However a blank line
-       // that precedes a continued indented block or bullet item should be
-       // included with the current section so that lists and <pre> blocks are
-       // preserved across blank lines.  The `lead` argument is the indentation
-       // level of the first line in the section being scanned.
-       nextSectionEnd => {
-               args(@txt, @lead, @bLead);
-               pos = search(txt, "\n");
-               for (; pos >= 0 && pos < length(txt); ) {
-                       j = pos + 1;
-                       for (; j < length(txt) && txt{j} === ' '; ++j);
-                       if (j < length(txt) && txt{j} === "\n") {
-                               nextIndent = span(txt{j + 1:}, ' ');
-                               prevLineStart = rsearch(txt{:pos}, "\n");
-                               if (prevLineStart < 0) prevLineStart = -1;
-                               prevLine = txt{prevLineStart + 1:pos - prevLineStart - 1};
-                               prevIndent = span(prevLine, ' ');
-                               bulletLine = wildmatch(prevLine{prevIndent:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @pLead, @rest)
-                                                         || wildmatch(prevLine{prevIndent:}, '{{-}[ ]?*}{[^ ]?[]*}', @pLead, @rest);
-                               prevBullet = (if (bulletLine) prevIndent + length(pLead) + 1 else -1);
-                               if (!((lead >= 4 && nextIndent >= 4)
-                                       || (bLead >= 0 && nextIndent >= bLead)
-                                       || (prevBullet >= 0 && nextIndent >= prevBullet)
-                                       || (nextIndent >= 4 && prevIndent >= 4))) break;
-                               next = search(txt{j + 1:}, "\n");
-                               if (next === void) { pos = length(txt); break } else { pos = j + 1 + next };
-                       } else {
-                               next = search(txt{pos + 1:}, "\n");
-                               if (next === void) { pos = length(txt); break } else { pos = pos + 1 + next };
-                       };
-               };
-               if (pos >= length(txt) || pos === void) length(txt) else pos
-       };
+	src = replace(src, "\r\n", "\n");
+	src = expandTabs(src, 4);
 	
 	body = '';
 	if (right(src, 1) === "\n") src = chop(src, 1);
@@ -276,19 +235,11 @@ map(@::STD_PATTERNS
 	// Find headers
 // Fix : either save the sections here for later processing, or make a subroutine of this split
 
-       for (xsrc = src; xsrc !== '';) {
-               leading = span(xsrc, ' ');
-               firstEnd = search(xsrc, "\n");
-               if (firstEnd < 0) firstEnd = length(xsrc);
-               first = xsrc{:firstEnd};
-               bulletLead = -1;
-               if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
-                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r))
-                       bulletLead = leading + rspan(b, ' ') + 2;
-               section = xsrc{:i = nextSectionEnd(xsrc, leading, bulletLead)};
-               xsrc = xsrc{i:};
-               xsrc = xsrc{span(xsrc, "\n"):};
-               lines.n = 0;
+	for (xsrc = src; xsrc !== '';) {
+		section = xsrc{:search(xsrc, "\n\n")};
+		xsrc = xsrc{length(section):};
+		xsrc = xsrc{span(xsrc, "\n"):};
+		lines.n = 0;
 		tokenize(section, >append(@lines, $0));
 		if (lines.n == 2 && (foundHeader = findHeader(lines[0], lines[1])) !== void) {
 			head = html(lines[0]);
@@ -299,19 +250,11 @@ map(@::STD_PATTERNS
 	
 	// Process ...
 
-       for (; src !== '';) {
-               leading = span(src, ' ');
-               firstEnd = search(src, "\n");
-               if (firstEnd < 0) firstEnd = length(src);
-               first = src{:firstEnd};
-               bulletLead = -1;
-               if (wildmatch(first{leading:}, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @b, @r)
-                               || wildmatch(first{leading:}, '{{-}[ ]?*}{[^ ]?[]*}', @b, @r))
-                       bulletLead = leading + rspan(b, ' ') + 2;
-               section = src{:i = nextSectionEnd(src, leading, bulletLead)};
-               src = src{i:};
-               src = src{span(src, "\n"):};
-               lines.n = 0;
+	for (; src !== '';) {
+		section = src{:search(src, "\n\n")};
+		src = src{length(section):};
+		src = src{span(src, "\n"):};
+		lines.n = 0;
 
 		tokenize(section, >append(@lines, $0));
 		leadingSpaces = 0;
