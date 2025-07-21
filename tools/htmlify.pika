@@ -146,6 +146,7 @@ map(@::STD_PATTERNS
                                ind = span(text{after:}, ' ');
                                if ((preIndent >= 0 && ind >= preIndent) ||
                                        (listIndent >= 0 && ind >= listIndent)) {
+                                       if (after <= off) break; // prevent infinite loops
                                        off = after;
                                        end = off + search(text{off:}, "\n\n");
                                        continue;
