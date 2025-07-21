@@ -10,11 +10,21 @@ buildHtml = function {
        html
 };
 
+buildHtmlPy = function {
+       css = replace(load(run.root # '../tools/docstyle.css'), "\r\n\t", '', find, 1);
+       head = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n      <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n        <title>PikaScript</title>\n    <style type=\"text/css\">\n          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }\n          th { text-align: left }\n     img { border: 0 none }\n                " # css # "\n        </style>\n  </head>\n          <body>\n";
+       tail = "\n        </body>\n</html>\n";
+       body = pipe(bake('python3 {quotePath(run.root # "../tools/htmlify.py")} {quotePath($0)}'));
+       ( head # body # tail )
+};
+
 runTest = function {
        args(@txt, @gold);
        golden = load(run.root # 'golden/' # gold);
        html = buildHtml(run.root # txt);
        assert(> html == golden, txt # ' mismatch');
+       pyHtml = buildHtmlPy(run.root # txt);
+       assert(> pyHtml == golden, txt # ' python mismatch');
 };
 
 runTest('htmlifyPikaDoc.txt', 'htmlifyPikaDoc.html');
