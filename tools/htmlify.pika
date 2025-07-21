@@ -228,15 +228,6 @@ map(@::STD_PATTERNS
 	
        src = replace(src, "\r\n", "\n");
        src = expandTabs(src, 4);
-       prune(@normLines);
-       tokenize(src, >append(@normLines, $0));
-       for (i = 0; i < normLines.n; ++i)
-               if (span(normLines[i], ' ') == length(normLines[i])) normLines[i] = '';
-       src = '';
-       for (i = 0; i < normLines.n; ++i) {
-               if (i > 0) src #= LF;
-               src #= normLines[i];
-       };
 
        nextSectionEnd => {
                args(@txt, @lead);
@@ -264,12 +255,12 @@ map(@::STD_PATTERNS
 	// Find headers
 // Fix : either save the sections here for later processing, or make a subroutine of this split
 
-        for (xsrc = src; xsrc !== '';) {
-                leading = span(xsrc, ' ');
-                section = xsrc{:i = nextSectionEnd(xsrc, leading)};
-                xsrc = xsrc{i:};
-                xsrc = xsrc{span(xsrc, "\n"):};
-                lines.n = 0;
+       for (xsrc = src; xsrc !== '';) {
+               leading = span(xsrc, ' ');
+               section = xsrc{:i = nextSectionEnd(xsrc, leading)};
+               xsrc = xsrc{i:};
+               xsrc = xsrc{span(xsrc, "\n"):};
+               lines.n = 0;
 		tokenize(section, >append(@lines, $0));
 		if (lines.n == 2 && (foundHeader = findHeader(lines[0], lines[1])) !== void) {
 			head = html(lines[0]);
@@ -280,12 +271,12 @@ map(@::STD_PATTERNS
 	
 	// Process ...
 
-        for (; src !== '';) {
-                leading = span(src, ' ');
-                section = src{:i = nextSectionEnd(src, leading)};
-                src = src{i:};
-                src = src{span(src, "\n"):};
-                lines.n = 0;
+       for (; src !== '';) {
+               leading = span(src, ' ');
+               section = src{:i = nextSectionEnd(src, leading)};
+               src = src{i:};
+               src = src{span(src, "\n"):};
+               lines.n = 0;
 
 		tokenize(section, >append(@lines, $0));
 		leadingSpaces = 0;
