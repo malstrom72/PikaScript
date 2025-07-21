@@ -7,11 +7,25 @@ checkPikaDoc = function {
        head = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n      <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n        <title>PikaScript</title>\n        <style type=\"text/css\">\n          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }\n          th { text-align: left }\n          img { border: 0 none }\n                " # css # "\n        </style>\n      </head>\n          <body>\n";
        tail = "\n        </body>\n</html>\n";
        text = load(run.root # 'htmlifyPikaDoc.txt');
-       golden = load(run.root # 'golden/htmlifyPikaDoc.golden');
+       golden = load(run.root # 'golden/htmlifyPikaDoc.html');
        html = head # htmlify(text) # tail;
        assert(> html == golden, 'htmlifyPikaDoc output no longer matches golden');
 };
 
+checkExample = function {
+       css = replace(load(run.root # '../tools/docstyle.css'), "\r\n\t", '', find, 1);
+       head = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n      <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n        <title>PikaScript</title>\n    <style type=\"text/css\">\n          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }\n          th { text-align: left }\n          img { border: 0 none }\n                " # css # "\n        </style>\n      </head>\n          <body>\n";
+       tail = "\n        </body>\n</html>\n";
+       text = load(run.root # 'test.txt');
+       golden = load(run.root # 'golden/test.html');
+       html = head # htmlify(text) # tail;
+       assert(> html == golden, 'example output mismatch');
+       text = load(run.root # 'testTrim.txt');
+       html = head # htmlify(text) # tail;
+       assert(> html == golden, 'example trimmed output mismatch');
+};
+
 checkPikaDoc();
+checkExample();
 
 print('OK!');
