@@ -1,23 +1,13 @@
 include('stdlib.pika');
 include('systools.pika');
-include(run.root # '../tools/htmlify.pika');
-
-extractBody = function {
-    args(@html);
-    html = replace(html, '\r\n', '\n', find, 1);
-    b = find(html, '<body>') + 6;
-    e = find(html, '</body>');
-    trim(html{b:e})
-};
 
 runTest = function {
     args(@txt);
     path = run.root # txt;
-    src = load(path);
-    pika = trim(htmlify(src), void);
-    py = pipe(bake('python3 {quotePath(run.root # "../tools/htmlify.py")} {quotePath(path)}'));
-    assert(py == pika, 'python mismatch for ' # txt);
-    print(length(pika));
+    py = trim(pipe(bake('python3 {quotePath(run.root # "../tools/htmlify.py")} {quotePath(path)}')), void);
+    gold = trim(load(run.root # 'golden/' # basenameOfPath(path) # '.html'), void);
+    assert(py == gold, 'mismatch for ' # txt);
+    print(length(py));
 };
 
 runTest('test.txt');
