@@ -2,21 +2,24 @@ include('stdlib.pika');
 include('systools.pika');
 include(run.root # '../tools/htmlify.pika');
 
-buildHtml = function {
-       css = replace(load(run.root # '../tools/docstyle.css'), "\r\n\t", '', find, 1);
-       head = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n      <meta http-equiv=\"Content-Style-Type\" content=\"text/css\">\n        <title>PikaScript</title>\n    <style type=\"text/css\">\n          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }\n          th { text-align: left }\n          img { border: 0 none }\n                " # css # "\n        </style>\n  </head>\n          <body>\n";
-       tail = "\n        </body>\n</html>\n";
-       html = head # htmlify(load($0)) # tail;
-       html
+extractBody = function {
+    args(@html);
+    html = replace(html, '\r\n', '\n', find, 1);
+    b = find(html, '<body>') + 6;
+    e = find(html, '</body>');
+    trim(html{b:e})
 };
 
 runTest = function {
     args(@txt);
-    html = buildHtml(run.root # txt);
-    print(length(html));
+    path = run.root # txt;
+    src = load(path);
+    pika = trim(htmlify(src), void);
+    py = pipe(bake('python3 {quotePath(run.root # "../tools/htmlify.py")} {quotePath(path)}'));
+    assert(py == pika, 'python mismatch for ' # txt);
+    print(length(pika));
 };
 
-// runTest('htmlifyPikaDoc.txt');
 runTest('test.txt');
 runTest('testTrim.txt');
 runTest('bulletSpacing.txt');
