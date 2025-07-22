@@ -226,8 +226,41 @@ map(@::STD_PATTERNS
 		}; )
 	};
 	
-	src = replace(src, "\r\n", "\n");
-	src = expandTabs(src, 4);
+        src = replace(src, "\r\n", "\n");
+        src = expandTabs(src, 4);
+
+        preprocess => {
+                args(@src);
+                lines.n = 0;
+                tokenize(src, >append(@lines, $0));
+                out = '';
+                for (i = 0; i < lines.n; ++i) {
+                        line = lines[i];
+                        if (line === '') {
+                                nextLine = (if (i + 1 < lines.n) lines[i + 1] else '');
+                                prevLine = (if (i > 0) lines[i - 1] else '');
+                                nextIndent = span(nextLine, ' ');
+                                prevIndent = span(prevLine, ' ');
+                                bulletIndent = 0;
+                                trimmed = prevLine{prevIndent:};
+                                if (wildmatch(trimmed, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @lead, @$bullet, @rest)
+                                                || wildmatch(trimmed, '{{-}[ ]?*}{[^ ]?[]*}', @lead, @$bullet, @rest))
+                                        bulletIndent = prevIndent + length(lead);
+                                if (prevIndent >= 4 && nextIndent >= 4) indent = 4
+                                else if (bulletIndent > 0 && nextIndent >= prevIndent) indent = bulletIndent
+                                else if (prevIndent > 0 && nextIndent >= prevIndent) indent = prevIndent
+                                else indent = 0;
+                                out #= repeat(' ', indent);
+                        } else {
+                                out #= line;
+                        };
+                        if (i + 1 < lines.n) out #= LF;
+                };
+                if (right(src, 1) === LF) out #= LF;
+                out
+        };
+
+        src = preprocess(src);
 	
 	body = '';
 	if (right(src, 1) === "\n") src = chop(src, 1);
