@@ -1,14 +1,15 @@
 include('stdlib.pika');
 include('debug.pika');
 include('systools.pika');
+include(run.root # '../tools/htmlify.pika');
 
 runTest = function {
     args(@txt);
     path = run.root # txt;
-    py = trim(pipe(bake('python3 {quotePath(run.root # "../tools/htmlify.py")} {quotePath(path)}')), void);
+    html = trim(htmlify(load(path)), void);
     gold = trim(load(run.root # 'golden/' # basenameOfPath(path) # '.html'), void);
-    assert(py == gold, 'mismatch for ' # txt);
-    print(length(py));
+    assert(html == gold, 'mismatch for ' # txt);
+    print(length(html));
 };
 
 runTest('test.txt');
