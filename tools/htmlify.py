@@ -36,7 +36,7 @@ def _preprocess(text: str) -> str:
         prev_indent = len(prev_line) - len(prev_line.lstrip(' '))
         bullet_match = _BULLET_RE.match(prev_line)
 
-        if next_indent >= 4:
+        if prev_indent >= 4 and next_indent >= 4:
             indent = 4
         elif bullet_match and next_indent >= prev_indent:
             indent = len(bullet_match.group(0))
