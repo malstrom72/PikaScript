@@ -245,10 +245,10 @@ map(@::STD_PATTERNS
                                 trimmed = prevLine{prevIndent:};
                                 if (wildmatch(trimmed, '{{[0-9*]?*})[ ]*}{[^ ]?[]*}', @lead, @$bullet, @rest)
                                                 || wildmatch(trimmed, '{{-}[ ]?*}{[^ ]?[]*}', @lead, @$bullet, @rest))
-                                        bulletIndent = prevIndent + length(lead);
+                                        bulletIndent = prevIndent + length(lead) + 1;
                                 if (prevIndent >= 4 && nextIndent >= 4) indent = 4
                                 else if (bulletIndent > 0 && nextIndent >= prevIndent) indent = bulletIndent
-                                else if (prevIndent > 0 && nextIndent >= prevIndent) indent = prevIndent
+                                else if (prevIndent >= 2 && nextIndent >= prevIndent) indent = prevIndent
                                 else indent = 0;
                                 out #= repeat(' ', indent);
                         } else {

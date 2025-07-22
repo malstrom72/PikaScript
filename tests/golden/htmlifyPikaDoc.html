@@ -266,26 +266,8 @@
 <p>In consequence, there is no return statement in PikaScript. Instead, the return value of a function is that of the last expression evaluated. If you do not wish for a function to return a value, simply put void as the last expression in the function.</p>
 <p>Within compounds, you are required to separate all expressions with semicolons (the last semicolon before the terminating <tt>}</tt> is optional). This use of semicolon is similar, but still different to C / C++ which uses semicolons for terminating statements. The implication is that semicolons are often required also after <tt>}</tt> in PikaScript, as illustrated in this example:</p>
 <pre>{<br>    welcome = function {<br>        print("Hello!");<br>    };                                      // Semicolon required here!<br>    if (true) {<br>        welcome();<br>    };                                      // And here!<br>    print("Goodbye")                        // But not required here.<br>}<br></pre>
-<table>
-<tr>
-<td colspan=4>At other times, the semicolon is <b>not</b> allowed, such as before <tt>else</tt> in a conditional expression. For example:</td>
-</tr>
-<tr>
-<td></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>{</td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>&nbsp;</td><td>if (test()) print('Test succeeded!')</td><td>// "else" belongs to the "if" expression, therefore no semicolon.</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>&nbsp;</td><td>else print('Test failed!');</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>}</td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-</table>
+<p>At other times, the semicolon is <b>not</b> allowed, such as before <tt>else</tt> in a conditional expression. For example:</p>
+<pre>{<br>    if (test()) print('Test succeeded!')    // "else" belongs to the "if" expression, therefore no semicolon.<br>    else print('Test failed!');<br>}<br></pre>
 <h2><a name="Arrays">Arrays</a></h2>
 <p>You may have noticed that there were no array or object class in the class table earlier, but don't despair, there is support for associative arrays in PikaScript, it is just that they are not what you normally call <i>first class objects</i>. That is, they are not stored in variables in a self-contained manner. Instead, each individual array element is an individual variable with a distinct naming convention where periods delimit its element keys. E.g. <tt>myArray[5]</tt> actually resolves to <tt>myArray.5</tt>. Likewise, <tt>phoneNumber["John"]["Doe"]</tt> will resolve to <tt>phoneNumber.John.Doe</tt>.</p>
 <p>There are no restrictions on what strings you can use for element names, but in case the string is not a valid symbol name (for example if it contains spaces, starts with a leading digit etc) you must use the subscript operator <tt>[]</tt>. E.g. <tt>x = myArray.5</tt> and <tt>x = myArray.two words</tt> are not valid expression syntaxes but <tt>myArray[5]</tt> and <tt>myArray["two words"]</tt> are. Also <tt>.</tt> is actually an operator, so surrounding spaces will not matter. <tt>myArray . myKey</tt> is the same as <tt>myArray.myKey</tt>.</p>
@@ -303,19 +285,7 @@
 <li>The <i>lambda expression</i> is a function that shares the variable scope with the function that created it. E.g. <tt>&gt;(a+b)</tt><br></li>
 </ul>
 The following example illustrates the difference between these two variants:
-<br><br>f = function {
-<br>localVariable = 'abcd';         // localVariable is created in the local variable scope of this function,
-<br>// it will be destroyed on function exit.
-<br><br>print(exists(@outerVariable));  // Will print false, because outerVariable is not reachable from here.
- };
-<br><br>l =&gt; {                              // Notice that l =&gt; { is interpreted as l = &gt;{, but it looks neater in this form.
-<br><br>newVariable = outerVariable;    // outerVariable is accessible here.
- };
-<br><br>outerVariable = 'reach me';
-<br>f();
-<br>l();
-<br>print(newVariable);                 // Will print 'reach me'.
-<br>print(exists(@localVariable));      // Will print false, because localVariable from f does not exist in this scope.
+<pre>f = function {<br>    localVariable = 'abcd';         // localVariable is created in the local variable scope of this function,<br>                                    // it will be destroyed on function exit.<br><br>    print(exists(@outerVariable));  // Will print false, because outerVariable is not reachable from here.<br>};<br><br>l =&gt; {                              // Notice that l =&gt; { is interpreted as l = &gt;{, but it looks neater in this form.<br><br>    newVariable = outerVariable;    // outerVariable is accessible here.<br>};<br><br>outerVariable = 'reach me';<br>f();<br>l();<br>print(newVariable);                 // Will print 'reach me'.<br>print(exists(@localVariable));      // Will print false, because localVariable from f does not exist in this scope.<br></pre>
 <p>Lambda expressions are very powerful, allowing practical use of so called higher-order functions, i.e. functions that take other functions as arguments (or returns new functions). For example, the <tt>foreach</tt> function (part of the standard library) takes an array as first argument and a function / lambda expression as second argument which is then applied to each element found in the array. Like this:</p>
 <pre>a[0] = 'q';<br>a[1] = 'w';<br>a[2] = 'e';<br>count = 0;<br>foreach(@a, &gt;++count);              // Count will now be 3.<br></pre>
 <p>Function arguments are not accessed by name in PikaScript, but by index. The first argument is number 0 and is accessed with <tt>$0</tt>. <tt>$n</tt> is a special variable containing the number of arguments passed to the function. Notice that you can modify the contents of the arguments in the function, but it will not affect any source variables passed to the function since arguments are passed by value. If you want to modify variable content in the caller's variable scope you should explicitly pass a reference to this variable from the caller to the function, e.g. a swap function could be implemented like this:</p>
@@ -361,11 +331,9 @@ under <tt>a</tt>.</p>
 <h2><a name="Standard_Native_Functions">Standard Native Functions</a></h2>
 <p>Here is a list of standard library functions that have native implementations. These are declared by the <tt>addLibraryNatives</tt> C++ function which means they are available without having to run / include <tt>stdlib.pika</tt>. Naturally they also execute much much faster than functions written in PikaScript. Please see the PikaScript Standard Library Reference (<a href="help/index.html">help/index</a>) for full documentation on all standard library functions.</p>
 <p><tt>abs</tt>, <tt>acos</tt>, <tt>asin</tt>, <tt>atan</tt>, <tt>atan2</tt>, <tt>ceil</tt>, <tt>char</tt>, <tt>cos</tt>, <tt>cosh</tt>, <tt>delete</tt>, <tt>escape</tt>, <tt>exists</tt>, <tt>elevate</tt>, <tt>evaluate</tt>, <tt>exp</tt>, <tt>find</tt>, <tt>floor</tt>, <tt>foreach</tt>, <tt>input</tt>*, <tt>invoke</tt>, <tt>length</tt>, <tt>log</tt>, <tt>log10</tt>, <tt>load</tt>*, <tt>lower</tt>, <tt>mismatch</tt>, <tt>ordinal</tt>, <tt>pow</tt>, <tt>parse</tt>, <tt>precision</tt>, <tt>print</tt>*, <tt>radix</tt>, <tt>random</tt>, <tt>reverse</tt>, <tt>sin</tt>, <tt>sinh</tt>, <tt>save</tt>*, <tt>search</tt>, <tt>span</tt>, <tt>sqrt</tt>, <tt>system</tt>*, <tt>tan</tt>, <tt>tanh</tt>, <tt>time</tt>, <tt>throw</tt>, <tt>trace</tt>, <tt>try</tt>, <tt>upper</tt></p>
-<p>There are two functions written in PikaScript that are also declared by <tt>addLibraryNatives</tt>: <tt>run</tt> and <tt>include</tt> <br>
- <br>
-Finally the global constant <tt>VERSION</tt> will contain the current PikaScript engine version. <br>
- <br>
-* <tt>input</tt>, <tt>load</tt>, <tt>print</tt>, <tt>save</tt> and <tt>system</tt> can be excluded by calling <tt>addLibraryNatives</tt> with a false <tt>includeIO</tt> argument.</p>
+<p>There are two functions written in PikaScript that are also declared by <tt>addLibraryNatives</tt>: <tt>run</tt> and <tt>include</tt></p>
+<p>Finally the global constant <tt>VERSION</tt> will contain the current PikaScript engine version.</p>
+<p><small><sup>*</sup> <tt>input</tt>, <tt>load</tt>, <tt>print</tt>, <tt>save</tt> and <tt>system</tt> can be excluded by calling <tt>addLibraryNatives</tt> with a false <tt>includeIO</tt> argument.</small></p>
 <h2><a name="Further_Reading">Further Reading</a></h2>
 
 <ul>
@@ -373,58 +341,20 @@ Finally the global constant <tt>VERSION</tt> will contain the current PikaScript
 <li>PikaScript C++ API Reference (Doxygen) : <a href="html/index.html">html/index</a></li>
 </ul>
 <h2><a name="Copyrights_and_Trademarks">Copyrights and Trademarks</a></h2>
-<table>
-<tr>
-<td colspan=3>PikaScript is released under the "New Simplified BSD License".</td>
-</tr>
-<tr>
-<td colspan=3><a href="http://www.opensource.org/licenses/bsd-license.php">http://www.opensource.org/licenses/bsd-license.php</a></td>
-</tr>
-<tr>
-<td></td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td colspan=3>Copyright (c) 2011-2025, NuEdge Development / Magnus Lidstr&ouml;m</td>
-</tr>
-<tr>
-<td colspan=3>All rights reserved.</td>
-</tr>
-<tr>
-<td></td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>*)</td><td>&nbsp;</td><td>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td colspan=2>following conditions are met:</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td></td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>*)</td><td>&nbsp;</td><td>Redistributions of source code must retain the above copyright notice, this list of conditions and the following</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td colspan=2>disclaimer.</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td></td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>*)</td><td>&nbsp;</td><td>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td colspan=2>disclaimer in the documentation and/or other materials provided with the distribution.</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td></td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>*)</td><td>&nbsp;</td><td>Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td colspan=2>products derived from this software without specific prior written permission.</td>
-</tr>
-</table>
+<p>PikaScript is released under the "New Simplified BSD License". <br>
+<a href="http://www.opensource.org/licenses/bsd-license.php">http://www.opensource.org/licenses/bsd-license.php</a></p>
+<p>Copyright (c) 2011-2025, NuEdge Development / Magnus Lidstr&ouml;m <br>
+All rights reserved.</p>
+
+<ul>
+<li>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+<br><br></li>
+<li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+<br><br></li>
+<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+<br><br></li>
+<li>Neither the name of the NuEdge Development nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+</li>
+</ul>
 <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
 <p>The HTML version of this document was created with PikaScript.</p>
