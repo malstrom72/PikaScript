@@ -1,7 +1,6 @@
 # PikaScript
 
-PikaScript is a minimal interpreted scripting language implemented in C++.
-This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation.
+PikaScript is a minimal interpreted scripting language implemented in C++. This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation.
 
 ## History
 
@@ -10,14 +9,11 @@ PikaScript began as a tiny scripting experiment and has hardly changed since 200
 ## Repository Layout
 
 ```
-src/       - C++ source code of the PikaScript interpreter and standard library
-tools/PikaCmd/   - command-line tool sources, build scripts, installation helpers
-examples/  - assorted PikaScript samples and experiments
-docs/      - generated documentation and helper scripts
+src/            - C++ source code of the PikaScript interpreter and standard library
+tools/PikaCmd/  - command-line tool sources, build scripts, installation helpers
+examples/       - samples and experiments (various quality, many of them unfinished)
+docs/           - generated documentation and helper scripts
 ```
-
-The main runtime implementation is in `src/PikaScript.cpp`/`PikaScript.h`.
-Examples and test scripts can be found in `examples/`, while `docs/` contains HTML documentation describing the standard library.
 
 ## Building PikaCmd
 
@@ -25,35 +21,23 @@ The easiest way to build the command-line tool is to run the provided build scri
 
 ```bash
 cd tools/PikaCmd/SourceDistribution
-bash BuildPikaCmd.sh       # builds PikaCmd and runs unit tests
+bash BuildPikaCmd.sh
 ```
 
-`BuildPikaCmd.sh` calls `BuildCpp.sh` internally to compile `PikaCmdAmalgam.cpp` and execute available unit tests. The relevant lines show the build step and tests:
+`BuildPikaCmd.sh` calls `BuildCpp.sh` internally to compile `PikaCmdAmalgam.cpp` and execute available unit tests.
 
-```
-6  bash BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmdAmalgam.cpp
-10 echo Testing...
-12 ./PikaCmd unittests.pika >/dev/null
-18 if [ -e ./systoolsTests.pika ]; then
-```
+After building, `PikaCmd` can be installed system-wide using `InstallPika.sh`, which copies the binary and helper scripts to `/usr/local/bin`.
 
-After building, `PikaCmd` can be installed system-wide using `InstallPika.sh`, which copies the binary and helper scripts to `/usr/local/bin`:
+Equivalent scripts are also available for Windows.
 
-```
-5 chmod +x ./pika
-16 sudo mv ./PikaCmd /usr/local/bin/
-17 sudo cp ./pika /usr/local/bin/
-18 sudo cp systools.pika /usr/local/bin/
-```
-
-For a detailed overview of `PikaCmd`, the helper script `systools.pika` and how
-to write portable build scripts, see
-[docs/PikaCmd Documentation.txt](docs/PikaCmd%20Documentation.txt).
+For a detailed overview of `PikaCmd`, the helper script `systools.pika` and how to write portable build scripts, see [docs/PikaCmd Documentation.txt](docs/PikaCmd%20Documentation.txt).
 
 The file `DownloadAndInstallReadMe.txt` also provides one-line boot-strap commands for Windows or Unix systems to download and install PikaScript:
 
-```
+```bat
 powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('http://nuedge.net/pikascript/install.bat','%TEMP%\\install.bat')" && %TEMP%\\install.bat
+```
+```bash
 curl -s http://nuedge.net/pikascript/install.sh | sh
 ```
 
@@ -65,7 +49,7 @@ Once built, you can run a PikaScript program via:
 ./PikaCmd myscript.pika
 ```
 
-For an interactive REPL experience, use `interactive.pika` (located in `src/`):
+For an interactive REPL experience, run `PikaCmd` without arguments (this will invoke `interactive.pika`):
 
 ```
 Enter expressions to evaluate them interactively line by line. E.g.:
@@ -78,35 +62,29 @@ Enter expressions to evaluate them interactively line by line. E.g.:
 The interactive environment provides several special commands:
 
 ```
-?                        this help
-<page>?                  shows a page from the standard library help system
-=                        displays the full definition of the last evaluated expression
-<variable>=              displays the full definition of a variable / function / container
-%                        re-run last executed PikaScript source file
-%['']<path>[''] [args...]  runs a PikaScript source file (optionally with arguments)
-!<command>               executes a command with the operating system's command interpreter
-exit                     exits
+?                           this help
+<page>?                     shows a page from the standard library help system
+=                           displays the full definition of the last evaluated expression
+<variable>=                 displays the full definition of a variable / function / container
+%                           re-run last executed PikaScript source file
+%['']<path>[''] [args...]   runs a PikaScript source file (optionally with arguments)
+!<command>                  executes a command with the operating system's command interpreter
+exit                        exits
 ```
 
 ## Debugging
 
-To enable assertions and debugging helpers, include the built-in `debug.pika` script at the start of your
-program:
+To enable assertions and debugging helpers, include the built-in `debug.pika` script at the start of your program:
 
 ```pika
 include('debug.pika');
 ```
 
-This installs a tracer that prints error offsets and a short call stack whenever an exception is caught.
-It also defines the `debug()` function for step-by-step execution and exposes `trace()` helpers for more
-verbose output.
+This installs a tracer that prints error offsets and a short call stack whenever an exception is caught. It also defines the `debug()` function for step-by-step execution and exposes `trace()` helpers for more verbose output.
 
 ## PPEG Parser Generator
 
-PPEG is a self-hosting parser generator used to build the PikaScript parser.
-All PPEG related files live under `tools/ppeg` and the folder contains both a
-global and a local compiler variant. For details on how they differ and how to
-run them, see [docs/PPEG Documentation.txt](docs/PPEG%20Documentation.txt).
+PPEG is a self-hosting parser generator. All PPEG related files live under `tools/ppeg`. For details on how to run them, see [docs/PPEG Documentation.txt](docs/PPEG%20Documentation.txt).
 
 ## Documentation
 
@@ -114,9 +92,7 @@ HTML documentation for the standard library lives in `docs/help/`. Open `docs/he
 
 ## Testing
 
-The standard library examples shown in `docs/help` also serve as the unit tests.
-`tests/unittests.pika` loads each documentation page, extracts the example code, and executes it.
-This double-checking system keeps the docs accurate and ensures the library functions behave as documented.
+The standard library examples shown in `docs/help` also serve as the unit tests. `tests/unittests.pika` loads each documentation page, extracts the example code, and executes it. This double-checking system keeps the docs accurate and ensures the library functions behave as documented.
 
 ## License
 
