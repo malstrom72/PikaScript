@@ -1,106 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <meta http-equiv="Content-Style-Type" content="text/css">
-    <style type="text/css">
-html {
-	background:#faf8f3;
-}
-body {
-	min-width:650px;
-	max-width:960px;
-	_width:650px;
-	color:#000;
-	margin:0;
-	font-family:'Cambria',Georgia,'Times New Roman',Times,serif;
-	height:100%;
-	overflow:visible;
-	padding:36px;
-}
-table {
-	line-height:18px;
-	margin-bottom:17px;
-	border:1px solid #ccc;
-	border-collapse:collapse;
-	border-bottom-color:#aaa;
-	border-radius:2px;
-	box-shadow:0px 1px 0 #ddd;
-	-moz-border-radius:2px;
-	-moz-box-shadow:0px 1px 0 #ddd;
-	-webkit-box-shadow:0px 1px 0 #ddd;
-}
-tr { 
-	background:#fff;
-	vertical-align:top;
-}
-th,tr:nth-child(even) { 
-	background:#eee;
-}
-td {
-	border:1px dotted #ccc;
-	padding:2px 18px 4px 9px;
-	font-size:0.9em;
-}
-th {
-	background:#ddd;
-	border:1px solid #bbb;
-	color:#000;
-	font-weight:normal;
-	padding:4px 18px 4px 9px;
-	text-align:left;
-	font-size:0.85em;
-}
-tr:nth-child(1) th {
-	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ccc), to(#bbb));
-	background:-moz-linear-gradient(top, #ccc, #bbb);
-	border:1px solid #aaa;
-	border-bottom-color:#999;
-	border-top-color:#bbb;
-	box-shadow:0px 1px 1px #ccc;
-	-moz-box-shadow:0px 1px 1px #ccc;
-	-webkit-box-shadow:0px 1px 1px #ccc;
-	color:#333;
-	padding:8px 18px 8px 9px;
-	text-shadow:0 1px #ddd;
-}
-tt {
-	color:#5d5d5d;
-	padding-right:4px;
-	padding-left:4px;
-}
-pre {
-	border:1px solid #d0d0d0;
-	overflow:auto;
-	color:#5f5f5f;
-	padding:0.4em;
-}
-ul {
-	list-style-type:disc;
-	padding-left:14px;
-	list-style-position:inside;
-}
-h1,h2,h3,h4,h5,h6 {
-	font-weight:bold;
-	margin-bottom:18px;
-}
-h1,h2 { line-height:36px; }
-h3,h4 { line-height:18px; }
-h1 { font-size:2.0em; }
-h2 { font-size:1.5em; }
-h3 { font-size:1.3em; }
-h4 { font-size:1.2em; }
-h5 { font-size:1.1em; }
-h6 { font-size:1.0em; }
-
-a { text-decoration:none; }
-a[href]:hover { text-decoration:underline; }
-a sup	{ font-size:0.7em; }
-
-
-    </style>
-  </head>
-  <body>
 <h1><a name="Main_Header">Main Header</a></h1>
 <h2><a name="First_Chapter">First Chapter</a></h2>
 <h3><a name="Introduction">Introduction</a></h3>
@@ -132,19 +29,12 @@ lines.</p>
 <br><br><i>for</i> <b>you</b>
 <br></li>
 <li>Orange<br><br>Beginning of sub-list
-<br><br>
-<ul>
-<li>Hey<br>
-<ol>
-<li>sub-list<br></li>
-<li>yeah</li>
-</ol>
 </li>
-<li>You</li>
-<li>The <b>rock</b> steady <i>crew</i></li>
-</ul>
-<br>End of sub-list
-<br><br></li>
+</ol>
+<pre>*) Hey<br>    1) sub-list<br>    2) yeah<br>*) You<br>*) The *rock* steady /crew/<br></pre>
+<pre>End of sub-list<br></pre>
+
+<ol>
 <li>Banana<br>
 <ul>
 <li>boat<br></li>
@@ -160,22 +50,28 @@ tonight
  and this wrap
 <br>but break before but there
  but not here
-<br><br>and extra space
-<br>before this section of two lines
 </li>
 </ul>
-<br></li>
-<li><a href="http://www.soniccharge.com">http://www.soniccharge.com</a>. Cool place to hang out.</li>
+</li>
 </ol>
+<pre>and extra space<br>before this section of two lines<br></pre>
 
 <ol>
+<li><a href="http://www.soniccharge.com">http://www.soniccharge.com</a>. Cool place to hang out.<br><br></li>
 <li>one<br></li>
 <li>two<br></li>
-<li>three</li>
+<li>three<br></li>
 </ol>
-<h3><a name="Examples">Examples</a></h3>
-<p>Examples are indented by four or more spaces and they will be put into &lt;pre&gt; &lt;/pre&gt; sections. Take a look at the following example:</p>
-<pre>This is an example.<br>+-----------------------------+<br>|It uses a preformatted style.|<br>+-----------------------------+<br><br>and it continues to here.<br></pre>
+Examples
+<br>--------
+<p>Examples are indented by four or more spaces and they will be put into &lt;pre&gt; &lt;/pre&gt; sections. Take a look at the following example: <br>
+     <br>
+    This is an example. <br>
+    +-----------------------------+ <br>
+    |It uses a preformatted style.| <br>
+    +-----------------------------+ <br>
+     <br>
+    and it continues to here.</p>
 <p>But stops here.</p>
 <h3><a name="Tables">Tables</a></h3>
 <p>Tables are created when a section contains a line with two or more consecutive spaces. These spaces divide the cells horizontally.</p>
@@ -242,6 +138,5 @@ tonight
 <th>Fourth attempt</th><td>oh no, back to square 1</td>
 </tr>
 </table>
-<pre>// run('tools/htmlifyFile.pika'); save('examples/test.html', htmlify(load('examples/test.txt')))<br></pre>
-  </body>
-</html>
+<p>     <br>
+    // run('tools/htmlifyFile.pika'); save('examples/test.html', htmlify(load('examples/test.txt')))</p>
