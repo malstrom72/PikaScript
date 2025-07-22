@@ -18,4 +18,5 @@ runTest('bulletSpacing.txt');
 runTest('bulletSpacingTrim.txt');
 runTest('preSpacing.txt');
 runTest('preSpacingTrim.txt');
+runTest('htmlifyPikaDoc.txt');
 print('OK!');
