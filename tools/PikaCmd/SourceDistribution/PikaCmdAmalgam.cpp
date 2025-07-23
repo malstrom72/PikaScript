@@ -514,7 +514,6 @@ template<class Config> struct Script {
 		"method" name as a string.
 		
 		\details
-		
 		Notice that if the $callee variable does not begin with a "frame specifier", it is assumed that the object
 		belongs to the previous frame (e.g. the caller of the method). This holds true even if the method is actually
 		defined in the root frame. For example \code function { obj.meth() } \endcode would trigger an error even if
@@ -1158,7 +1157,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 	switch (p < e ? *p : 0) {
 		case 0:		return false;
 		case ' ': case '\t': case '\r': case '\n':
-					if (thres < DEFINITION) { Char c = *p; while (++p < e && *p == c); return true; } break;			// <-- white spaces
+					if (thres < DEFINITION) { Char c = *p; while (++p < e && *p == c) { } return true; } break;			// <-- white spaces
 		case '/':	if (thres < DEFINITION && e - p > 1 && (p[1] == '/' || p[1] == '*')) { white(p, e); return true; }	// <-- comment
 					return assignableOp(p, e, v, dry, thres, 1, MUL_DIV, std::divides<double>());						// <-- divide
 		case '+':	return addSubOp(p, e, v, dry, thres, std::plus<double>());											// <-- add
@@ -3274,18 +3273,18 @@ const char* BUILT_IN_STDLIB =
 #include <iostream>
 #include <fstream>
 #if !defined(PikaScript_h)
-#include "../src/PikaScript.h"
+#include "../../src/PikaScript.h"
 #endif
 
 #if (QUICKER_SCRIPT)
 	#if !defined(QStrings_h)
-	#include "../src/QStrings.h"
+	#include "../../src/QStrings.h"
 	#endif
 	#if !defined(PikaScriptImpl_h)
-	#include "../src/PikaScriptImpl.h"
+	#include "../../src/PikaScriptImpl.h"
 	#endif
 	#if !defined(QuickVars_h)
-	#include "../src/QuickVars.h"
+	#include "../../src/QuickVars.h"
 	#endif
 
 	struct QuickerScriptConfig;

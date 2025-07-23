@@ -3,12 +3,14 @@ set -e -o pipefail -u
 cd "$(dirname "$0")"
 
 if [ -e ./PikaCmd ]; then
-        :
+       :
 else
-        bash ./BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../src/*.cpp
-	if [ $? -ne 0 ]; then
-		exit 1
-	fi
+       # Use the portable build script from SourceDistribution to avoid
+       # platform-specific flags such as `-target`
+       bash ./SourceDistribution/BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../../src/*.cpp
+       if [ $? -ne 0 ]; then
+               exit 1
+       fi
 fi
 
 ./PikaCmd UpdateBuiltIns.pika
@@ -17,7 +19,7 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-cat ../src/PikaScript.h ../src/PikaScriptImpl.h ../src/QStrings.h ../src/QuickVars.h ../src/PikaScript.cpp ../src/QStrings.cpp BuiltIns.cpp PikaCmd.cpp >SourceDistribution/PikaCmdAmalgam.cpp
+cat ../../src/PikaScript.h ../../src/PikaScriptImpl.h ../../src/QStrings.h ../../src/QuickVars.h ../../src/PikaScript.cpp ../../src/QStrings.cpp BuiltIns.cpp PikaCmd.cpp >SourceDistribution/PikaCmdAmalgam.cpp
 if [ $? -ne 0 ]; then
 	echo Failed concatenating files
 	exit 1
