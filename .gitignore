@@ -4,3 +4,5 @@ tools/PikaCmd/SourceDistribution/PikaCmd
 /tools/PikaCmd/SourceDistribution/PikaCmd.dSYM
 /projects/build
 output/
+/projects/.vs
+/projects/temp/PikaCmd/Debug

@@ -23,25 +23,26 @@
     <ProjectGuid>{679162A7-315E-4F73-912B-F69447B868F5}</ProjectGuid>
     <RootNamespace>PikaCmd</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -191,13 +192,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BuiltIns.cpp" />
-    <ClCompile Include="PikaCmd.cpp" />
     <ClCompile Include="..\src\PikaScript.cpp" />
     <ClCompile Include="..\src\QStrings.cpp" />
+    <ClCompile Include="..\tools\PikaCmd\BuiltIns.cpp" />
+    <ClCompile Include="..\tools\PikaCmd\PikaCmd.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\PikaObjects.h" />
     <ClInclude Include="..\src\PikaScript.h" />
     <ClInclude Include="..\src\PikaScriptImpl.h" />
     <ClInclude Include="..\src\QStrings.h" />
