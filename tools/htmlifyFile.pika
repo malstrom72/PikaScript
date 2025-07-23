@@ -11,16 +11,19 @@ if (srcPath === void) {
 };
 defaults(@cssPath, run.root # 'docstyle.css');
 
-css = load(cssPath);
+css = void;
+if (cssPath !== '-') css = load(cssPath);
 text = load(srcPath);
 
 head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">' # LF #
 '<html>' # LF #
 '  <head>' # LF #
 '    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">' # LF #
-'    <meta http-equiv="Content-Style-Type" content="text/css">' # LF #
-'    <style type="text/css">' # LF # css # LF # '    </style>' # LF #
-'  </head>' # LF #
+'    <meta http-equiv="Content-Style-Type" content="text/css">' # LF;
+if (css !== void) {
+    head #= '    <style type="text/css">' # LF # css # LF # '    </style>' # LF;
+};
+head #= '  </head>' # LF #
 '  <body>' # LF;
 
 tail = '  </body>' # LF # '</html>' # LF;
