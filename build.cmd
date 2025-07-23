@@ -14,6 +14,8 @@ IF ERRORLEVEL 1 GOTO error
 tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika
 IF ERRORLEVEL 1 GOTO error
 
+tools\PikaCmd\SourceDistribution\PikaCmd examples\htmlifyTests.pika || GOTO error
+
 PUSHD tools\PikaCmd\SourceDistribution
 DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release
@@ -25,6 +27,8 @@ IF ERRORLEVEL 1 GOTO error
 
 tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika
 IF ERRORLEVEL 1 GOTO error
+
+tools\PikaCmd\SourceDistribution\PikaCmd examples\htmlifyTests.pika || GOTO error
 
 EXIT /b 0
 :error
