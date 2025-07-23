@@ -145,10 +145,7 @@
 <p>In PikaScript you simply declare variables by assigning them values (in fact, this is the only way to create new variables). Unless a variable is global (prefixed with <tt>::</tt>), it will be destroyed when the function wherein it is declared returns. Read more about variable scopes under <a href="#Functions">Functions</a>.</p>
 <h2><a name="Operators">Operators</a></h2>
 <p>Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements (such as <tt>if</tt> and <tt>for</tt>) are actually operators rather than statements. See <a href="#Expressions">Expressions</a> for more on this.</p>
-<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the <br>
-header.  Numbers 0&#8211;3 are artificial levels reserved for the tracing system and the <br>
-<tt>tick()</tt> callback.  They never appear in actual expressions.  Real operators start at the <br>
-<tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
+<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Numbers 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
 <table>
 <tr>
 <th>Operator</th><th>Prec.</th><th>Comment</th>

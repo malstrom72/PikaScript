@@ -4,11 +4,9 @@ systools
 What is systools?
 =================
 
- systools.pika is a compact portable helper library distributed with
-PikaCmd. It bundles cross-platform file utilities together with an
-improved `include()` that tracks where scripts are running from. By
-loading this script alongside `stdlib.pika` you gain a toolbox for
-manipulating files, running shell commands and resolving paths.
+ systools.pika is a compact portable helper library distributed with PikaCmd. It bundles cross-platform file utilities
+together with an improved `include()` that tracks where scripts are running from. By loading this script alongside
+`stdlib.pika` you gain a toolbox for manipulating files, running shell commands and resolving paths.
 
 Loading the helper
 ------------------
@@ -66,11 +64,9 @@ Syntax
 Description
 -----------
 
- Improved 'include' that looks for include files in a list of search
-paths. Use `include.addSearchPath()` or the environment variable
-PIKAINCLUDE to define search paths. Include files will also be searched
-in the same directory as the currently executing script. The global
-`::run.root` contains this directory path.
+ Improved 'include' that looks for include files in a list of search paths. Use `include.addSearchPath()` or the
+environment variable PIKAINCLUDE to define search paths. Include files will also be searched in the same directory as
+the currently executing script. The global `::run.root` contains this directory path.
 
 run
 ===
@@ -83,9 +79,8 @@ Syntax
 Description
 -----------
 
- Loads and immediately executes the file. Before running, `run.root` is
-set to the directory of the script so that subsequent includes resolve
-paths relative to that location.
+ Loads and immediately executes the file. Before running, `run.root` is set to the directory of the script so that
+subsequent includes resolve paths relative to that location.
 
 appendDirSlash
 ==============
@@ -98,8 +93,7 @@ Syntax
 Description
 -----------
 
- Appends '/' to `path` if its last character is not already '/', '\\' or
-':'.
+ Appends '/' to `path` if its last character is not already '/', '\\' or ':'.
 
 removeDirSlash
 ==============
@@ -112,9 +106,9 @@ Syntax
 Description
 -----------
 
- Removes the last character from `pathSlash` if it is '/', '\\' or ':'. Use
-this to climb a path upwards:
-     parent = dirOfPath(removeDirSlash('/abc/def/ghi'))
+ Removes the last character from `pathSlash` if it is '/', '\\' or ':'. Use this to climb a path upwards:
+
+    parent = dirOfPath(removeDirSlash('/abc/def/ghi'))
 
 dirOfPath
 =========
@@ -166,8 +160,7 @@ Syntax
 Description
 -----------
 
- Extracts the extension of `path`, including the leading '.'. Returns
-`void` if there is no extension.
+ Extracts the extension of `path`, including the leading '.'. Returns `void` if there is no extension.
 
 splitPath
 =========
@@ -180,8 +173,7 @@ Syntax
 Description
 -----------
 
- Splits a full path into directory, base name and extension and writes
-the values to the referenced variables.
+ Splits a full path into directory, base name and extension and writes the values to the referenced variables.
 
 shell
 =====
@@ -194,8 +186,7 @@ Syntax
 Description
 -----------
 
- Executes a shell command and optionally throws an exception if the
-command exits with a non-zero return code.
+ Executes a shell command and optionally throws an exception if the command exits with a non-zero return code.
 
 pipe
 ====
@@ -208,9 +199,8 @@ Syntax
 Description
 -----------
 
- Executes a shell command, captures its output and returns it. An
-exception is thrown when the command exits with a non-zero return code.
-Optional `@err` and `@rc` receive stderr output and return code.
+ Executes a shell command, captures its output and returns it. An exception is thrown when the command exits with a
+non-zero return code. Optional `@err` and `@rc` receive stderr output and return code.
 
 eraseFile
 =========
@@ -236,8 +226,7 @@ Syntax
 Description
 -----------
 
- Moves or renames file(s). `fromPath` can contain wildcard characters.
-`toPath` may or may not contain a file name.
+ Moves or renames file(s). `fromPath` can contain wildcard characters. `toPath` may or may not contain a file name.
 
 copyFile
 ========
@@ -250,8 +239,7 @@ Syntax
 Description
 -----------
 
- Copies file(s). `fromPath` can contain wildcard characters. `toPath` may
-or may not contain a file name.
+ Copies file(s). `fromPath` can contain wildcard characters. `toPath` may or may not contain a file name.
 
 makeDir
 =======
@@ -264,8 +252,8 @@ Syntax
 Description
 -----------
 
- Creates a directory. Throws if the directory already exists when
-`throwOnError` is true. Intermediate directories must exist.
+ Creates a directory. Throws if the directory already exists when `throwOnError` is true. Intermediate directories must
+exist.
 
 removeDir
 =========
@@ -278,8 +266,7 @@ Syntax
 Description
 -----------
 
- Removes a directory. Throws if the directory is not empty or does not
-exist when `throwOnError` is true.
+ Removes a directory. Throws if the directory is not empty or does not exist when `throwOnError` is true.
 
 renameFile
 ==========
@@ -305,8 +292,8 @@ Syntax
 Description
 -----------
 
- Concatenates all source files and writes the result to `toPath`.
-`sources` may contain wildcards and `toPath` must not be one of them.
+ Concatenates all source files and writes the result to `toPath`. `sources` may contain wildcards and `toPath` must not
+be one of them.
 
 fromNativePath
 ==============
@@ -319,8 +306,7 @@ Syntax
 Description
 -----------
 
- Converts a path in native representation (using platform separators) to
-a normalized representation.
+ Converts a path in native representation (using platform separators) to a normalized representation.
 
 toNativePath
 ============
@@ -333,8 +319,7 @@ Syntax
 Description
 -----------
 
- Converts a path in platform-normalized representation (always using
-forward slashes) to the native representation.
+ Converts a path in platform-normalized representation (always using forward slashes) to the native representation.
 
 quotePath
 =========
@@ -347,8 +332,8 @@ Syntax
 Description
 -----------
 
- Like `toNativePath()` but also quotes the path or escapes special
-characters so that spaces and wildcards are treated as literals.
+ Like `toNativePath()` but also quotes the path or escapes special characters so that spaces and wildcards are treated
+as literals.
 
 quoteWildcardPath
 =================
@@ -388,11 +373,9 @@ Syntax
 Description
 -----------
 
-  Lists files matching `filesOrDir` (which may contain wildcards) or all
-files in a directory and calls `>action` for each file. `order` can be
-`void`, `name`, `time` or `size`. `>action` receives the file name
-(without the parent directory). When a name ends with '/', it represents
-a subdirectory.
+  Lists files matching `filesOrDir` (which may contain wildcards) or all files in a directory and calls `>action` for
+each file. `order` can be `void`, `name`, `time` or `size`. `>action` receives the file name (without the parent
+directory). When a name ends with '/', it represents a subdirectory.
 
 fileSize
 ========
@@ -431,8 +414,7 @@ Syntax
 Description
 -----------
 
- Returns true if `comparePath` is newer than `toPath` or if
-`comparePath` exists and `toPath` does not.
+ Returns true if `comparePath` is newer than `toPath` or if `comparePath` exists and `toPath` does not.
 
 sleep
 =====
@@ -445,8 +427,7 @@ Syntax
 Description
 -----------
 
- Pauses execution for the given number of seconds. Timing accuracy may
-vary.
+ Pauses execution for the given number of seconds. Timing accuracy may vary.
 
 randomFilename
 ==============
@@ -459,8 +440,8 @@ Syntax
 Description
 -----------
 
- Returns a pseudo-random file name of eight hexadecimal characters.
-There is no guarantee that such a file does not already exist.
+ Returns a pseudo-random file name of eight hexadecimal characters. There is no guarantee that such a file does not
+already exist.
 
 makeTempDir
 ===========
@@ -473,8 +454,7 @@ Syntax
 Description
 -----------
 
- Creates a directory with a guaranteed unique pseudo-random name under
-`TEMP_DIR`.
+ Creates a directory with a guaranteed unique pseudo-random name under `TEMP_DIR`.
 
 wipeTempDir
 ===========
@@ -487,9 +467,8 @@ Syntax
 Description
 -----------
 
- Removes a temporary directory and all of its contents. Throws if `dir`
-is not under `TEMP_DIR`. It does not throw if the directory does not
-exist.
+ Removes a temporary directory and all of its contents. Throws if `dir` is not under `TEMP_DIR`. It does not throw if
+the directory does not exist.
 
 Constants
 =========
@@ -510,5 +489,4 @@ RMDIR_COMMAND       rmdir              RMDIR /Q
 WIPE_DIR_COMMAND    rm -Rf             RMDIR /S /Q
 DIRECT_ALL_TO_NULL  1>/dev/null 2>&1   1>NUL 2>&1
 
- These constants help keep scripts portable when spawning shell commands
-or manipulating paths.
+ These constants help keep scripts portable when spawning shell commands or manipulating paths.

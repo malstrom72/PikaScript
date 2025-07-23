@@ -4,10 +4,9 @@ htmlify
 What is htmlify?
 ================
 
- htmlify is a lightweight text to HTML converter implemented in PikaScript. It takes plain
-text formatted with a minimal markup language and outputs corresponding HTML. The script is
-mainly used to convert the documentation in this repository from `.txt` sources into the
-`docs/help` HTML pages and `PikaScript Documentation.html`.
+ htmlify is a lightweight text to HTML converter implemented in PikaScript. It takes plain text formatted with a minimal
+markup language and outputs corresponding HTML. The script is mainly used to convert the documentation in this
+repository from `.txt` sources into the `docs/help` HTML pages and `PikaScript Documentation.html`.
 
 Markup Syntax
 -------------
@@ -29,27 +28,26 @@ Markup Syntax
  -  A `^` sequence forms superscript like `x^2`; spaces around the caret are not allowed.
  -  Appending one or more `*` to a word marks a footnote and the text `**` defines it later.
 
- Any text that does not match a special pattern is HTML escaped to ensure valid output. Source files
-are assumed to be encoded with UTF-8.
+ Any text that does not match a special pattern is HTML escaped to ensure valid output. Source files are assumed to be
+encoded with UTF-8.
 
- Headers become <h1>, <h2> or <h3> respectively and automatically turn into named anchors that can be
-referenced simply by writing the exact words again elsewhere.
+ Headers become <h1>, <h2> or <h3> respectively and automatically turn into named anchors that can be referenced simply
+by writing the exact words again elsewhere.
 
 
 Example Usage
 -------------
 
- To convert a document you load `htmlify.pika` and call the `htmlify` function with the
-text to process. Below is the minimal command used by this project to generate the main
-documentation:
+ To convert a document you load `htmlify.pika` and call the `htmlify` function with the text to process. Below is the
+minimal command used by this project to generate the main documentation:
 
      include('tools/htmlify.pika');
      src = load('docs/PikaScript Documentation.txt');
      html = htmlify(src);
      save('docs/PikaScript Documentation.html', html);
 
- A helper script `tools/htmlifyFile.pika` performs the same conversion from the command line.
-Pass the text file and optionally a CSS file:
+ A helper script `tools/htmlifyFile.pika` performs the same conversion from the command line. Pass the text file and
+optionally a CSS file:
 
     output/PikaCmd tools/htmlifyFile.pika README.txt custom.css
 
@@ -58,14 +56,12 @@ Known Limitations
 -----------------
 
  -  Trailing spaces may affect formatting, particularly inside preformatted blocks.
- -  The implementation is tuned for this repository and may require adjustments for other
-    input conventions.
+ -  The implementation is tuned for this repository and may require adjustments for other input conventions.
 
 Example Document
 ----------------
 
- The following text demonstrates most features of `htmlify` and replaces the
-previous `examples/test.txt` file:
+ The following text demonstrates most features of `htmlify`.
 
 Main Header
 ###########
