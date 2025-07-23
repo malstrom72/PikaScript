@@ -8,16 +8,16 @@ css = replace(load(run.root # 'docstyle.css'), "\r\n\t", '', find, 1);
 head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-      <meta http-equiv="Content-Style-Type" content="text/css">
-        <title>PikaScript</title>
-        <style type="text/css">
-          table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }
-          th { text-align: left }
-          img { border: 0 none }
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	  <meta http-equiv="Content-Style-Type" content="text/css">
+		<title>PikaScript</title>
+		<style type="text/css">
+		  table, th, td { border: 1px solid black; padding: 5px; border-collapse:collapse; }
+		  th { text-align: left }
+		  img { border: 0 none }
 		' # css # '	
-        </style>
-      </head>
+		</style>
+	  </head>
 	  <body>
 ';
 tail = '
@@ -28,9 +28,11 @@ map(@::STD_PATTERNS, "[?][?]{*}[?][?]" # STD_PATTERN_SUFFIX, '<font color="red">
 map(@::STD_PATTERNS, "=== {*} ===" # STD_PATTERN_SUFFIX, '<b>{$1}</b>');
 
 dir(run.root # '../docs/*.txt', >{
-        src = run.root # '../docs/' # $0;
-        splitPath(src, @d, @n, @ext);
-        out = coalesce(d, '') # n # '.html';
-        save(out, head # htmlify(load(src)) # tail);
+	src = run.root # '../docs/' # $0;
+	splitPath(src, @d, @n, @ext);
+	if (n !== 'dictionary') {
+		out = coalesce(d, '') # n # '.html';
+		save(out, head # htmlify(load(src)) # tail);
+	}
 });
 print(LF # '***** DONE *****' # LF);
