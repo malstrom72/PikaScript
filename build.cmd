@@ -11,7 +11,7 @@ tools\PikaCmd\SourceDistribution\PikaCmd tests\ppegTest.pika || GOTO error
 
 tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika || GOTO error
 
-tools\PikaCmd\SourceDistribution\PikaCmd examples\htmlifyTests.pika || GOTO error
+tools\PikaCmd\SourceDistribution\PikaCmd tests\htmlifyTests.pika || GOTO error
 
 PUSHD tools\PikaCmd\SourceDistribution
 DEL /Q PikaCmd.exe 2>NUL
@@ -22,7 +22,7 @@ tools\PikaCmd\SourceDistribution\PikaCmd tests\ppegTest.pika || GOTO error
 
 tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika || GOTO error
 
-tools\PikaCmd\SourceDistribution\PikaCmd examples\htmlifyTests.pika || GOTO error
+tools\PikaCmd\SourceDistribution\PikaCmd tests\htmlifyTests.pika || GOTO error
 
 EXIT /b 0
 :error
