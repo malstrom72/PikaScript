@@ -101,7 +101,10 @@ Operators
  Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements
 (such as `if` and `for`) are actually operators rather than statements. See Expressions for more on this.
 
-?? TODO : document system with "artificial" precedence levels for "ticks" ??
+ The precedence values used in the table below match the `Precedence` enumeration in the
+ header.  Numbers 0–3 are artificial levels reserved for the tracing system and the
+ `tick()` callback.  They never appear in actual expressions.  Real operators start at the
+ `STATEMENT` level (4) and continue upward with higher values meaning higher precedence.
 
 Operator                    Prec.   Comment
 --------                    -----   -------
