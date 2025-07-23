@@ -95,6 +95,16 @@ HTML documentation for the standard library lives in `docs/help/`. Open `docs/he
 
 The standard library examples shown in `docs/help` also serve as the unit tests. `tests/unittests.pika` loads each documentation page, extracts the example code, and executes it. This double-checking system keeps the docs accurate and ensures the library functions behave as documented.
 
+## Running the Test Suite
+
+From the repository root, execute the build script to compile both the beta and release versions and run all regression tests:
+
+```bash
+bash build.sh
+```
+
+Windows users should run `build.cmd` instead. The script builds the tool in both modes and then runs the full test suite.
+
 ## License
 
 PikaScript is released under the BSD 2-Clause license. See [LICENSE](LICENSE) for details.
