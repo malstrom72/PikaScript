@@ -18,11 +18,13 @@ DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release
 CALL BuildPikaCmd.cmd || GOTO error
 POPD
-tools\PikaCmd\SourceDistribution\PikaCmd tests\ppegTest.pika || GOTO error
+IF NOT EXIST output MD output
+COPY /Y tools\PikaCmd\SourceDistribution\PikaCmd.exe output\PikaCmd.exe || GOTO error
+output\PikaCmd.exe tests\ppegTest.pika || GOTO error
 
-tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika || GOTO error
+output\PikaCmd.exe examples\ppegDocExample.pika || GOTO error
 
-tools\PikaCmd\SourceDistribution\PikaCmd tests\htmlifyTests.pika || GOTO error
+output\PikaCmd.exe tests\htmlifyTests.pika || GOTO error
 
 EXIT /b 0
 :error
