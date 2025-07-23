@@ -20,21 +20,22 @@
 
 <ul>
 <li>Paragraphs indented 1&#8211;3 spaces are unwrapped while four or more spaces create <tt>&lt;pre&gt;</tt> blocks.<br></li>
-<li>Lines consisting solely of <tt>#</tt>, <tt>=</tt> or <tt>-</tt> create headers <tt>&lt;h1&gt;</tt>, <tt>&lt;h2&gt;</tt> and <tt>&lt;h3&gt;</tt>.<br></li>
+<li>A header is created when a line of text is followed by a line of <tt>#</tt>, <tt>=</tt> or <tt>-</tt> of the same length.<br></li>
 <li><tt>*bold*</tt>, <tt>/italic/</tt> and <tt>_underline_</tt> produce <tt>&lt;b&gt;</tt>, <tt>&lt;i&gt;</tt> and <tt>&lt;u&gt;</tt> respectively.<br></li>
 <li>Backtick quoted sections <tt>`code`</tt> become <tt>&lt;tt&gt;</tt> blocks.<br></li>
 <li><tt>name.txt</tt> and <tt>name.html</tt> are turned into links to <tt>name.html</tt>.<br></li>
 <li>Lists start with <tt>*</tt>, <tt>-</tt> or digits followed by <tt>.</tt> and may be nested using indentation.<br></li>
 <li>Tables are created by aligning columns with two spaces or more.<br></li>
 <li>Tables support header rows using a dashed line and row headers using <tt>:</tt> surrounded by spaces.<br></li>
-<li><tt>==========</tt> inserts a horizontal rule.<br></li>
+<li>A line of ten or more <tt>=</tt> characters by itself inserts a horizontal rule.<br></li>
 <li>Plain <tt>http://</tt> or <tt>https://</tt> links are automatically converted to <tt>&lt;a href&gt;</tt> tags.<br></li>
 <li>Writing <tt>[image.jpg]</tt> (or <tt>.png</tt>, <tt>.gif</tt>) embeds the image; remote URLs inside brackets work too.<br></li>
 <li>Referencing a header name exactly creates an internal link to that section if it appears elsewhere.<br></li>
 <li>A <tt>^</tt> sequence forms superscript like <tt>x^2</tt>; spaces around the caret are not allowed.<br></li>
 <li>Appending one or more <tt>*</tt> to a word marks a footnote and the text <tt>**</tt> defines it later.</li>
 </ul>
-<p>Any text that does not match a special pattern is HTML escaped to ensure valid output.</p>
+<p>Any text that does not match a special pattern is HTML escaped to ensure valid output. Source files are assumed to be encoded with UTF-8.</p>
+<p>Headers become&#160;&lt;h1&gt;,&#160;&lt;h2&gt;&#160;or&#160;&lt;h3&gt;&#160;respectively and automatically turn into named anchors that can be referenced simply by writing the exact words again elsewhere.</p>
 <h3><a name="Example_Usage">Example Usage</a></h3>
 <p>To convert a document you load <tt>htmlify.pika</tt> and call the <tt>htmlify</tt> function with the text to process. Below is the minimal command used by this project to generate the main documentation:</p>
 <pre>include('tools/htmlify.pika');<br>src = load('docs/PikaScript Documentation.txt');<br>html = htmlify(src);<br>save('docs/PikaScript Documentation.html', html);<br></pre>

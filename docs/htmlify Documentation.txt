@@ -15,21 +15,26 @@ Markup Syntax
  The converter recognizes a small set of conventions:
 
  -  Paragraphs indented 1–3 spaces are unwrapped while four or more spaces create `<pre>` blocks.
- -  Lines consisting solely of `#`, `=` or `-` create headers `<h1>`, `<h2>` and `<h3>`.
+ -  A header is created when a line of text is followed by a line of `#`, `=` or `-` of the same length.
  -  `*bold*`, `/italic/` and `_underline_` produce `<b>`, `<i>` and `<u>` respectively.
  -  Backtick quoted sections ``code`` become `<tt>` blocks.
  -  `name.txt` and `name.html` are turned into links to `name.html`.
  -  Lists start with `*`, `-` or digits followed by `.` and may be nested using indentation.
  -  Tables are created by aligning columns with two spaces or more.
  -  Tables support header rows using a dashed line and row headers using `:` surrounded by spaces.
- -  `==========` inserts a horizontal rule.
+ -  A line of ten or more `=` characters by itself inserts a horizontal rule.
  -  Plain `http://` or `https://` links are automatically converted to `<a href>` tags.
  -  Writing `[image.jpg]` (or `.png`, `.gif`) embeds the image; remote URLs inside brackets work too.
  -  Referencing a header name exactly creates an internal link to that section if it appears elsewhere.
  -  A `^` sequence forms superscript like `x^2`; spaces around the caret are not allowed.
  -  Appending one or more `*` to a word marks a footnote and the text `**` defines it later.
 
- Any text that does not match a special pattern is HTML escaped to ensure valid output.
+ Any text that does not match a special pattern is HTML escaped to ensure valid output. Source files
+are assumed to be encoded with UTF-8.
+
+ Headers become <h1>, <h2> or <h3> respectively and automatically turn into named anchors that can be
+referenced simply by writing the exact words again elsewhere.
+
 
 Example Usage
 -------------
