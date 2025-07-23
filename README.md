@@ -1,7 +1,6 @@
 # PikaScript
 
-PikaScript is a minimal interpreted scripting language implemented in C++. This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation.
-A thorough language reference is provided in [docs/PikaScript Documentation.txt](docs/PikaScript%20Documentation.txt) (also available as [HTML](docs/PikaScript%20Documentation.html)).
+PikaScript is a minimal interpreted scripting language implemented in C++. This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation. A thorough language reference is provided in [docs/PikaScript Documentation.txt](docs/PikaScript%20Documentation.txt) (also available as [HTML](docs/PikaScript%20Documentation.html)).
 
 ## History
 
