@@ -30,7 +30,7 @@ Running the Compilers
     
  Run the regression test that exercises both compiler variants:
    
-    ./PikaCmd ../../tests/ppegTest.pika
+    ../../output/PikaCmd ../../tests/ppegTest.pika
 
  The test first uses the **global** compiler and then the **local** one. Both must compile themselves
 successfully for the test to pass.
@@ -40,7 +40,7 @@ Regenerating the PPEG Implementation
 
  After changing a grammar, refresh `initPPEG.pika` with:
 
-    ./PikaCmd ../../tools/ppeg/updatePPEG.pika
+    ../../output/PikaCmd ../../tools/ppeg/updatePPEG.pika
 
  The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the
 new implementation to `initPPEG.pika` if everything succeeds.

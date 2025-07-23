@@ -47,10 +47,10 @@ curl -s http://nuedge.net/pikascript/install.sh | sh
 Once built, you can run a PikaScript program via:
 
 ```bash
-./PikaCmd myscript.pika
+output/PikaCmd myscript.pika
 ```
 
-For an interactive REPL experience, run `PikaCmd` without arguments (this will invoke `interactive.pika`):
+For an interactive REPL experience, run `output/PikaCmd` without arguments (this will invoke `interactive.pika`):
 
 ```
 Enter expressions to evaluate them interactively line by line. E.g.:

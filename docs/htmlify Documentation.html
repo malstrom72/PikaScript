@@ -128,7 +128,7 @@ a sup	{ font-size:0.7em; }
 <p>To convert a document you load <tt>htmlify.pika</tt> and call the <tt>htmlify</tt> function with the text to process. Below is the minimal command used by this project to generate the main documentation:</p>
 <pre>include('tools/htmlify.pika');<br>src = load('docs/PikaScript Documentation.txt');<br>html = htmlify(src);<br>save('docs/PikaScript Documentation.html', html);<br></pre>
 <p>A helper script <tt>tools/htmlifyFile.pika</tt> performs the same conversion from the command line. Pass the text file and optionally a CSS file:</p>
-<pre>PikaCmd tools/htmlifyFile.pika README.txt custom.css<br></pre>
+<pre>output/PikaCmd tools/htmlifyFile.pika README.txt custom.css<br></pre>
 <h3><a name="Known_Limitations">Known Limitations</a></h3>
 
 <ul>

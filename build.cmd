@@ -20,6 +20,7 @@ CALL BuildPikaCmd.cmd || GOTO error
 POPD
 IF NOT EXIST output MD output
 COPY /Y tools\PikaCmd\SourceDistribution\PikaCmd.exe output\PikaCmd.exe || GOTO error
+COPY /Y tools\PikaCmd\SourceDistribution\systools.pika output\systools.pika || GOTO error
 output\PikaCmd.exe tests\ppegTest.pika || GOTO error
 
 output\PikaCmd.exe examples\ppegDocExample.pika || GOTO error

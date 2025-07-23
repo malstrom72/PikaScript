@@ -117,11 +117,11 @@ a sup	{ font-size:0.7em; }
 <p>Build the command line tool used to run scripts:</p>
 <pre>cd tools/PikaCmd/SourceDistribution<br>bash BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows<br></pre>
 <p>Run the regression test that exercises both compiler variants:</p>
-<pre>./PikaCmd ../../tests/ppegTest.pika<br></pre>
+<pre>../../output/PikaCmd ../../tests/ppegTest.pika<br></pre>
 <p>The test first uses the **global** compiler and then the **local** one. Both must compile themselves successfully for the test to pass.</p>
 <h2><a name="Regenerating_the_PPEG_Implementation">Regenerating the PPEG Implementation</a></h2>
 <p>After changing a grammar, refresh <tt>initPPEG.pika</tt> with:</p>
-<pre>./PikaCmd ../../tools/ppeg/updatePPEG.pika<br></pre>
+<pre>../../output/PikaCmd ../../tools/ppeg/updatePPEG.pika<br></pre>
 <p>The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the new implementation to <tt>initPPEG.pika</tt> if everything succeeds.</p>
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. <br>
