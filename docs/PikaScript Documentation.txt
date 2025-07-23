@@ -5,11 +5,11 @@ What is PikaScript?
 ===================
 
  PikaScript is a small interpreting C-style scripting language implemented with modern C++ programming techniques. The
-source code for PikaScript is amazingly compact. It's core is around 1000 lines of C++ plus an additional header file of
-500 lines including doxygen comments. The optional standard library (written in PikaScript), providing utilities for
-strings, math, algorithms and objects (including a mark and swipe garbage collector) is around 300 lines of source code.
-Despite it's small size the language is powerful enough to support sophisticated concepts such as higher order functions
-and closures.
+source code for PikaScript is amazingly compact. It's core is around 1000 lines of C++ plus an additional header file
+of 500 lines including doxygen comments. The optional standard library (written in PikaScript), providing utilities for
+strings, math, algorithms and objects (including a mark and swipe garbage collector) is around 300 lines of source
+code. Despite it's small size the language is powerful enough to support sophisticated concepts such as higher order
+functions and closures.
 
 Goals of PikaScript
 -------------------
@@ -52,10 +52,10 @@ Variables
 
  In order to minimize code complexity and make the interface to PikaScript minimal and easy, all Pika variables are
 represented internally by strings. Unlike many dynamically typed languages, there is no distinct variable type coupled
-with the values. Instead, the interpretation of a value (and its type) is determined by the context in which it is used.
-For example, there is no distinction between `10 / 2` and `"10" / "2"`. Both result in the value `"5"`. Similiarly,
-`10 + 2` and `'10' + '2'` are equivalent and the result is `"12"`. (If you want to perform string concatention you use
-the special `#` operator instead.) This approach is usually referred to as /weak typing/.
+with the values. Instead, the interpretation of a value (and its type) is determined by the context in which it is
+used. For example, there is no distinction between `10 / 2` and `"10" / "2"`. Both result in the value `"5"`.
+Similiarly, `10 + 2` and `'10' + '2'` are equivalent and the result is `"12"`. (If you want to perform string
+concatention you use the special `#` operator instead.) This approach is usually referred to as /weak typing/.
 
  Despite the lack of strong types in PikaScript, you can distinguish seven different /value classes/ by how they are
 handled by the various expressions, operators and library functions:
@@ -101,7 +101,9 @@ Operators
  Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements
 (such as `if` and `for`) are actually operators rather than statements. See Expressions for more on this.
 
-?? TODO : document system with "artificial" precedence levels for "ticks" ??
+ The precedence values used in the table below match the `Precedence` enumeration in the header. Numbers 0–3 are
+artificial levels reserved for the tracing system and the `tick()` callback. They never appear in actual expressions.
+Real operators start at the `STATEMENT` level (4) and continue upward with higher values meaning higher precedence.
 
 Operator                    Prec.   Comment
 --------                    -----   -------
@@ -492,22 +494,18 @@ names) and deletes any object that is "unreachable" through other references. It
 C++ Interface
 =============
 
- PikaScript is entirely implemented in C++ and exposes a small template API.
-The interpreter is defined by `Pika::Script`, parameterised by a configuration
-struct that specifies which string type and variable container to use. The
-typedef `StdScript` selects the reference implementation based on
-`std::string` and the simple `STLVariables` storage.
+ PikaScript is entirely implemented in C++ and exposes a small template API. The interpreter is defined by
+`Pika::Script`, parameterised by a configuration struct that specifies which string type and variable container to use.
+The typedef `StdScript` selects the reference implementation based on `std::string` and the simple `STLVariables`
+storage.
 
- For better performance you may combine the interpreter with the fast
-`QString` class from `QStrings.h` and the `QuickVars` variable cache. These
-replacements trade memory for speed and are drop in compatible.
-`QString` relies on a shared memory pool and is not thread-safe, so it must only be used from one thread at a time.
+ For better performance you may combine the interpreter with the fast `QString` class from `QStrings.h` and the
+`QuickVars` variable cache. These replacements trade memory for speed and are drop in compatible. `QString` relies on a
+shared memory pool and is not thread-safe, so it must only be used from one thread at a time.
 
- Host applications create a `FullRoot` instance and can register custom
-functions by deriving from `Script::Native` and calling `assignNative`. You can
-also supply your own `Variables` subclass to sandbox execution or share globals
-between multiple interpreters. See the generated C++ API reference for
-details.
+ Host applications create a `FullRoot` instance and can register custom functions by deriving from `Script::Native` and
+calling `assignNative`. You can also supply your own `Variables` subclass to sandbox execution or share globals between
+multiple interpreters. See the generated C++ API reference for details.
 
 Standard Native Functions
 =========================

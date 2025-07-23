@@ -4,21 +4,21 @@ PPEG
 What is PPEG?
 =============
 
- PPEG is a parser generator written in PikaScript. It consumes grammars described using Parsing Expression
-Grammars (PEG) and produces parser functions. All related files live in the `tools/ppeg` folder. The runtime
-interface `ppeg.pika` loads the generated `initPPEG.pika` and exposes the `PPEG` class used to build parsers.
-The folder also holds the grammar sources and an `updatePPEG.pika` script for regenerating `initPPEG.pika`.
+ PPEG is a parser generator written in PikaScript. It consumes grammars described using Parsing Expression Grammars
+(PEG) and produces parser functions. All related files live in the `tools/ppeg` folder. The runtime interface
+`ppeg.pika` loads the generated `initPPEG.pika` and exposes the `PPEG` class used to build parsers. The folder also
+holds the grammar sources and an `updatePPEG.pika` script for regenerating `initPPEG.pika`.
 
 Global vs Local Compilers
 =========================
 
  The project provides two self-hosted grammars:
 
--  `tools/ppeg/ppegGlobal.ppeg` – builds parser functions stored in whatever dictionary `ppeg.$compileTo`
-  points at. This variant uses global variables and is what regenerates PPEG itself (`initPPEG.pika`).
+-  `tools/ppeg/ppegGlobal.ppeg` – builds parser functions stored in whatever dictionary `ppeg.$compileTo` points at.
+  This variant uses global variables and is what regenerates PPEG itself (`initPPEG.pika`).
 
--  `tools/ppeg/ppegLocal.ppeg` – returns a self-contained parsing function. It relies on no globals and is
-  easier to embed in other projects.
+-  `tools/ppeg/ppegLocal.ppeg` – returns a self-contained parsing function. It relies on no globals and is easier to
+  embed in other projects.
 
 Running the Compilers
 =====================
@@ -31,8 +31,8 @@ Running the Compilers
 
     output/PikaCmd tests/ppegTest.pika
 
- The test first uses the **global** compiler and then the **local** one. Both must compile themselves
-successfully for the test to pass.
+ The test first uses the *global* compiler and then the *local* one. Both must compile themselves successfully for the
+test to pass.
 
 Regenerating the PPEG Implementation
 ====================================
@@ -41,15 +41,15 @@ Regenerating the PPEG Implementation
 
     output/PikaCmd tools/ppeg/updatePPEG.pika
 
- The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the
-new implementation to `initPPEG.pika` if everything succeeds.
+ The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the new
+implementation to `initPPEG.pika` if everything succeeds.
 
 Example: Using the Local Compiler
 =================================
 
- Below is a minimal example that compiles `examples/digits.ppeg` into a local parsing function and runs it.
- The script locates both `ppeg.pika` and `digits.ppeg` relative to its own path so it works no matter
- which directory it is launched from:
+ Below is a minimal example that compiles `examples/digits.ppeg` into a local parsing function and runs it. The script
+locates both `ppeg.pika` and `digits.ppeg` relative to its own path so it works no matter which directory it is
+launched from:
 
     include('systools.pika');
     include('stdlib.pika');

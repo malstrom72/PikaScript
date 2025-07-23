@@ -29,15 +29,13 @@
 <pre>bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows<br></pre>
 <p>Run the regression test that exercises both compiler variants from the repository root:</p>
 <pre>output/PikaCmd tests/ppegTest.pika<br></pre>
-<p>The test first uses the **global** compiler and then the **local** one. Both must compile themselves successfully for the test to pass.</p>
+<p>The test first uses the <b>global</b> compiler and then the <b>local</b> one. Both must compile themselves successfully for the test to pass.</p>
 <h2><a name="Regenerating_the_PPEG_Implementation">Regenerating the PPEG Implementation</a></h2>
 <p>After changing a grammar, refresh <tt>initPPEG.pika</tt> with:</p>
 <pre>output/PikaCmd tools/ppeg/updatePPEG.pika<br></pre>
 <p>The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the new implementation to <tt>initPPEG.pika</tt> if everything succeeds.</p>
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
-<p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. <br>
-The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter <br>
-which directory it is launched from:</p>
+<p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
 
 	</body>
