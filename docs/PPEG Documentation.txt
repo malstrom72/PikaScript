@@ -16,32 +16,30 @@ Global vs Local Compilers
 
 -  `tools/ppeg/ppegGlobal.ppeg` – builds parser functions stored in whatever dictionary `ppeg.$compileTo`
   points at. This variant uses global variables and is what regenerates PPEG itself (`initPPEG.pika`).
+
 -  `tools/ppeg/ppegLocal.ppeg` – returns a self-contained parsing function. It relies on no globals and is
   easier to embed in other projects.
 
 Running the Compilers
 =====================
 
-1) Build the command line tool used to run scripts:
+ Build the command line tool used to run scripts:
    
-      bash
-      cd tools/PikaCmd/SourceDistribution
-      bash BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows
+    cd tools/PikaCmd/SourceDistribution
+    bash BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows
     
-2) Run the regression test that exercises both compiler variants:
+ Run the regression test that exercises both compiler variants:
    
-      bash
-      ./PikaCmd ../../tests/ppegTest.pika
+    ./PikaCmd ../../tests/ppegTest.pika
 
-    The test first uses the **global** compiler and then the **local** one. Both must compile themselves
-   successfully for the test to pass.
+ The test first uses the **global** compiler and then the **local** one. Both must compile themselves
+successfully for the test to pass.
 
 Regenerating the PPEG Implementation
 ====================================
 
  After changing a grammar, refresh `initPPEG.pika` with:
 
-    bash
     ./PikaCmd ../../tools/ppeg/updatePPEG.pika
 
  The same script can be run to experiment directly with the compilers. It rebuilds both variants and writes the

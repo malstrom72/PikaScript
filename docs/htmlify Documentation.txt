@@ -5,9 +5,9 @@ What is htmlify?
 ================
 
  htmlify is a lightweight text to HTML converter implemented in PikaScript. It takes plain
- text formatted with a minimal markup language and outputs corresponding HTML. The script is
- mainly used to convert the documentation in this repository from `.txt` sources into the
- `docs/help` HTML pages and `PikaScript Documentation.html`.
+text formatted with a minimal markup language and outputs corresponding HTML. The script is
+mainly used to convert the documentation in this repository from `.txt` sources into the
+`docs/help` HTML pages and `PikaScript Documentation.html`.
 
 Markup Syntax
 -------------
@@ -21,13 +21,13 @@ Markup Syntax
  -  `name.txt` and `name.html` are turned into links to `name.html`.
  -  Lists start with `*`, `-` or digits followed by `.` and may be nested using indentation.
  -  Tables are created by aligning columns with two spaces or more.
+ -  Tables support header rows using a dashed line and row headers using `:` surrounded by spaces.
  -  `==========` inserts a horizontal rule.
  -  Plain `http://` or `https://` links are automatically converted to `<a href>` tags.
  -  Writing `[image.jpg]` (or `.png`, `.gif`) embeds the image; remote URLs inside brackets work too.
  -  Referencing a header name exactly creates an internal link to that section if it appears elsewhere.
  -  A `^` sequence forms superscript like `x^2`; spaces around the caret are not allowed.
  -  Appending one or more `*` to a word marks a footnote and the text `**` defines it later.
- -  Tables support header rows using a dashed line and row headers using `:` surrounded by spaces.
 
  Any text that does not match a special pattern is HTML escaped to ensure valid output.
 
@@ -35,8 +35,8 @@ Example Usage
 -------------
 
  To convert a document you load `htmlify.pika` and call the `htmlify` function with the
- text to process. Below is the minimal command used by this project to generate the main
- documentation:
+text to process. Below is the minimal command used by this project to generate the main
+documentation:
 
      include('tools/htmlify.pika');
      src = load('docs/PikaScript Documentation.txt');
@@ -44,7 +44,7 @@ Example Usage
      save('docs/PikaScript Documentation.html', html);
 
  A helper script `tools/htmlifyFile.pika` performs the same conversion from the command line.
- Pass the text file and optionally a CSS file:
+Pass the text file and optionally a CSS file:
 
     PikaCmd tools/htmlifyFile.pika README.txt custom.css
 
@@ -60,7 +60,7 @@ Example Document
 ----------------
 
  The following text demonstrates most features of `htmlify` and replaces the
- previous `examples/test.txt` file:
+previous `examples/test.txt` file:
 
 Main Header
 ###########
@@ -168,8 +168,8 @@ Examples are indented by four or more spaces and they will be put into <pre> </p
 
 But stops here.
 
-Tables
-------
+Table Examples
+--------------
 
 Tables are created when a section contains a line with two or more consecutive spaces. These spaces divide the cells horizontally.
 

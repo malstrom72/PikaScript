@@ -12,7 +12,8 @@ PikaScript began as a tiny scripting experiment and has hardly changed since 200
 src/            - C++ source code of the PikaScript interpreter and standard library
 tools/PikaCmd/  - command-line tool sources, build scripts, installation helpers
 examples/       - samples and experiments (various quality, many of them unfinished)
-docs/           - generated documentation and helper scripts
+docs/           - documentation (text and HTML formats)
+tests/          - tests and helper scripts
 ```
 
 ## Building PikaCmd
