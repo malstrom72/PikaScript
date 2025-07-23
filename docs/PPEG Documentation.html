@@ -115,7 +115,7 @@ a sup	{ font-size:0.7em; }
 </ul>
 <h2><a name="Running_the_Compilers">Running the Compilers</a></h2>
 <p>Build the command line tool used to run scripts:</p>
-<pre>cd tools/PikaCmd/SourceDistribution<br>bash BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows<br></pre>
+<pre>bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows<br></pre>
 <p>Run the regression test that exercises both compiler variants:</p>
 <pre>../../output/PikaCmd ../../tests/ppegTest.pika<br></pre>
 <p>The test first uses the **global** compiler and then the **local** one. Both must compile themselves successfully for the test to pass.</p>

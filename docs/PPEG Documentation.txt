@@ -25,8 +25,7 @@ Running the Compilers
 
  Build the command line tool used to run scripts:
    
-    cd tools/PikaCmd/SourceDistribution
-    bash BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows
+   bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh       # or BuildPikaCmd.cmd on Windows
     
  Run the regression test that exercises both compiler variants:
    

@@ -18,11 +18,11 @@ tests/          - tests and helper scripts
 
 ## Building PikaCmd
 
-The easiest way to build the command-line tool is to run the provided build script under `tools/PikaCmd/SourceDistribution`:
+The easiest way to build the command-line tool is to run the build script from
+the repository root:
 
 ```bash
-cd tools/PikaCmd/SourceDistribution
-bash BuildPikaCmd.sh
+bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh
 ```
 
 `BuildPikaCmd.sh` calls `BuildCpp.sh` internally to compile `PikaCmdAmalgam.cpp` and execute available unit tests.
