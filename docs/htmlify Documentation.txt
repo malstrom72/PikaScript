@@ -46,7 +46,7 @@ documentation:
  A helper script `tools/htmlifyFile.pika` performs the same conversion from the command line.
 Pass the text file and optionally a CSS file:
 
-    PikaCmd tools/htmlifyFile.pika README.txt custom.css
+    output/PikaCmd tools/htmlifyFile.pika README.txt custom.css
 
 
 Known Limitations

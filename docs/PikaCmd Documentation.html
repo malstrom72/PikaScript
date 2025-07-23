@@ -17,7 +17,7 @@
 <p>PikaCmd is the command line runner for PikaScript programs. It bundles the language runtime and standard library into a standalone executable so that scripts can be executed directly from a shell.</p>
 <h2><a name="Building">Building</a></h2>
 <p>The tool is built from the sources in <tt>tools/PikaCmd/SourceDistribution</tt>. Run <tt>BuildPikaCmd.sh</tt> (or the <tt>.cmd</tt> variant on Windows) which compiles <tt>PikaCmdAmalgam.cpp</tt>, executes unit tests and produces a <tt>PikaCmd</tt> binary.</p>
-<pre>cd tools/PikaCmd/SourceDistribution<br>bash BuildPikaCmd.sh<br></pre>
+<pre>bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh<br></pre>
 <p>After building, you can install <tt>PikaCmd</tt> and helper scripts system wide using <tt>InstallPika.sh</tt> or <tt>InstallPika.cmd</tt>.</p>
 <h1><a name="systools.pika">systools.pika</a></h1>
 <p>The helper script <tt>systools.pika</tt> contains cross&#8209;platform file utilities and an improved <tt>include</tt> function used by many build scripts. Load it together with <tt>stdlib.pika</tt> at the top of a script:</p>
@@ -41,7 +41,7 @@
 <p>A PikaScript file can act as a command-line tool. At the start of such a script you typically call <tt>args()</tt> or <tt>vargs()</tt> to assign the values from <tt>$1</tt>, <tt>$2</tt>, ... to local variables. <tt>args()</tt> is used for mandatory parameters&#8212;the number of variables passed to it must match the number of arguments supplied or an exception is thrown. <tt>vargs()</tt> works the same way but lets you define optional arguments by leaving a blank slot in the call. Passing too few required or too many optional arguments will also raise an error.</p>
 <p>Example: an <tt>echo.pika</tt> script that prints a message a number of times:</p>
 <pre>vargs(@msg, , @times);<br>defaults(@times, 1);<br>for (i = 0; i &lt; times; ++i) print(msg);<br></pre>
-<p>Running <tt>PikaCmd echo.pika Hello 3</tt> prints <tt>Hello</tt> three times. Using <tt>args()</tt> instead would require exactly the specified parameters.</p>
+<p>Running <tt>output/PikaCmd echo.pika Hello 3</tt> prints <tt>Hello</tt> three times. Using <tt>args()</tt> instead would require exactly the specified parameters.</p>
 <h3><a name="Setting_Defaults">Setting Defaults</a></h3>
 <p>Use the standard <tt>defaults()</tt> function to assign fallback values only when variables do not yet exist. This is handy after <tt>vargs()</tt> to initialize optional parameters or to set globals once.</p>
 <pre>vargs(@file, , @mode);<br>defaults(@mode, 'r');<br></pre>
