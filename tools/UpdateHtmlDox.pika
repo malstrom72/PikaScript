@@ -26,6 +26,11 @@ tail = '
 ';
 map(@::STD_PATTERNS, "[?][?]{*}[?][?]" # STD_PATTERN_SUFFIX, '<font color="red">??{$1}??</font>');
 map(@::STD_PATTERNS, "=== {*} ===" # STD_PATTERN_SUFFIX, '<b>{$1}</b>');
-save(run.root # '../docs/PikaScript Documentation.html',
-     head # htmlify(load(run.root # '../docs/PikaScript Documentation.txt')) # tail);
+
+dir(run.root # '../docs/*.txt', >{
+        src = run.root # '../docs/' # $0;
+        splitPath(src, @d, @n, @ext);
+        out = coalesce(d, '') # n # '.html';
+        save(out, head # htmlify(load(src)) # tail);
+});
 print(LF # '***** DONE *****' # LF);
