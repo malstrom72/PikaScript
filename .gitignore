@@ -3,4 +3,4 @@
 tools/PikaCmd/SourceDistribution/PikaCmd
 /tools/PikaCmd/SourceDistribution/PikaCmd.dSYM
 /projects/build
-tools/PikaCmd/PikaCmd
+output/

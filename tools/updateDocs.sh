@@ -2,8 +2,8 @@
 set -e -o pipefail -u
 cd "$(dirname "$0")"/..
 
-./tools/PikaCmd/SourceDistribution/PikaCmd tools/ExportHelp.pika
-./tools/PikaCmd/SourceDistribution/PikaCmd tools/UpdateHtmlDox.pika
+./output/PikaCmd tools/ExportHelp.pika
+./output/PikaCmd tools/UpdateHtmlDox.pika
 if command -v doxygen >/dev/null; then
     doxygen docs/PikaScriptDoxyfile
 else

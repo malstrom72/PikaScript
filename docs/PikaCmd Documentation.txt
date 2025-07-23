@@ -15,8 +15,7 @@ Building
 Run `BuildPikaCmd.sh` (or the `.cmd` variant on Windows) which compiles
 `PikaCmdAmalgam.cpp`, executes unit tests and produces a `PikaCmd` binary.
 
-     cd tools/PikaCmd/SourceDistribution
-     bash BuildPikaCmd.sh
+     bash tools/PikaCmd/SourceDistribution/BuildPikaCmd.sh
 
  After building, you can install `PikaCmd` and helper scripts system wide
 using `InstallPika.sh` or `InstallPika.cmd`.
@@ -121,7 +120,7 @@ will also raise an error.
      defaults(@times, 1);
      for (i = 0; i < times; ++i) print(msg);
 
- Running `PikaCmd echo.pika Hello 3` prints `Hello` three times. Using
+ Running `output/PikaCmd echo.pika Hello 3` prints `Hello` three times. Using
 `args()` instead would require exactly the specified parameters.
 
 Setting Defaults
