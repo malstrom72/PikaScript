@@ -15,14 +15,22 @@ Markup Syntax
  The converter recognizes a small set of conventions:
 
  -  Paragraphs indented 1–3 spaces are unwrapped while four or more spaces create `<pre>` blocks.
- -  Lines consisting solely of `#`, `=` or `-` create headers `<h1>`, `<h2>` and `<h3>`.
+ -  Indenting only the first line unwraps a hard-wrapped paragraph:
+
+       first line, now this
+   will unwrap these two lines
+
+   Without that leading space the break is kept.
+ -  A header is created when a line of text is followed by a line of `#`, `=` or `-` of the same length.
+   The text becomes `<h1>`, `<h2>` or `<h3>` respectively and automatically turns into a named anchor that
+   can be referenced simply by writing the same words again elsewhere.
  -  `*bold*`, `/italic/` and `_underline_` produce `<b>`, `<i>` and `<u>` respectively.
  -  Backtick quoted sections ``code`` become `<tt>` blocks.
  -  `name.txt` and `name.html` are turned into links to `name.html`.
  -  Lists start with `*`, `-` or digits followed by `.` and may be nested using indentation.
  -  Tables are created by aligning columns with two spaces or more.
  -  Tables support header rows using a dashed line and row headers using `:` surrounded by spaces.
- -  `==========` inserts a horizontal rule.
+ -  A line of ten or more `=` characters by itself inserts a horizontal rule.
  -  Plain `http://` or `https://` links are automatically converted to `<a href>` tags.
  -  Writing `[image.jpg]` (or `.png`, `.gif`) embeds the image; remote URLs inside brackets work too.
  -  Referencing a header name exactly creates an internal link to that section if it appears elsewhere.
