@@ -1,6 +1,6 @@
 # PikaScript
 
-PikaScript is a minimal interpreted scripting language implemented in C++. This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation. A thorough language reference is provided in [docs/PikaScript Documentation.txt](docs/PikaScript%20Documentation.txt) (also available as [HTML](docs/PikaScript%20Documentation.html)).
+PikaScript is a minimal interpreted scripting language implemented in C++. This repository contains the language runtime, standard library, a command-line tool called `PikaCmd`, and various example scripts and documentation. A thorough language reference is provided in [docs/PikaScript Documentation.txt](docs/PikaScript%20Documentation.txt) (also available as [HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/PikaScript%20Documentation.html)).
 
 ## History
 
@@ -89,13 +89,13 @@ PPEG is a self-hosting parser generator. All PPEG related files live under `tool
 
 ## Documentation
 
-* [PikaScript Documentation](docs/PikaScript%20Documentation.txt) ([HTML](docs/PikaScript%20Documentation.html)) – language reference
-* [PikaCmd Documentation](docs/PikaCmd%20Documentation.txt) ([HTML](docs/PikaCmd%20Documentation.html)) – command-line tool usage
-* [PPEG Documentation](docs/PPEG%20Documentation.txt) ([HTML](docs/PPEG%20Documentation.html)) – parser generator manual
-* [systools Documentation](docs/systools%20Documentation.txt) ([HTML](docs/systools%20Documentation.html)) – cross-platform utilities
-* [htmlify Documentation](docs/htmlify%20Documentation.txt) ([HTML](docs/htmlify%20Documentation.html)) – helper for generating the HTML docs
+* [PikaScript Documentation](docs/PikaScript%20Documentation.txt) ([HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/PikaScript%20Documentation.html)) – language reference
+* [PikaCmd Documentation](docs/PikaCmd%20Documentation.txt) ([HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/PikaCmd%20Documentation.html)) – command-line tool usage
+* [PPEG Documentation](docs/PPEG%20Documentation.txt) ([HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/PPEG%20Documentation.html)) – parser generator manual
+* [systools Documentation](docs/systools%20Documentation.txt) ([HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/systools%20Documentation.html)) – cross-platform utilities
+* [htmlify Documentation](docs/htmlify%20Documentation.txt) ([HTML](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/htmlify%20Documentation.html)) – helper for generating the HTML docs
 
-HTML documentation for the standard library lives in `docs/help/`. Open `docs/help/index.html` to browse available functions and examples.
+HTML documentation for the standard library lives in `docs/help/`. Open [docs/help/index.html](https://htmlpreview.github.io/?https://raw.githubusercontent.com/malstrom72/PikaScript/main/docs/help/index.html) to browse available functions and examples.
 
 ## Testing
 
