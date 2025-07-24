@@ -148,145 +148,145 @@
 <p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Numbers 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
 <table>
 <tr>
-<th>Operator</th><th>Prec.</th><th>Comment</th>
+<th>Operator</th><th>Prec.</th><th colspan=2>Comment</th>
 </tr>
 <tr>
-<td>function { x }</td><td>21</td><td>Function with body <tt>x</tt>. See <a href="#Functions">Functions</a> for more info.</td>
+<td>function { x }</td><td>22</td><td colspan=2>Function with body <tt>x</tt>. See <a href="#Functions">Functions</a> for more info.</td>
 </tr>
 <tr>
-<td>x([a][,b][,c]...)</td><td>20</td><td>Function call. (All arguments are optional and will be void if omitted.)</td>
+<td>x([a][,b][,c]...)</td><td>21</td><td colspan=2>Function call. (All arguments are optional and will be void if omitted.)</td>
 </tr>
 <tr>
-<td>x.y</td><td>20</td><td>Element operator (<tt>y</tt> must be a valid symbol literal).</td>
+<td>x.y</td><td>21</td><td colspan=2>Element operator (<tt>y</tt> must be a valid symbol literal).</td>
 </tr>
 <tr>
-<td>x[y]</td><td>20</td><td>Subscript operator.</td>
+<td>x[y]</td><td>21</td><td colspan=2>Subscript operator.</td>
 </tr>
 <tr>
-<td>x{[o]:[l]}</td><td>20</td><td>Substring operator. Returns a sub-string of <tt>l</tt> characters from <tt>x</tt> starting at offset <tt>o</tt> .<a href="#fn0001"><sup>*</sup></a></td>
+<td>x{[o]:[l]}</td><td>21</td><td colspan=2>Substring operator. Returns a sub-string of <tt>l</tt> characters from <tt>x</tt> starting at offset <tt>o</tt> .<a href="#fn0001"><sup>*</sup></a></td>
 </tr>
 <tr>
-<td>x++</td><td>20</td><td>Postfix increment. Value is that of <tt>x</tt> before the increment. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
+<td>x++</td><td>21</td><td colspan=2>Postfix increment. Value is that of <tt>x</tt> before the increment. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
 </tr>
 <tr>
-<td>x--</td><td>20</td><td>Postfix decrement. Value is that of <tt>x</tt> before the decrement. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
+<td>x--</td><td>21</td><td colspan=2>Postfix decrement. Value is that of <tt>x</tt> before the decrement. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
 </tr>
 <tr>
-<td>@x</td><td>19</td><td>Reference operator. See <a href="#References">References</a> for more info.</td>
+<td>@x</td><td>20</td><td colspan=2>Reference operator. See <a href="#References">References</a> for more info.</td>
 </tr>
 <tr>
-<td>!x</td><td>19</td><td>Logical not (<tt>false</tt> -&gt; <tt>true</tt> and vice versa). (<tt>!!x</tt> can be used to assert that <tt>x</tt> is a boolean.)</td>
+<td>!x</td><td>20</td><td colspan=2>Logical not (<tt>false</tt> -&gt; <tt>true</tt> and vice versa). (<tt>!!x</tt> can be used to assert that <tt>x</tt> is a boolean.)</td>
 </tr>
 <tr>
-<td>~x</td><td>19</td><td>Bitwise not (only works on integers) (<tt>~~x</tt> can be used to assert that <tt>x</tt> is an integer value.)</td>
+<td>~x</td><td>20</td><td colspan=2>Bitwise not (only works on integers) (<tt>~~x</tt> can be used to assert that <tt>x</tt> is an integer value.)</td>
 </tr>
 <tr>
-<td>+x</td><td>19</td><td>Prefix plus, verifies that <tt>x</tt> is a number and "normalizes" it. (<tt>+x</tt> can be used to assert that <tt>x</tt> is a number.)</td>
+<td>+x</td><td>20</td><td colspan=2>Prefix plus, verifies that <tt>x</tt> is a number and "normalizes" it. (<tt>+x</tt> can be used to assert that <tt>x</tt> is a number.)</td>
 </tr>
 <tr>
-<td>-x</td><td>19</td><td>Negate, only works on numbers.</td>
+<td>-x</td><td>20</td><td colspan=2>Negate, only works on numbers.</td>
 </tr>
 <tr>
-<td>++x</td><td>19</td><td>Prefix increment, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use += for floating point numbers.)</td>
+<td>++x</td><td>20</td><td colspan=2>Prefix increment, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use += for floating point numbers.)</td>
 </tr>
 <tr>
-<td>--x</td><td>19</td><td>Prefix decrement, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use -= for floating point numbers.)</td>
+<td>--x</td><td>20</td><td colspan=2>Prefix decrement, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use -= for floating point numbers.)</td>
 </tr>
 <tr>
-<td>x * y</td><td>18</td><td>Multiplication (only works on numbers).</td>
+<td>x * y</td><td>19</td><td colspan=2>Multiplication (only works on numbers).</td>
 </tr>
 <tr>
-<td>x / y</td><td>18</td><td>Division (only works on numbers).</td>
+<td>x / y</td><td>19</td><td colspan=2>Division (only works on numbers).</td>
 </tr>
 <tr>
-<td>x % y</td><td>18</td><td>Modulo (only works on numbers). (Result is platform dependent if <tt>x</tt> is negative.)</td>
+<td>x % y</td><td>19</td><td colspan=2>Modulo (only works on numbers). (Result is platform dependent if <tt>x</tt> is negative.)</td>
 </tr>
 <tr>
-<td>x + y</td><td>17</td><td>Addition (only works on numbers).</td>
+<td>x + y</td><td>18</td><td colspan=2>Addition (only works on numbers).</td>
 </tr>
 <tr>
-<td>x - y</td><td>17</td><td>Subtraction (only works on numbers).</td>
+<td>x - y</td><td>18</td><td colspan=2>Subtraction (only works on numbers).</td>
 </tr>
 <tr>
-<td>x &lt;&lt; y</td><td>16</td><td>Bit-shift left (only works on positive integers).</td>
+<td>x &lt;&lt; y</td><td>17</td><td colspan=2>Bit-shift left (only works on positive integers).</td>
 </tr>
 <tr>
-<td>x &gt;&gt; y</td><td>16</td><td>Bit-shift right (only works on positive integers).</td>
+<td>x &gt;&gt; y</td><td>17</td><td colspan=2>Bit-shift right (only works on positive integers).</td>
 </tr>
 <tr>
-<td>x # y</td><td>15</td><td>String concatenation.</td>
+<td>x # y</td><td>16</td><td colspan=2>String concatenation.</td>
 </tr>
 <tr>
-<td>x &lt; y</td><td>14</td><td><tt>true</tt> if <tt>x</tt> is less than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &lt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &lt;= y</td><td>14</td><td><tt>true</tt> if <tt>x</tt> is less or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &lt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &gt;= y</td><td>14</td><td><tt>true</tt> if <tt>x</tt> is greater or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &gt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &gt; y</td><td>14</td><td><tt>true</tt> if <tt>x</tt> is greater than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &gt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x === y</td><td>13</td><td><tt>true</tt> if <tt>x</tt> is literally equal to <tt>y</tt> (character by character).</td>
+<td>x === y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is literally equal to <tt>y</tt> (character by character).</td>
 </tr>
 <tr>
-<td>x == y</td><td>13</td><td><tt>true</tt> if <tt>x</tt> is equal to <tt>y</tt>, numerically (if both <tt>x</tt> and <tt>y</tt> are valid numbers) or literally.</td>
+<td>x == y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is equal to <tt>y</tt>, numerically (if both <tt>x</tt> and <tt>y</tt> are valid numbers) or literally.</td>
 </tr>
 <tr>
-<td>x !== y</td><td>13</td><td><tt>true</tt> if <tt>x</tt> is not literally equal to <tt>y</tt> (character by character).</td>
+<td>x !== y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is not literally equal to <tt>y</tt> (character by character).</td>
 </tr>
 <tr>
-<td>x != y</td><td>13</td><td><tt>true</tt> if <tt>x</tt> is not equal to <tt>y</tt>, numerically (if both <tt>x</tt> and <tt>y</tt> are valid numbers) or literally.</td>
+<td>x != y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is not equal to <tt>y</tt>, numerically (if both <tt>x</tt> and <tt>y</tt> are valid numbers) or literally.</td>
 </tr>
 <tr>
-<td>x &amp; y</td><td>12</td><td>Bitwise and (only works on positive integers).</td>
+<td>x &amp; y</td><td>13</td><td colspan=2>Bitwise and (only works on positive integers).</td>
 </tr>
 <tr>
-<td>x ^ y</td><td>11</td><td>Bitwise xor (only works on positive integers).</td>
+<td>x ^ y</td><td>12</td><td colspan=2>Bitwise xor (only works on positive integers).</td>
 </tr>
 <tr>
-<td>x | y</td><td>10</td><td>Bitwise or (only works on positive integers).</td>
+<td>x | y</td><td>11</td><td colspan=2>Bitwise or (only works on positive integers).</td>
 </tr>
 <tr>
-<td>x &amp;&amp; y</td><td>9</td><td>Logical and. <tt>y</tt> is only evaluated if <tt>x</tt> is <tt>true</tt>.</td>
+<td>x &amp;&amp; y</td><td>10</td><td>&nbsp;</td><td>Logical and. <tt>y</tt> is only evaluated if <tt>x</tt> is <tt>true</tt>.</td>
 </tr>
 <tr>
-<td>x || y</td><td>8</td><td>Logical or. <tt>y</tt> is only evaluated if <tt>x</tt> is <tt>false</tt>.</td>
+<td>x || y</td><td>9</td><td colspan=2>Logical or. <tt>y</tt> is only evaluated if <tt>x</tt> is <tt>false</tt>.</td>
 </tr>
 <tr>
-<td>x = y</td><td>7</td><td>Assignment (right to left associative, e.g. <tt>a = b = 3</tt> is ok.)</td>
+<td>x = y</td><td>8</td><td colspan=2>Assignment (right to left associative, e.g. <tt>a = b = 3</tt> is ok.)</td>
 </tr>
 <tr>
-<td>*= /= %=</td><td>&nbsp;</td><td>&nbsp;</td>
+<td>*= /= %=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>+= -=</td><td>&nbsp;</td><td>&nbsp;</td>
+<td>+= -=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>&lt;&lt;= &gt;&gt;= #=</td><td>&nbsp;</td><td>&nbsp;</td>
+<td>&lt;&lt;= &gt;&gt;= #=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>&amp;= ^= |=</td><td>7</td><td>Assignment by operation, e.g. <tt>a += 3</tt> adds 3 to <tt>a</tt>.</td>
+<td>&amp;= ^= |=</td><td>8</td><td colspan=2>Assignment by operation, e.g. <tt>a += 3</tt> adds 3 to <tt>a</tt>.</td>
 </tr>
 <tr>
-<td>(x)</td><td>6</td><td>Parenthesis, groups sub-expressions.</td>
+<td>(x)</td><td>7</td><td colspan=2>Parenthesis, groups sub-expressions.</td>
 </tr>
 <tr>
-<td>[x]</td><td>6</td><td>Dereferences <tt>x</tt>. E.g. <tt>[@x]</tt> is the same as <tt>x</tt>. See <a href="#References">References</a> for more info.</td>
+<td>[x]</td><td>7</td><td colspan=2>Dereferences <tt>x</tt>. E.g. <tt>[@x]</tt> is the same as <tt>x</tt>. See <a href="#References">References</a> for more info.</td>
 </tr>
 <tr>
-<td>{[a[;b][;c]...]}</td><td>3</td><td>Compound expression. Evaluates sub-expressions sequentially. Final result is that of last sub-expression.</td>
+<td>for ([a];b;[c]) [x]</td><td>5</td><td colspan=2>First evaluates <tt>a</tt>, then if <tt>b</tt> is <tt>true</tt>, <tt>x</tt> and <tt>c</tt> are repeated until <tt>b</tt> is <tt>false</tt>. Final result is that of <tt>x</tt> (or unchanged if first <tt>b</tt> is <tt>false</tt> or <tt>x</tt> is omitted).</td>
 </tr>
 <tr>
-<td>&gt;x</td><td>3</td><td>Lambda expression of <tt>x</tt>. E.g. <tt>(&gt;x)()</tt> is the same as <tt>x</tt>. See <a href="#Functions">Functions</a> for more info.</td>
+<td>if (x) a [else b]</td><td>5</td><td colspan=2>Evaluates <tt>a</tt> if <tt>x</tt> is <tt>true</tt> (or optionally evaluates <tt>b</tt> if <tt>x</tt> is <tt>false</tt>). Final result is that of <tt>a</tt>, <tt>b</tt> or unchanged. (Can be <i>lvalue</i> or <i>rvalue</i>.)</td>
 </tr>
 <tr>
-<td>for ([a];b;[c]) [x]</td><td>3</td><td>First evaluates <tt>a</tt>, then if <tt>b</tt> is <tt>true</tt>, <tt>x</tt> and <tt>c</tt> are repeated until <tt>b</tt> is <tt>false</tt>. Final result is that of <tt>x</tt> (or unchanged if first <tt>b</tt> is <tt>false</tt> or <tt>x</tt> is omitted).</td>
+<td>{[a[;b][;c]...]}</td><td>4</td><td colspan=2>Compound expression. Evaluates sub-expressions sequentially. Final result is that of last sub-expression.</td>
 </tr>
 <tr>
-<td>if (x) a [else b]</td><td>3</td><td>Evaluates <tt>a</tt> if <tt>x</tt> is <tt>true</tt> (or optionally evaluates <tt>b</tt> if <tt>x</tt> is <tt>false</tt>). Final result is that of <tt>a</tt>, <tt>b</tt> or unchanged. (Can be <i>lvalue</i> or <i>rvalue</i>.)</td>
+<td>&gt;x</td><td>4</td><td colspan=2>Lambda expression of <tt>x</tt>. E.g. <tt>(&gt;x)()</tt> is the same as <tt>x</tt>. See <a href="#Functions">Functions</a> for more info.</td>
 </tr>
 </table>
 <p><small><a name="fn0001"><sup>*</sup> You must specify either <tt>o</tt>, <tt>l</tt> or both. If <tt>o</tt> is omitted, the first <tt>l</tt> characters of the source string <tt>x</tt> are returned. If <tt>l</tt> is omitted, the sub-string from offset <tt>o</tt> to the end of the source string is returned. Negative values and values greater than the length of <tt>x</tt> are valid for both <tt>o</tt> and <tt>l</tt>. For example, <tt>'hello'{-2:6}</tt> returns <tt>'hell'</tt> (the first two negative character positions are considered empty for this purpose).</a></small></p>
