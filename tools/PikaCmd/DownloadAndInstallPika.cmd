@@ -65,10 +65,21 @@ REM This script upzip's files...
     >> j_unzip.vbs ECHO.
 
 ECHO Downloading, please wait...
-powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.zip','PikaCmdSourceDistribution.zip')" || GOTO error
+powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz','PikaCmdSourceDistribution.tar.gz')" >NUL 2>NUL
+IF EXIST PikaCmdSourceDistribution.tar.gz (
+    SET ARCH=tar
+) ELSE (
+    powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.zip','PikaCmdSourceDistribution.zip')" || GOTO error
+    SET ARCH=zip
+)
 ECHO Extracting...
-cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
-DEL PikaCmdSourceDistribution.zip
+IF "%ARCH%"=="tar" (
+    tar -xzf PikaCmdSourceDistribution.tar.gz || GOTO error
+    DEL PikaCmdSourceDistribution.tar.gz
+) ELSE (
+    cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
+    DEL PikaCmdSourceDistribution.zip
+)
 CD SourceDistribution || GOTO error
 CALL BuildPikaCmd || GOTO error
 REM runas.exe /savecred /user:administrator /noprofile "CMD /K CD /D %TEMP%&&CD SourceDistribution&&InstallPika.cmd C:\WINDOWS&&CD ..&&RMDIR /S /Q SourceDistribution" || GOTO error

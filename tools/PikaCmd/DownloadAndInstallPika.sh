@@ -7,12 +7,21 @@ if [ -z "${TMPDIR:-}" ]; then
 fi
 
 cd "${TMPDIR}"
-curl -fL https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz
+ARCHIVE="tar.gz"
+if ! curl -fL https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz; then
+        ARCHIVE="zip"
+        curl -fL https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.zip -o PikaCmdSourceDistribution.zip
+fi
 mkdir -p "PikaCmd"
 cd "PikaCmd"
 rm -rf "SourceDistribution" || true
-tar -xzf "../PikaCmdSourceDistribution.tar.gz"
-rm -f PikaCmdSourceDistribution.tar.gz
+if [ "$ARCHIVE" = "tar.gz" ]; then
+        tar -xzf "../PikaCmdSourceDistribution.tar.gz"
+        rm -f "../PikaCmdSourceDistribution.tar.gz"
+else
+        unzip -q "../PikaCmdSourceDistribution.zip"
+        rm -f "../PikaCmdSourceDistribution.zip"
+fi
 cd "SourceDistribution"
 bash BuildPikaCmd.sh
 bash InstallPika.sh

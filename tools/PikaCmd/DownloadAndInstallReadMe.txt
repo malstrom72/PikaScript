@@ -24,5 +24,11 @@ On FreeBSD you may have to first install sudo and gcc:
 To manually download the distribution on Unix systems you can run:
 
         curl -fL -o PikaCmdSourceDistribution.tar.gz \
-                https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz
-        tar -xzvf PikaCmdSourceDistribution.tar.gz
+                https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz \
+        || curl -fL -o PikaCmdSourceDistribution.zip \
+                https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.zip
+        if [ -f PikaCmdSourceDistribution.tar.gz ]; then
+                tar -xzvf PikaCmdSourceDistribution.tar.gz
+        else
+                unzip PikaCmdSourceDistribution.zip
+        fi

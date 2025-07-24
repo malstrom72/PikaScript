@@ -42,6 +42,9 @@ powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https:/
 curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 ```
 
+Both Windows and Unix installers first try to download the `.tar.gz` distribution
+and fall back to the `.zip` archive if needed.
+
 ## Running Scripts
 
 Once built, you can run a PikaScript program via:
