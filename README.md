@@ -39,7 +39,7 @@ The file `DownloadAndInstallReadMe.txt` also provides one-line boot-strap comman
 powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/install.bat','%TEMP%\\install.bat')" && %TEMP%\\install.bat
 ```
 ```bash
-curl -s https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
+curl -sL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 ```
 
 ## Running Scripts

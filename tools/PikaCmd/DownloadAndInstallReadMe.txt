@@ -11,7 +11,7 @@ MAC / UNIX
 
 One line install boot strap:
 	
-curl -s https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
+curl -sL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 
 On Ubuntu you may have to first install curl, g++ and 32-bit libraries:
 
