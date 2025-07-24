@@ -2,12 +2,12 @@
 set -e -o pipefail -u
 cd "$(dirname "$0")"
 
-if [ -z "${TMPDIR}" ]; then
-	TMPDIR="/tmp/"
+if [ -z "${TMPDIR:-}" ]; then
+        TMPDIR="/tmp/"
 fi
 
 cd "${TMPDIR}"
-curl http://nuedge.net/pikascript/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz
+curl -fL https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz
 mkdir -p "PikaCmd"
 cd "PikaCmd"
 rm -rf "SourceDistribution" || true
