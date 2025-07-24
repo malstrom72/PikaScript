@@ -11,7 +11,7 @@ MAC / UNIX
 
 One line install boot strap:
 	
-curl -sL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
+curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 
 On Ubuntu you may have to first install curl, g++ and 32-bit libraries:
 
@@ -19,4 +19,10 @@ On Ubuntu you may have to first install curl, g++ and 32-bit libraries:
 
 On FreeBSD you may have to first install sudo and gcc:
 
-	pkg install sudo gcc
+        pkg install sudo gcc
+
+To manually download the distribution on Unix systems you can run:
+
+        curl -fL -o PikaCmdSourceDistribution.tar.gz \
+                https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz
+        tar -xzvf PikaCmdSourceDistribution.tar.gz
