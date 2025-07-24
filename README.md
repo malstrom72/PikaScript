@@ -36,10 +36,10 @@ For a detailed overview of `PikaCmd`, the helper script `systools.pika` and how 
 The file `DownloadAndInstallReadMe.txt` also provides one-line boot-strap commands for Windows or Unix systems to download and install PikaScript:
 
 ```bat
-powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('http://nuedge.net/pikascript/install.bat','%TEMP%\\install.bat')" && %TEMP%\\install.bat
+powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/install.bat','%TEMP%\\install.bat')" && %TEMP%\\install.bat
 ```
 ```bash
-curl -s http://nuedge.net/pikascript/install.sh | sh
+curl -s https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 ```
 
 ## Running Scripts

@@ -7,7 +7,7 @@ if [ -z "${TMPDIR}" ]; then
 fi
 
 cd "${TMPDIR}"
-curl http://nuedge.net/pikascript/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz
+curl https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.tar.gz -o PikaCmdSourceDistribution.tar.gz
 mkdir -p "PikaCmd"
 cd "PikaCmd"
 rm -rf "SourceDistribution" || true

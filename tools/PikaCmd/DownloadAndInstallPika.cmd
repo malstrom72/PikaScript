@@ -65,7 +65,7 @@ REM This script upzip's files...
     >> j_unzip.vbs ECHO.
 
 ECHO Downloading, please wait...
-powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('http://nuedge.net/pikascript/PikaCmdSourceDistribution.zip','PikaCmdSourceDistribution.zip')" || GOTO error
+powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/PikaCmdSourceDistribution.zip','PikaCmdSourceDistribution.zip')" || GOTO error
 ECHO Extracting...
 cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
 DEL PikaCmdSourceDistribution.zip
@@ -80,5 +80,4 @@ EXIT /b 0
 
 :error
 ECHO Error %ERRORLEVEL%
-POPD
 EXIT /b %ERRORLEVEL%
