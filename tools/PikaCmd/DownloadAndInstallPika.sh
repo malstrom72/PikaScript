@@ -2,8 +2,8 @@
 set -e -o pipefail -u
 cd "$(dirname "$0")"
 
-if [ -z "${TMPDIR}" ]; then
-	TMPDIR="/tmp/"
+if [ -z "${TMPDIR:-}" ]; then
+        TMPDIR="/tmp/"
 fi
 
 cd "${TMPDIR}"
