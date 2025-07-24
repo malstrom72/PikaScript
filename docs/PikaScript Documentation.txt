@@ -107,52 +107,52 @@ Real operators start at the `STATEMENT` level (4) and continue upward with highe
 
 Operator                    Prec.   Comment
 --------                    -----   -------
-function { x }              21      Function with body `x`. See Functions for more info.
-x([a][,b][,c]...)           20      Function call. (All arguments are optional and will be void if omitted.)
-x.y                         20      Element operator (`y` must be a valid symbol literal).
-x[y]                        20      Subscript operator.
-x{[o]:[l]}                  20      Substring operator. Returns a sub-string of `l` characters from `x` starting at offset `o` .*
-x++                         20      Postfix increment. Value is that of `x` before the increment. `x` must be an integer /lvalue/ .**
-x--                         20      Postfix decrement. Value is that of `x` before the decrement. `x` must be an integer /lvalue/ .**
-@x                          19      Reference operator. See References for more info.
-!x                          19      Logical not (`false` -> `true` and vice versa). (`!!x` can be used to assert that `x` is a boolean.)
-~x                          19      Bitwise not (only works on integers) (`~~x` can be used to assert that `x` is an integer value.)
-+x                          19      Prefix plus, verifies that `x` is a number and "normalizes" it. (`+x` can be used to assert that `x` is a number.)
--x                          19      Negate, only works on numbers.
-++x                         19      Prefix increment, `x` must be an integer /lvalue/ .** (Use += for floating point numbers.)
---x                         19      Prefix decrement, `x` must be an integer /lvalue/ .** (Use -= for floating point numbers.)
-x * y                       18      Multiplication (only works on numbers).
-x / y                       18      Division (only works on numbers).
-x % y                       18      Modulo (only works on numbers). (Result is platform dependent if `x` is negative.)
-x + y                       17      Addition (only works on numbers).
-x - y                       17      Subtraction (only works on numbers).
-x << y                      16      Bit-shift left (only works on positive integers).
-x >> y                      16      Bit-shift right (only works on positive integers).
-x # y                       15      String concatenation.
-x < y                       14      `true` if `x` is less than `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
-x <= y                      14      `true` if `x` is less or equal to `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
-x >= y                      14      `true` if `x` is greater or equal to `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
-x > y                       14      `true` if `x` is greater than `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
-x === y                     13      `true` if `x` is literally equal to `y` (character by character).
-x == y                      13      `true` if `x` is equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
-x !== y                     13      `true` if `x` is not literally equal to `y` (character by character).
-x != y                      13      `true` if `x` is not equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
-x & y                       12      Bitwise and (only works on positive integers).
-x ^ y                       11      Bitwise xor (only works on positive integers).
-x | y                       10      Bitwise or (only works on positive integers).
-x && y                      9       Logical and. `y` is only evaluated if `x` is `true`.
-x || y                      8       Logical or. `y` is only evaluated if `x` is `false`.
-x = y                       7       Assignment (right to left associative, e.g. `a = b = 3` is ok.)
+function { x }              22      Function with body `x`. See Functions for more info.
+x([a][,b][,c]...)           21      Function call. (All arguments are optional and will be void if omitted.)
+x.y                         21      Element operator (`y` must be a valid symbol literal).
+x[y]                        21      Subscript operator.
+x{[o]:[l]}                  21      Substring operator. Returns a sub-string of `l` characters from `x` starting at offset `o` .*
+x++                         21      Postfix increment. Value is that of `x` before the increment. `x` must be an integer /lvalue/ .**
+x--                         21      Postfix decrement. Value is that of `x` before the decrement. `x` must be an integer /lvalue/ .**
+@x                          20      Reference operator. See References for more info.
+!x                          20      Logical not (`false` -> `true` and vice versa). (`!!x` can be used to assert that `x` is a boolean.)
+~x                          20      Bitwise not (only works on integers) (`~~x` can be used to assert that `x` is an integer value.)
++x                          20      Prefix plus, verifies that `x` is a number and "normalizes" it. (`+x` can be used to assert that `x` is a number.)
+-x                          20      Negate, only works on numbers.
+++x                         20      Prefix increment, `x` must be an integer /lvalue/ .** (Use += for floating point numbers.)
+--x                         20      Prefix decrement, `x` must be an integer /lvalue/ .** (Use -= for floating point numbers.)
+x * y                       19      Multiplication (only works on numbers).
+x / y                       19      Division (only works on numbers).
+x % y                       19      Modulo (only works on numbers). (Result is platform dependent if `x` is negative.)
+x + y                       18      Addition (only works on numbers).
+x - y                       18      Subtraction (only works on numbers).
+x << y                      17      Bit-shift left (only works on positive integers).
+x >> y                      17      Bit-shift right (only works on positive integers).
+x # y                       16      String concatenation.
+x < y                       15      `true` if `x` is less than `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
+x <= y                      15      `true` if `x` is less or equal to `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
+x >= y                      15      `true` if `x` is greater or equal to `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
+x > y                       15      `true` if `x` is greater than `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
+x === y                     14      `true` if `x` is literally equal to `y` (character by character).
+x == y                      14      `true` if `x` is equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
+x !== y                     14      `true` if `x` is not literally equal to `y` (character by character).
+x != y                      14      `true` if `x` is not equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
+x & y                       13      Bitwise and (only works on positive integers).
+x ^ y                       12      Bitwise xor (only works on positive integers).
+x | y                       11      Bitwise or (only works on positive integers).
+x && y                      10       Logical and. `y` is only evaluated if `x` is `true`.
+x || y                      9       Logical or. `y` is only evaluated if `x` is `false`.
+x = y                       8       Assignment (right to left associative, e.g. `a = b = 3` is ok.)
 *= /= %=
 += -=
 <<= >>= #=
-&= ^= |=                    7       Assignment by operation, e.g. `a += 3` adds 3 to `a`.
-(x)                         6       Parenthesis, groups sub-expressions.
-[x]                         6       Dereferences `x`. E.g. `[@x]` is the same as `x`. See References for more info.
-{[a[;b][;c]...]}            3       Compound expression. Evaluates sub-expressions sequentially. Final result is that of last sub-expression.
->x                          3       Lambda expression of `x`. E.g. `(>x)()` is the same as `x`. See Functions for more info.
-for ([a];b;[c]) [x]         3       First evaluates `a`, then if `b` is `true`, `x` and `c` are repeated until `b` is `false`. Final result is that of `x` (or unchanged if first `b` is `false` or `x` is omitted).
-if (x) a [else b]           3       Evaluates `a` if `x` is `true` (or optionally evaluates `b` if `x` is `false`). Final result is that of `a`, `b` or unchanged. (Can be /lvalue/ or /rvalue/.)
+&= ^= |=                    8       Assignment by operation, e.g. `a += 3` adds 3 to `a`.
+(x)                         7       Parenthesis, groups sub-expressions.
+[x]                         7       Dereferences `x`. E.g. `[@x]` is the same as `x`. See References for more info.
+for ([a];b;[c]) [x]         5       First evaluates `a`, then if `b` is `true`, `x` and `c` are repeated until `b` is `false`. Final result is that of `x` (or unchanged if first `b` is `false` or `x` is omitted).
+if (x) a [else b]           5       Evaluates `a` if `x` is `true` (or optionally evaluates `b` if `x` is `false`). Final result is that of `a`, `b` or unchanged. (Can be /lvalue/ or /rvalue/.)
+{[a[;b][;c]...]}            4       Compound expression. Evaluates sub-expressions sequentially. Final result is that of last sub-expression.
+>x                          4       Lambda expression of `x`. E.g. `(>x)()` is the same as `x`. See Functions for more info.
 
  * You must specify either `o`, `l` or both. If `o` is omitted, the first `l` characters of the source string `x` are
 returned. If `l` is omitted, the sub-string from offset `o` to the end of the source string is returned. Negative values
