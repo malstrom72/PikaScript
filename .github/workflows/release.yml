@@ -41,6 +41,8 @@ jobs:
       run: zip -r PikaCmdSourceDistribution.zip tools/PikaCmd/SourceDistribution
     - name: Upload tarball
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ./PikaCmdSourceDistribution.tar.gz
@@ -48,6 +50,8 @@ jobs:
         asset_content_type: application/gzip
     - name: Upload zip
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ./PikaCmdSourceDistribution.zip
