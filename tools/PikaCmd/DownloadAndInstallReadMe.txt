@@ -13,6 +13,9 @@ One line install boot strap:
 	
 curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 
+The installer only downloads the `PikaCmd` source distribution from the latest release
+so the bootstrap is quick and lightweight.
+
 On Ubuntu you may have to first install curl, g++ and 32-bit libraries:
 
 	sudo apt-get install curl g++ g++-multilib

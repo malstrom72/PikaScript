@@ -41,6 +41,8 @@ powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https:/
 ```bash
 curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
 ```
+These install scripts fetch only the `tools/PikaCmd/SourceDistribution` package from the
+latest release, keeping the download small for quick installation.
 
 ## Running Scripts
 
