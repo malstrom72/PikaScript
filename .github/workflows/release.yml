@@ -54,23 +54,4 @@ jobs:
         asset_name: PikaCmdSourceDistribution.zip
         asset_content_type: application/zip
 
-  macos:
-    needs: create_release
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: bash ./build.sh
-
-
-  windows:
-    needs: create_release
-    runs-on: windows-latest
-    permissions:
-      contents: write
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ilammy/msvc-dev-cmd@v1
-    - name: Build
-      run: .\build.cmd
 
