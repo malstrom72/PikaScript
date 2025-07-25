@@ -33,43 +33,25 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build
       run: bash ./build.sh
-    - name: Package SourceDistribution
+    - name: Remove prebuilt PikaCmd
+      run: rm -f tools/PikaCmd/SourceDistribution/PikaCmd tools/PikaCmd/SourceDistribution/PikaCmd.exe
+    - name: Package SourceDistribution (tar)
       run: tar -czf PikaCmdSourceDistribution.tar.gz tools/PikaCmd/SourceDistribution
-    - name: Upload release asset
+    - name: Package SourceDistribution (zip)
+      run: zip -r PikaCmdSourceDistribution.zip tools/PikaCmd/SourceDistribution
+    - name: Upload tarball
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ./PikaCmdSourceDistribution.tar.gz
         asset_name: PikaCmdSourceDistribution.tar.gz
         asset_content_type: application/gzip
-
-  macos:
-    needs: create_release
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: bash ./build.sh
-    - name: Package SourceDistribution
-      run: tar -czf PikaCmdSourceDistribution.tar.gz tools/PikaCmd/SourceDistribution
-
-  windows:
-    needs: create_release
-    runs-on: windows-latest
-    permissions:
-      contents: write
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ilammy/msvc-dev-cmd@v1
-    - name: Build
-      run: .\build.cmd
-    - name: Package SourceDistribution
-      shell: pwsh
-      run: Compress-Archive -Path tools/PikaCmd/SourceDistribution/* -DestinationPath PikaCmdSourceDistribution.zip
-    - name: Upload release asset
+    - name: Upload zip
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ./PikaCmdSourceDistribution.zip
         asset_name: PikaCmdSourceDistribution.zip
         asset_content_type: application/zip
+
+
