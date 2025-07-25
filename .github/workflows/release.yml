@@ -44,6 +44,10 @@ jobs:
         cd tools/PikaCmd
         zip -r ../../PikaCmdSourceDistribution.zip SourceDistribution
         cd ../../
+    - name: Prepare install scripts
+      run: |
+        cp tools/PikaCmd/DownloadAndInstallPika.sh install.sh
+        cp tools/PikaCmd/DownloadAndInstallPika.cmd install.bat
     - name: Upload tarball
       uses: actions/upload-release-asset@v1
       env:
@@ -62,5 +66,23 @@ jobs:
         asset_path: ./PikaCmdSourceDistribution.zip
         asset_name: PikaCmdSourceDistribution.zip
         asset_content_type: application/zip
+    - name: Upload install script (Unix)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: ./install.sh
+        asset_name: install.sh
+        asset_content_type: text/x-shellscript
+    - name: Upload install script (Windows)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: ./install.bat
+        asset_name: install.bat
+        asset_content_type: text/plain
 
 
