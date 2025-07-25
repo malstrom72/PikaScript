@@ -11,7 +11,7 @@ MAC / UNIX
 
 One line install boot strap:
 	
-curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | sh
+curl -fsL https://github.com/malstrom72/PikaScript/releases/latest/download/install.sh | bash
 
 The installer only downloads the `PikaCmd` source distribution from the latest release
 so the bootstrap is quick and lightweight.
