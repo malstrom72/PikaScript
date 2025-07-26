@@ -38,26 +38,23 @@
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
 <h2><a name="compileFunction">compileFunction</a></h2>
-<h3><a name="Syntax">Syntax</a></h3>
 <pre>'parser' = ppeg.compileFunction(source)<br></pre>
-<h3><a name="Description">Description</a></h3>
-<p>Converts <tt>source</tt> into a parser function and returns it. <br>
-The returned parser has the following signature:</p>
+<p>Converts <tt>source</tt> into a parser function. The generated parser has the <br>
+following signature:</p>
 <pre>'success' = parser(text, [@dd], [@iref], [rule = 'root'])<br></pre>
-<p><tt>dd</tt> is a reference that supplies the starting <tt>$$</tt> value <br>
-and usually points at a container for the parse results. <br>
-<tt>iref</tt> receives the index where parsing stops. <br>
-The optional <tt>rule</tt> argument selects the entry rule and <br>
+<p><tt>dd</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a <br>
+container to collect results.  <tt>iref</tt> receives the index where parsing <br>
+stopped.  The optional <tt>rule</tt> argument selects the entry rule and <br>
 defaults to <tt>'root'</tt>.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
-inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>
-block runs, <tt>$$</tt> already contains the value produced by the expression. The <br>
-action can inspect or modify this value directly.</p>
+ inside braces <tt>{}</tt>. Before the block runs, <tt>$$</tt> already contains the value <br>
+ produced by the expression. The action can inspect or modify this value <br>
+ directly.</p>
 <p>The following helpers are available inside an action:</p>
 
 <ul>
-<li><tt>$$</tt> &#8211; current result container. Use <tt>$$=</tt> before an expression to capture<br>the substring it consumes.
+<li><tt>$$</tt> &#8211; current value passed between rules. Use <tt>name=expr</tt> or <tt>$$=expr</tt><br>to capture the substring an expression consumes.
 <br></li>
 <li><tt>$$s</tt> &#8211; the source string being parsed.<br></li>
 <li><tt>$$i</tt> &#8211; index within <tt>$$s</tt> for the next character.<br></li>
