@@ -37,6 +37,54 @@
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
+<h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
+<p>PPEG grammars can embed blocks of PikaScript that run when the preceding <br>
+expression succeeds. These action blocks appear inside braces <tt>{}</tt> and end <br>
+with a <tt>;true</tt> so the parser always continues after running the code. <br>
+Before the action executes <tt>$$</tt> already holds the value produced by the <br>
+expression. The code may read or modify this value in place.</p>
+<p>The following helper variables are available inside an action:</p>
+
+<ul>
+<li><tt>$$</tt> &#8211; current result container. Use <tt>$$=</tt> before an expression to capture<br>the raw substring it consumes.
+<br></li>
+<li><tt>$$s</tt> &#8211; the source string being parsed.<br></li>
+<li><tt>$$i</tt> &#8211; the index within <tt>$$s</tt> where the next character will be read.<br></li>
+<li><tt>$$parser</tt> &#8211; dictionary holding all generated parser functions. Global<br>grammars populate this dictionary while local compilers return it.
+</li>
+</ul>
+<p>These identifiers are expanded by the compiler so that actions can inspect <br>
+the input, construct data structures or call helper functions. Use <br>
+<tt>ppeg.fail()</tt> to abort parsing and report an error.</p>
+<h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
+<p>Every rule receives a single argument in <tt>$$</tt>. Whatever the caller has <br>
+placed there can be read and modified, so <tt>$$</tt> acts as both input and <br>
+output. Unless you tag an expression the exact same object flows into <br>
+each sub-expression and any changes they make remain visible. Tagging <br>
+an expression with <tt>name:expr</tt> temporarily rebinds <tt>$$</tt> to <tt>$name</tt> while <br>
+<tt>expr</tt> runs. When it succeeds <tt>$name</tt> keeps the produced value and <tt>$$</tt> <br>
+reverts to its previous binding. Nothing is automatically merged back <br>
+into the caller&amp;#8217;s `$$`&amp;nbsp;&amp;mdash;&amp;nbsp;store the value yourself if <br>
+needed.</p>
+<p>Prefixing an expression with <tt>name=</tt> or <tt>$$=</tt> captures the exact text <br>
+that the expression consumes before any actions run.  This is useful for <br>
+converting the substring to another datatype or keeping it for later <br>
+inspection.</p>
+<p>The following small grammar demonstrates these features by building a <br>
+dictionary from colon separated pairs:</p>
+<pre>root &lt;- "{" _            { $$ = new(Container) }<br>         pair ("," _ pair)* "}" _ !.<br><br>pair &lt;- key:ident ":" _ val:number { [$$][$key] = $val }<br><br>ident &lt;- $$=[a-zA-Z]+ _<br>number &lt;- digits=[0-9]+ { $$ = evaluate('+' # digits) } _<br>_ &lt;- [ \t\r\n]*<br></pre>
+<p>Here <tt>pair</tt> tags the identifier and number so its action can access them <br>
+as <tt>$key</tt> and <tt>$val</tt>.  The <tt>number</tt> rule captures the raw digits in <br>
+<tt>$digits</tt> before converting them to a numeric value.  Tagged and <br>
+captured variables remain available until the current rule finishes, allowing later actions to read or modify them.</p>
+<h2><a name="Working_with_Custom_Fields">Working with Custom Fields</a></h2>
+<p>More elaborate grammars often store helper information in <tt>$$</tt> so that <br>
+multiple rules can share it.  The monolithic JSON example distributes <br>
+values into a pre-existing container designated by <tt>$$.target</tt>:</p>
+<pre>root   &lt;- _ { $$parser.null = coalesce(@$$.null, &lt;null&gt;); }<br>           (object / array) !.<br><br>object &lt;- "{"_ ( member (","_ member)* )? "}"_<br><br>member &lt;- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }<br>           v:value<br><br>value  &lt;- string                     { [$$.target] = $$ }<br>           / number                  { [$$.target] = $$ }<br>           / "true" _               { [$$.target] = true }<br>           / "false" _              { [$$.target] = false }<br>           / "null" _               { [$$.target] = $$parser.null }<br>           / object<br>           / array<br></pre>
+<p>The caller initializes <tt>$$.target</tt> to a container and each rule stores <br>
+its result at that location.  Because <tt>target</tt> is just a field inside <br>
+<tt>$$</tt> it is visible to all sub-expressions until the rule returns.</p>
 
 	</body>
 </html>
