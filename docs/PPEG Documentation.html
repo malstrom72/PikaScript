@@ -41,13 +41,14 @@
 <h3><a name="Syntax">Syntax</a></h3>
 <pre>parser = ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule = 'root']]]])<br></pre>
 <h3><a name="Description">Description</a></h3>
-<p>Converts &lt;code&gt;source&lt;/code&gt; into a parser function. If &lt;code&gt;@outFunc&lt;/code&gt; is supplied, <br>
-the generated parser is stored there and the call returns &lt;code&gt;true&lt;/code&gt;; otherwise it <br>
+<p>Converts <tt>source</tt> into a parser function. If <tt>@outFunc</tt> is supplied, <br>
+the generated parser is stored there and the call returns <tt>true</tt>; otherwise it <br>
 returns the new parser.</p>
-<p>&lt;code&gt;dd&lt;/code&gt; and &lt;code&gt;iref&lt;/code&gt; establish the default dictionary container and index <br>
-reference for the parser. They let callers provide an external container and position <br>
-variable that each rule will update. The optional &lt;code&gt;rule&lt;/code&gt; parameter selects the <br>
-starting rule and defaults to &lt;code&gt;'root'&lt;/code&gt;.</p>
+<p><tt>dd</tt> and <tt>iref</tt> customize how the generated parser manages state. <tt>dd</tt> is the <br>
+container passed to each rule when no tag rebinding occurs so rules can add to a <br>
+shared dictionary. <tt>iref</tt> is an lvalue that receives the index of the first <br>
+unconsumed character once parsing finishes. The optional <tt>rule</tt> parameter <br>
+selects the entry point and defaults to <tt>'root'</tt>.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
 inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>

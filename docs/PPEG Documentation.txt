@@ -72,14 +72,15 @@ Syntax
 Description
 -----------
 
- Converts <code>source</code> into a parser function. If <code>@outFunc</code> is supplied,
- the generated parser is stored there and the call returns <code>true</code>; otherwise it
+ Converts `source` into a parser function. If `@outFunc` is supplied,
+ the generated parser is stored there and the call returns `true`; otherwise it
  returns the new parser.
 
- <code>dd</code> and <code>iref</code> establish the default dictionary container and index
- reference for the parser. They let callers provide an external container and position
- variable that each rule will update. The optional <code>rule</code> parameter selects the
- starting rule and defaults to <code>'root'</code>.
+`dd` and `iref` customize how the generated parser manages state. `dd` is the
+container passed to each rule when no tag rebinding occurs so rules can add to a
+shared dictionary. `iref` is an lvalue that receives the index of the first
+unconsumed character once parsing finishes. The optional `rule` parameter
+selects the entry point and defaults to `'root'`.
 
 
 PikaScript Actions
