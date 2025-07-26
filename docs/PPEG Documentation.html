@@ -37,6 +37,12 @@
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
+<p>CompileFunction Arguments <br>
+------------------------</p>
+<p><tt>ppeg.compileFunction(src, @outFunc, dd=nil, iref=nil, rule='root')</tt> returns a <br>
+new parsing function built from <tt>src</tt>. When <tt>@outFunc</tt> is supplied the function <br>
+is also stored there. The remaining parameters become the defaults for the <br>
+parser's own arguments, matching the ones used by <tt>ppeg.parse</tt>.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
 inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>
@@ -54,12 +60,12 @@ action can inspect or modify this value directly.</p>
 <p>These identifiers let actions look at the input, build data structures, or <br>
 report errors via <tt>ppeg.fail()</tt>.</p>
 <h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
-<p>Every rule takes one argument called <tt>$$</tt>. It also serves as the return value. <br>
-When subexpressions are written without tags the same object flows through them <br>
-all and may be modified in place. A tagged expression <tt>name:expr</tt> temporarily <br>
-sets <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> runs. After it succeeds <tt>$name</tt> holds the <br>
-result and <tt>$$</tt> reverts to the original object so the rule can decide how to <br>
-use the new value.</p>
+<p>Every rule takes <tt>$$</tt> as its input and also returns it. Untagged <br>
+subexpressions therefore share one container and may update it in place. A <br>
+tagged expression <tt>name:expr</tt> temporarily binds <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> <br>
+runs. When the expression finishes, <tt>$name</tt> contains the produced value and <br>
+<tt>$$</tt> again refers to the outer container so the rule can decide how to use the <br>
+new data.</p>
 <p>A capture <tt>name=expr</tt> (or <tt>$$=expr</tt>) grabs the substring consumed by <tt>expr</tt> <br>
 before any action executes. The action can then convert this text or store it.</p>
 <p>The grammar below builds a dictionary from colon-separated pairs:</p>

@@ -61,6 +61,14 @@ launched from:
     assert(> parseDigits('12345'));
     assert(> !parseDigits('12a45'));
 
+CompileFunction Arguments
+------------------------
+
+ `ppeg.compileFunction(src, @outFunc, dd=nil, iref=nil, rule='root')` returns a
+ new parsing function built from `src`. When `@outFunc` is supplied the function
+ is also stored there. The remaining parameters become the defaults for the
+ parser's own arguments, matching the ones used by `ppeg.parse`.
+
 PikaScript Actions
 ==================
 
@@ -83,12 +91,12 @@ PikaScript Actions
 Tags and Captures
 =================
 
- Every rule takes one argument called `$$`. It also serves as the return value.
- When subexpressions are written without tags the same object flows through them
- all and may be modified in place. A tagged expression `name:expr` temporarily
- sets `$$` to `$name` while `expr` runs. After it succeeds `$name` holds the
- result and `$$` reverts to the original object so the rule can decide how to
- use the new value.
+ Every rule takes `$$` as its input and also returns it. Untagged
+ subexpressions therefore share one container and may update it in place. A
+ tagged expression `name:expr` temporarily binds `$$` to `$name` while `expr`
+ runs. When the expression finishes, `$name` contains the produced value and
+ `$$` again refers to the outer container so the rule can decide how to use the
+ new data.
 
  A capture `name=expr` (or `$$=expr`) grabs the substring consumed by `expr`
  before any action executes. The action can then convert this text or store it.
