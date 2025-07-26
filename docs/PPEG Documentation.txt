@@ -86,23 +86,18 @@ PikaScript Actions
 Tags and Captures
 =================
 
- Every rule receives a single argument in `$$`. Whatever the caller has
- placed there can be read and modified, so `$$` acts as both input and
- output. Unless you tag an expression the exact same object flows into
- each sub-expression and any changes they make remain visible. Tagging
- an expression with `name:expr` temporarily rebinds `$$` to `$name` while
- `expr` runs. When it succeeds `$name` keeps the produced value and `$$`
- reverts to its previous binding. Nothing is automatically merged back
- into the caller&#8217;s `$$`&nbsp;&mdash;&nbsp;store the value yourself if
+ Each rule receives an object in `$$`. If you do not tag any
+ expressions the same value flows through nested expressions and they may
+ modify it directly. A tag `name:expr` binds `$$` to `$name` only while
+ `expr` runs; when it succeeds `$name` keeps the result and `$$` reverts.
+ Nothing is copied back automatically&#8212;store `$name` yourself if
  needed.
 
- Prefixing an expression with `name=` or `$$=` captures the exact text
- that the expression consumes before any actions run.  This is useful for
- converting the substring to another datatype or keeping it for later
- inspection.
+ `name=expr` or `$$=expr` saves the substring consumed by `expr` before
+ actions execute. This is handy for converting digits or preserving the
+ original text.
 
- The following small grammar demonstrates these features by building a
- dictionary from colon separated pairs:
+ The grammar below builds a dictionary from colon separated pairs:
 
      root <- "{" _            { $$ = new(Container) }
               pair ("," _ pair)* "}" _ !.
@@ -113,18 +108,15 @@ Tags and Captures
      number <- digits=[0-9]+ { $$ = evaluate('+' # digits) } _
      _ <- [ \t\r\n]*
 
- Here `pair` tags the identifier and number so its action can access them
- as `$key` and `$val`.  The `number` rule captures the raw digits in
- `$digits` before converting them to a numeric value.  Tagged and
- captured variables remain available until the current rule finishes,
-allowing later actions to read or modify them.
+ `pair` tags the identifier and number so the action can read `$key` and
+ `$val`. `number` captures the digits in `$digits` before converting
+ them. Tagged variables remain available until the rule returns.
 
 Working with Custom Fields
 ==========================
 
- More elaborate grammars often store helper information in `$$` so that
- multiple rules can share it.  The monolithic JSON example distributes
- values into a pre-existing container designated by `$$.target`:
+ Grammars often pass context in `$$`.  The monolithic JSON parser
+ writes results into the container referenced by `$$.target`:
 
      root   <- _ { $$parser.null = coalesce(@$$.null, <null>); }
                 (object / array) !.
@@ -142,6 +134,6 @@ Working with Custom Fields
                 / object
                 / array
 
- The caller initializes `$$.target` to a container and each rule stores
- its result at that location.  Because `target` is just a field inside
- `$$` it is visible to all sub-expressions until the rule returns.
+ Initialize `$$.target` before parsing; each rule stores its result in
+ that field.  Because `target` is just a member of `$$`, all nested
+ rules see it until the current rule finishes.

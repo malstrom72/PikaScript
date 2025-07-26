@@ -57,34 +57,42 @@ expression. The code may read or modify this value in place.</p>
 the input, construct data structures or call helper functions. Use <br>
 <tt>ppeg.fail()</tt> to abort parsing and report an error.</p>
 <h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
-<p>Every rule receives a single argument in <tt>$$</tt>. Whatever the caller has <br>
-placed there can be read and modified, so <tt>$$</tt> acts as both input and <br>
-output. Unless you tag an expression the exact same object flows into <br>
-each sub-expression and any changes they make remain visible. Tagging <br>
-an expression with <tt>name:expr</tt> temporarily rebinds <tt>$$</tt> to <tt>$name</tt> while <br>
-<tt>expr</tt> runs. When it succeeds <tt>$name</tt> keeps the produced value and <tt>$$</tt> <br>
-reverts to its previous binding. Nothing is automatically merged back <br>
-into the caller&amp;#8217;s `$$`&amp;nbsp;&amp;mdash;&amp;nbsp;store the value yourself if <br>
+<p>Each rule receives an object in <tt>$$</tt>. If you do not tag any <br>
+expressions the same value flows through nested expressions and they may <br>
+modify it directly. A tag <tt>name:expr</tt> binds <tt>$$</tt> to <tt>$name</tt> only while <br>
+<tt>expr</tt> runs; when it succeeds <tt>$name</tt> keeps the result and <tt>$$</tt> reverts. <br>
+Nothing is copied back automatically&amp;#8212;store <tt>$name</tt> yourself if <br>
 needed.</p>
-<p>Prefixing an expression with <tt>name=</tt> or <tt>$$=</tt> captures the exact text <br>
-that the expression consumes before any actions run.  This is useful for <br>
-converting the substring to another datatype or keeping it for later <br>
-inspection.</p>
-<p>The following small grammar demonstrates these features by building a <br>
-dictionary from colon separated pairs:</p>
+<p><tt>name=expr</tt> or <tt>$$=expr</tt> saves the substring consumed by <tt>expr</tt> before <br>
+actions execute. This is handy for converting digits or preserving the <br>
+original text.</p>
+<p>The grammar below builds a dictionary from colon separated pairs:</p>
 <pre>root &lt;- "{" _            { $$ = new(Container) }<br>         pair ("," _ pair)* "}" _ !.<br><br>pair &lt;- key:ident ":" _ val:number { [$$][$key] = $val }<br><br>ident &lt;- $$=[a-zA-Z]+ _<br>number &lt;- digits=[0-9]+ { $$ = evaluate('+' # digits) } _<br>_ &lt;- [ \t\r\n]*<br></pre>
-<p>Here <tt>pair</tt> tags the identifier and number so its action can access them <br>
-as <tt>$key</tt> and <tt>$val</tt>.  The <tt>number</tt> rule captures the raw digits in <br>
-<tt>$digits</tt> before converting them to a numeric value.  Tagged and <br>
-captured variables remain available until the current rule finishes, allowing later actions to read or modify them.</p>
+<p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <br>
+<tt>$val</tt>. <tt>number</tt> captures the digits in <tt>$digits</tt> before converting <br>
+them. Tagged variables remain available until the rule returns.</p>
 <h2><a name="Working_with_Custom_Fields">Working with Custom Fields</a></h2>
-<p>More elaborate grammars often store helper information in <tt>$$</tt> so that <br>
-multiple rules can share it.  The monolithic JSON example distributes <br>
-values into a pre-existing container designated by <tt>$$.target</tt>:</p>
-<pre>root   &lt;- _ { $$parser.null = coalesce(@$$.null, &lt;null&gt;); }<br>           (object / array) !.<br><br>object &lt;- "{"_ ( member (","_ member)* )? "}"_<br><br>member &lt;- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }<br>           v:value<br><br>value  &lt;- string                     { [$$.target] = $$ }<br>           / number                  { [$$.target] = $$ }<br>           / "true" _               { [$$.target] = true }<br>           / "false" _              { [$$.target] = false }<br>           / "null" _               { [$$.target] = $$parser.null }<br>           / object<br>           / array<br></pre>
-<p>The caller initializes <tt>$$.target</tt> to a container and each rule stores <br>
-its result at that location.  Because <tt>target</tt> is just a field inside <br>
-<tt>$$</tt> it is visible to all sub-expressions until the rule returns.</p>
+<table>
+<tr>
+<td colspan=4>Grammars often pass context in <tt>$$</tt>.</td><td>The monolithic JSON parser</td>
+</tr>
+<tr>
+<td colspan=5>writes results into the container referenced by <tt>$$.target</tt>:</td>
+</tr>
+<tr>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td><td>root</td><td colspan=3>&lt;- _ { $$parser.null = coalesce(@$$.null, &lt;null&gt;); }</td>
+</tr>
+<tr>
+<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>(object / array) !.</td><td>&nbsp;</td>
+</tr>
+</table>
+<pre>object &lt;- "{"_ ( member (","_ member)* )? "}"_<br><br>member &lt;- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }<br>           v:value<br><br>value  &lt;- string                     { [$$.target] = $$ }<br>           / number                  { [$$.target] = $$ }<br>           / "true" _               { [$$.target] = true }<br>           / "false" _              { [$$.target] = false }<br>           / "null" _               { [$$.target] = $$parser.null }<br>           / object<br>           / array<br></pre>
+<p>Initialize <tt>$$.target</tt> before parsing; each rule stores its result in <br>
+that field.  Because <tt>target</tt> is just a member of <tt>$$</tt>, all nested <br>
+rules see it until the current rule finishes.</p>
 
 	</body>
 </html>
