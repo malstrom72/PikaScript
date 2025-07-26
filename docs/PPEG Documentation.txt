@@ -67,16 +67,20 @@ compileFunction
 Syntax
 ------
 
-    'parser' = ppeg.compileFunction(source, [@dd], [@iref], [rule = 'root'])
+    'parser' = ppeg.compileFunction(source)
 
 Description
 -----------
 
- Converts `source` into a parser function and returns it. `dd` and `iref`
- are references that set the default input for the generated parser.
- `dd` supplies the initial `$$` value, often a container for parse
- results but it may be any object. `iref` receives the index where
- parsing stops. The optional `rule` argument selects the entry rule and
+ Converts `source` into a parser function and returns it.
+ The returned parser has the following signature:
+
+     'success' = parser(text, [@dd], [@iref], [rule = 'root'])
+
+ `dd` is a reference that supplies the starting `$$` value
+ and usually points at a container for the parse results.
+ `iref` receives the index where parsing stops.
+ The optional `rule` argument selects the entry rule and
  defaults to `'root'`.
 
 
