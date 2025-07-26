@@ -67,16 +67,16 @@ compileFunction
 Syntax
 ------
 
-    parser = ppeg.compileFunction(source [, dd [, iref [, rule = 'root']]])
+    'parser' = ppeg.compileFunction(source, [@dd], [@iref], [rule = 'root'])
 
 Description
 -----------
 
- Converts `source` into a parser function and returns it.  `dd` and
- `iref` are references that become the defaults for the generated
- parser. `dd` supplies the starting `$$` value which typically holds the
- output dictionary. `iref` receives the character index where parsing
- stopped. The optional `rule` argument selects the entry rule and
+ Converts `source` into a parser function and returns it. `dd` and `iref`
+ are references that set the default input for the generated parser.
+ `dd` supplies the initial `$$` value, often a container for parse
+ results but it may be any object. `iref` receives the index where
+ parsing stops. The optional `rule` argument selects the entry rule and
  defaults to `'root'`.
 
 
@@ -102,12 +102,12 @@ PikaScript Actions
 Tags and Captures
 =================
 
- Each rule receives and returns `$$`.  Without a tag, called rules work on the
- same container.  Tagging with `name:expr` binds `$$` to `$name` while `expr`
- runs and leaves `$name` defined for the rest of the rule.  If `$$` is a
- dictionary, the tag is also stored there automatically.  A capture
- `name=expr` (or `$$=expr`) records the consumed substring before any actions
- run.
+ Each rule receives `$$` as both input and output.  Without a tag, sub-rules
+ operate on the same value.  Tagging with `name:expr` temporarily rebinds `$$`
+ to `$name` while `expr` runs.  Afterward `$name` holds the result and can be
+ used in later actions.  When `$$` is a dictionary the tag is also stored there
+ automatically.  A capture `name=expr` (or `$$=expr`) stores the consumed
+ substring before any attached actions run.
 
  The grammar below builds a dictionary from colon-separated pairs:
 
