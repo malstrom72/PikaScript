@@ -67,20 +67,17 @@ compileFunction
 Syntax
 ------
 
-    parser = ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule = 'root']]]])
+    parser = ppeg.compileFunction(source [, dd [, iref [, rule = 'root']]])
 
 Description
 -----------
 
- Converts `source` into a parser function. If `@outFunc` is supplied,
- the generated parser is stored there and the call returns `true`; otherwise it
- returns the new parser.
-
-`dd` and `iref` customize how the generated parser manages state. `dd` is the
-container passed to each rule when no tag rebinding occurs so rules can add to a
-shared dictionary. `iref` is an lvalue that receives the index of the first
-unconsumed character once parsing finishes. The optional `rule` parameter
-selects the entry point and defaults to `'root'`.
+ Converts `source` into a parser function and returns it.  `dd` and
+ `iref` are references that become the defaults for the generated
+ parser. `dd` supplies the starting `$$` value which typically holds the
+ output dictionary. `iref` receives the character index where parsing
+ stopped. The optional `rule` argument selects the entry rule and
+ defaults to `'root'`.
 
 
 PikaScript Actions
@@ -105,15 +102,12 @@ PikaScript Actions
 Tags and Captures
 =================
 
- Every rule takes `$$` as its input and also returns it. Untagged
- subexpressions therefore share one container and may update it in place. A
- tagged expression `name:expr` temporarily binds `$$` to `$name` while `expr`
- runs. When the expression finishes, `$name` contains the produced value and
- `$$` again refers to the outer container so the rule can decide how to use the
- new data.
-
- A capture `name=expr` (or `$$=expr`) grabs the substring consumed by `expr`
- before any action executes. The action can then convert this text or store it.
+ Each rule receives and returns `$$`.  Without a tag, called rules work on the
+ same container.  Tagging with `name:expr` binds `$$` to `$name` while `expr`
+ runs and leaves `$name` defined for the rest of the rule.  If `$$` is a
+ dictionary, the tag is also stored there automatically.  A capture
+ `name=expr` (or `$$=expr`) records the consumed substring before any actions
+ run.
 
  The grammar below builds a dictionary from colon-separated pairs:
 
@@ -127,13 +121,13 @@ Tags and Captures
      _ <- [ \t\r\n]*
 
  `pair` tags the identifier and number so the action can read `$key` and
- `$val`. `number` captures the digits in `$digits` before converting
+ `$val`.  `number` captures the digits in `$digits` before converting
  them. Tagged variables remain available until the rule returns.
 
 Working with Custom Fields
 ==========================
 
- Grammars often pass context in `$$`.  The monolithic JSON parser
+ Grammars often store context in a field of `$$`.  The monolithic JSON parser
  writes results into the container referenced by `$$.target`:
 
      root   <- _ { $$parser.null = coalesce(@$$.null, <null>); }
@@ -152,6 +146,5 @@ Working with Custom Fields
                 / object
                 / array
 
- Initialize `$$.target` before parsing; each rule stores its result in
- that field.  Because `target` is just a member of `$$`, all nested
- rules see it until the current rule finishes.
+ Initialize `$$.target` before parsing.  Because `target` is just a member of
+ `$$`, all nested rules see it until the current rule finishes.

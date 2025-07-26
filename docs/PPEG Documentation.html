@@ -39,16 +39,28 @@
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
 <h2><a name="compileFunction">compileFunction</a></h2>
 <h3><a name="Syntax">Syntax</a></h3>
-<pre>parser = ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule = 'root']]]])<br></pre>
+<pre>parser = ppeg.compileFunction(source [, dd [, iref [, rule = 'root']]])<br></pre>
 <h3><a name="Description">Description</a></h3>
-<p>Converts <tt>source</tt> into a parser function. If <tt>@outFunc</tt> is supplied, <br>
-the generated parser is stored there and the call returns <tt>true</tt>; otherwise it <br>
-returns the new parser.</p>
-<p><tt>dd</tt> and <tt>iref</tt> customize how the generated parser manages state. <tt>dd</tt> is the <br>
-container passed to each rule when no tag rebinding occurs so rules can add to a <br>
-shared dictionary. <tt>iref</tt> is an lvalue that receives the index of the first <br>
-unconsumed character once parsing finishes. The optional <tt>rule</tt> parameter <br>
-selects the entry point and defaults to <tt>'root'</tt>.</p>
+<table>
+<tr>
+<td>Converts <tt>source</tt> into a parser function and returns it.</td><td><tt>dd</tt> and</td>
+</tr>
+<tr>
+<td colspan=2><tt>iref</tt> are references that become the defaults for the generated</td>
+</tr>
+<tr>
+<td colspan=2>parser. <tt>dd</tt> supplies the starting <tt>$$</tt> value which typically holds the</td>
+</tr>
+<tr>
+<td colspan=2>output dictionary. <tt>iref</tt> receives the character index where parsing</td>
+</tr>
+<tr>
+<td colspan=2>stopped. The optional <tt>rule</tt> argument selects the entry rule and</td>
+</tr>
+<tr>
+<td>defaults to <tt>'root'</tt>.</td><td>&nbsp;</td>
+</tr>
+</table>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
 inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>
@@ -66,23 +78,35 @@ action can inspect or modify this value directly.</p>
 <p>These identifiers let actions look at the input, build data structures, or <br>
 report errors via <tt>ppeg.fail()</tt>.</p>
 <h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
-<p>Every rule takes <tt>$$</tt> as its input and also returns it. Untagged <br>
-subexpressions therefore share one container and may update it in place. A <br>
-tagged expression <tt>name:expr</tt> temporarily binds <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> <br>
-runs. When the expression finishes, <tt>$name</tt> contains the produced value and <br>
-<tt>$$</tt> again refers to the outer container so the rule can decide how to use the <br>
-new data.</p>
-<p>A capture <tt>name=expr</tt> (or <tt>$$=expr</tt>) grabs the substring consumed by <tt>expr</tt> <br>
-before any action executes. The action can then convert this text or store it.</p>
+<table>
+<tr>
+<td colspan=2>Each rule receives and returns <tt>$$</tt>.</td><td colspan=3>Without a tag, called rules work on the</td>
+</tr>
+<tr>
+<td>same container.</td><td colspan=4>Tagging with <tt>name:expr</tt> binds <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt></td>
+</tr>
+<tr>
+<td colspan=4>runs and leaves <tt>$name</tt> defined for the rest of the rule.</td><td>If <tt>$$</tt> is a</td>
+</tr>
+<tr>
+<td colspan=3>dictionary, the tag is also stored there automatically.</td><td colspan=2>A capture</td>
+</tr>
+<tr>
+<td colspan=5><tt>name=expr</tt> (or <tt>$$=expr</tt>) records the consumed substring before any actions</td>
+</tr>
+<tr>
+<td>run.</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+</table>
 <p>The grammar below builds a dictionary from colon-separated pairs:</p>
 <pre>root &lt;- "{" _            { $$ = new(Container) }<br>         pair ("," _ pair)* "}" _ !.<br><br>pair &lt;- key:ident ":" _ val:number { [$$][$key] = $val }<br><br>ident &lt;- $$=[a-zA-Z]+ _<br>number &lt;- digits=[0-9]+ { $$ = evaluate('+' # digits) } _<br>_ &lt;- [ \t\r\n]*<br></pre>
 <p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <br>
-<tt>$val</tt>. <tt>number</tt> captures the digits in <tt>$digits</tt> before converting <br>
+<tt>$val</tt>.  <tt>number</tt> captures the digits in <tt>$digits</tt> before converting <br>
 them. Tagged variables remain available until the rule returns.</p>
 <h2><a name="Working_with_Custom_Fields">Working with Custom Fields</a></h2>
 <table>
 <tr>
-<td colspan=4>Grammars often pass context in <tt>$$</tt>.</td><td>The monolithic JSON parser</td>
+<td colspan=4>Grammars often store context in a field of <tt>$$</tt>.</td><td>The monolithic JSON parser</td>
 </tr>
 <tr>
 <td colspan=5>writes results into the container referenced by <tt>$$.target</tt>:</td>
@@ -98,9 +122,14 @@ them. Tagged variables remain available until the rule returns.</p>
 </tr>
 </table>
 <pre>object &lt;- "{"_ ( member (","_ member)* )? "}"_<br><br>member &lt;- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }<br>           v:value<br><br>value  &lt;- string                     { [$$.target] = $$ }<br>           / number                  { [$$.target] = $$ }<br>           / "true" _               { [$$.target] = true }<br>           / "false" _              { [$$.target] = false }<br>           / "null" _               { [$$.target] = $$parser.null }<br>           / object<br>           / array<br></pre>
-<p>Initialize <tt>$$.target</tt> before parsing; each rule stores its result in <br>
-that field.  Because <tt>target</tt> is just a member of <tt>$$</tt>, all nested <br>
-rules see it until the current rule finishes.</p>
+<table>
+<tr>
+<td>Initialize <tt>$$.target</tt> before parsing.</td><td>Because <tt>target</tt> is just a member of</td>
+</tr>
+<tr>
+<td colspan=2><tt>$$</tt>, all nested rules see it until the current rule finishes.</td>
+</tr>
+</table>
 
 	</body>
 </html>
