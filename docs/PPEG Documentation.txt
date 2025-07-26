@@ -64,40 +64,36 @@ launched from:
 PikaScript Actions
 ==================
 
- PPEG grammars can embed blocks of PikaScript that run when the preceding
- expression succeeds. These action blocks appear inside braces `{}` and end
- with a `;true` so the parser always continues after running the code.
- Before the action executes `$$` already holds the value produced by the
- expression. The code may read or modify this value in place.
+ PPEG grammars may attach PikaScript code to an expression. The code is written
+ inside braces `{}` and always succeeds because it ends with `;true`. Before the
+ block runs, `$$` already contains the value produced by the expression. The
+ action can inspect or modify this value directly.
 
- The following helper variables are available inside an action:
+ The following helpers are available inside an action:
 
 -  `$$` – current result container. Use `$$=` before an expression to capture
-   the raw substring it consumes.
+   the substring it consumes.
 -  `$$s` – the source string being parsed.
--  `$$i` – the index within `$$s` where the next character will be read.
--  `$$parser` – dictionary holding all generated parser functions. Global
-   grammars populate this dictionary while local compilers return it.
+-  `$$i` – index within `$$s` for the next character.
+-  `$$parser` – dictionary holding all generated parser functions.
 
- These identifiers are expanded by the compiler so that actions can inspect
- the input, construct data structures or call helper functions. Use
- `ppeg.fail()` to abort parsing and report an error.
+ These identifiers let actions look at the input, build data structures, or
+ report errors via `ppeg.fail()`.
 
 Tags and Captures
 =================
 
- Each rule receives an object in `$$`. If you do not tag any
- expressions the same value flows through nested expressions and they may
- modify it directly. A tag `name:expr` binds `$$` to `$name` only while
- `expr` runs; when it succeeds `$name` keeps the result and `$$` reverts.
- Nothing is copied back automatically&#8212;store `$name` yourself if
- needed.
+ Every rule takes one argument called `$$`. It also serves as the return value.
+ When subexpressions are written without tags the same object flows through them
+ all and may be modified in place. A tagged expression `name:expr` temporarily
+ sets `$$` to `$name` while `expr` runs. After it succeeds `$name` holds the
+ result and `$$` reverts to the original object so the rule can decide how to
+ use the new value.
 
- `name=expr` or `$$=expr` saves the substring consumed by `expr` before
- actions execute. This is handy for converting digits or preserving the
- original text.
+ A capture `name=expr` (or `$$=expr`) grabs the substring consumed by `expr`
+ before any action executes. The action can then convert this text or store it.
 
- The grammar below builds a dictionary from colon separated pairs:
+ The grammar below builds a dictionary from colon-separated pairs:
 
      root <- "{" _            { $$ = new(Container) }
               pair ("," _ pair)* "}" _ !.

@@ -38,35 +38,31 @@
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
-<p>PPEG grammars can embed blocks of PikaScript that run when the preceding <br>
-expression succeeds. These action blocks appear inside braces <tt>{}</tt> and end <br>
-with a <tt>;true</tt> so the parser always continues after running the code. <br>
-Before the action executes <tt>$$</tt> already holds the value produced by the <br>
-expression. The code may read or modify this value in place.</p>
-<p>The following helper variables are available inside an action:</p>
+<p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
+inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>
+block runs, <tt>$$</tt> already contains the value produced by the expression. The <br>
+action can inspect or modify this value directly.</p>
+<p>The following helpers are available inside an action:</p>
 
 <ul>
-<li><tt>$$</tt> &#8211; current result container. Use <tt>$$=</tt> before an expression to capture<br>the raw substring it consumes.
+<li><tt>$$</tt> &#8211; current result container. Use <tt>$$=</tt> before an expression to capture<br>the substring it consumes.
 <br></li>
 <li><tt>$$s</tt> &#8211; the source string being parsed.<br></li>
-<li><tt>$$i</tt> &#8211; the index within <tt>$$s</tt> where the next character will be read.<br></li>
-<li><tt>$$parser</tt> &#8211; dictionary holding all generated parser functions. Global<br>grammars populate this dictionary while local compilers return it.
-</li>
+<li><tt>$$i</tt> &#8211; index within <tt>$$s</tt> for the next character.<br></li>
+<li><tt>$$parser</tt> &#8211; dictionary holding all generated parser functions.</li>
 </ul>
-<p>These identifiers are expanded by the compiler so that actions can inspect <br>
-the input, construct data structures or call helper functions. Use <br>
-<tt>ppeg.fail()</tt> to abort parsing and report an error.</p>
+<p>These identifiers let actions look at the input, build data structures, or <br>
+report errors via <tt>ppeg.fail()</tt>.</p>
 <h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
-<p>Each rule receives an object in <tt>$$</tt>. If you do not tag any <br>
-expressions the same value flows through nested expressions and they may <br>
-modify it directly. A tag <tt>name:expr</tt> binds <tt>$$</tt> to <tt>$name</tt> only while <br>
-<tt>expr</tt> runs; when it succeeds <tt>$name</tt> keeps the result and <tt>$$</tt> reverts. <br>
-Nothing is copied back automatically&amp;#8212;store <tt>$name</tt> yourself if <br>
-needed.</p>
-<p><tt>name=expr</tt> or <tt>$$=expr</tt> saves the substring consumed by <tt>expr</tt> before <br>
-actions execute. This is handy for converting digits or preserving the <br>
-original text.</p>
-<p>The grammar below builds a dictionary from colon separated pairs:</p>
+<p>Every rule takes one argument called <tt>$$</tt>. It also serves as the return value. <br>
+When subexpressions are written without tags the same object flows through them <br>
+all and may be modified in place. A tagged expression <tt>name:expr</tt> temporarily <br>
+sets <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> runs. After it succeeds <tt>$name</tt> holds the <br>
+result and <tt>$$</tt> reverts to the original object so the rule can decide how to <br>
+use the new value.</p>
+<p>A capture <tt>name=expr</tt> (or <tt>$$=expr</tt>) grabs the substring consumed by <tt>expr</tt> <br>
+before any action executes. The action can then convert this text or store it.</p>
+<p>The grammar below builds a dictionary from colon-separated pairs:</p>
 <pre>root &lt;- "{" _            { $$ = new(Container) }<br>         pair ("," _ pair)* "}" _ !.<br><br>pair &lt;- key:ident ":" _ val:number { [$$][$key] = $val }<br><br>ident &lt;- $$=[a-zA-Z]+ _<br>number &lt;- digits=[0-9]+ { $$ = evaluate('+' # digits) } _<br>_ &lt;- [ \t\r\n]*<br></pre>
 <p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <br>
 <tt>$val</tt>. <tt>number</tt> captures the digits in <tt>$digits</tt> before converting <br>
