@@ -64,10 +64,14 @@ launched from:
 CompileFunction Arguments
 ------------------------
 
- `ppeg.compileFunction(src, @outFunc, dd=nil, iref=nil, rule='root')` returns a
- new parsing function built from `src`. When `@outFunc` is supplied the function
- is also stored there. The remaining parameters become the defaults for the
- parser's own arguments, matching the ones used by `ppeg.parse`.
+ `ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule='root']]]])`
+ builds a parser from `source`. With `@outFunc` the compiled parser is stored
+ there and the call returns `true` on success; otherwise the new parser is
+ returned.
+
+ `dd` and `iref` become the parser's default `dd` and `iref` parameters so you
+ may share a dictionary container and a position reference. `rule` chooses the
+ starting rule and defaults to `'root'`.
 
 PikaScript Actions
 ==================
