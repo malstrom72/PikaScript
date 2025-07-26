@@ -37,15 +37,17 @@
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
-<p>CompileFunction Arguments <br>
-------------------------</p>
-<p><tt>ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule='root']]]])</tt> <br>
-builds a parser from <tt>source</tt>. With <tt>@outFunc</tt> the compiled parser is stored <br>
-there and the call returns <tt>true</tt> on success; otherwise the new parser is <br>
-returned.</p>
-<p><tt>dd</tt> and <tt>iref</tt> become the parser's default <tt>dd</tt> and <tt>iref</tt> parameters so you <br>
-may share a dictionary container and a position reference. <tt>rule</tt> chooses the <br>
-starting rule and defaults to <tt>'root'</tt>.</p>
+<h2><a name="compileFunction">compileFunction</a></h2>
+<h3><a name="Syntax">Syntax</a></h3>
+<pre>parser = ppeg.compileFunction(source [, @outFunc [, dd [, iref [, rule = 'root']]]])<br></pre>
+<h3><a name="Description">Description</a></h3>
+<p>Converts &lt;code&gt;source&lt;/code&gt; into a parser function. If &lt;code&gt;@outFunc&lt;/code&gt; is supplied, <br>
+the generated parser is stored there and the call returns &lt;code&gt;true&lt;/code&gt;; otherwise it <br>
+returns the new parser.</p>
+<p>&lt;code&gt;dd&lt;/code&gt; and &lt;code&gt;iref&lt;/code&gt; establish the default dictionary container and index <br>
+reference for the parser. They let callers provide an external container and position <br>
+variable that each rule will update. The optional &lt;code&gt;rule&lt;/code&gt; parameter selects the <br>
+starting rule and defaults to &lt;code&gt;'root'&lt;/code&gt;.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
 inside braces <tt>{}</tt> and always succeeds because it ends with <tt>;true</tt>. Before the <br>
