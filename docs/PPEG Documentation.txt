@@ -69,12 +69,12 @@ compileFunction
  Converts `source` into a parser function. The generated parser has the
  following signature:
 
-     'success' = parser(text, [@dd], [@iref], [rule = 'root'])
+    'success' = parser(text, [@result], [@endIndex], [rule = 'root'])
 
- `dd` is a reference supplying the starting value of `$$`, normally a
- container to collect results.  `iref` receives the index where parsing
- stopped.  The optional `rule` argument selects the entry rule and
- defaults to `'root'`.
+ `result` is a reference supplying the starting value of `$$`, normally a
+ container to collect results.  `endIndex` receives the position where
+ parsing stopped.  The optional `rule` argument selects the entry rule
+ and defaults to `'root'`.
 
 
 PikaScript Actions

@@ -41,11 +41,11 @@
 <pre>'parser' = ppeg.compileFunction(source)<br></pre>
 <p>Converts <tt>source</tt> into a parser function. The generated parser has the <br>
 following signature:</p>
-<pre>'success' = parser(text, [@dd], [@iref], [rule = 'root'])<br></pre>
-<p><tt>dd</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a <br>
-container to collect results.  <tt>iref</tt> receives the index where parsing <br>
-stopped.  The optional <tt>rule</tt> argument selects the entry rule and <br>
-defaults to <tt>'root'</tt>.</p>
+<pre>'success' = parser(text, [@result], [@endIndex], [rule = 'root'])<br></pre>
+<p><tt>result</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a <br>
+container to collect results.  <tt>endIndex</tt> receives the position where <br>
+parsing stopped.  The optional <tt>rule</tt> argument selects the entry rule <br>
+and defaults to <tt>'root'</tt>.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
 <p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
  inside braces <tt>{}</tt>. Before the block runs, <tt>$$</tt> already contains the value <br>
