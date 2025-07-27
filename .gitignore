@@ -6,3 +6,6 @@ tools/PikaCmd/SourceDistribution/PikaCmd
 output/
 /projects/.vs
 /projects/temp/PikaCmd/Debug
+tools/PikaCmd/SourceDistribution/PikaCmd.exe
+tools/PikaCmd/SourceDistribution/PikaCmd.pdb
+tools/PikaCmd/SourceDistribution/vc140.pdb
