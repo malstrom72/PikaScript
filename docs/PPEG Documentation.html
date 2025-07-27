@@ -37,6 +37,27 @@
 <h2><a name="Example:_Using_the_Local_Compiler">Example: Using the Local Compiler</a></h2>
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
+<h2><a name="compileFunction">compileFunction</a></h2>
+<pre>&gt;parser = ppeg.compileFunction(source)<br></pre>
+<p>Converts <tt>source</tt> into a parser function. The generated parser has the following signature:</p>
+<pre>?success = parser(text, [@result], [@endIndex], [rule = 'root'])<br></pre>
+<p><tt>result</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a container to collect results. <tt>endIndex</tt> receives the position where parsing stopped. The optional <tt>rule</tt> argument selects the entry rule and defaults to <tt>'root'</tt>.</p>
+<h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
+<p>PPEG grammars may attach PikaScript code to an expression. The code is written inside braces <tt>{}</tt>. Before the block runs, <tt>$$</tt> already contains the value produced by the expression. The action can inspect or modify this value directly.</p>
+<p>The following helpers are available inside an action:</p>
+
+<ul>
+<li><tt>$$</tt> &#8211; current value passed between rules.<br></li>
+<li><tt>$$s</tt> &#8211; the source string being parsed.<br></li>
+<li><tt>$$i</tt> &#8211; index within <tt>$$s</tt> for the next character.<br></li>
+<li><tt>$$parser</tt> &#8211; dictionary holding all generated parser functions.</li>
+</ul>
+<p>These identifiers let actions look at the input, build data structures, or report errors via <tt>ppeg.fail()</tt>.</p>
+<h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
+<p>Each rule receives <tt>$$</tt> as both input and output. Without a tag, sub-rules operate on the same value. Tagging with <tt>name:expr</tt> temporarily rebinds <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> runs. Afterward <tt>$name</tt> holds the result and can be used in later actions. A capture <tt>name=expr`(or `$$=expr</tt>) stores the consumed substring before any attached actions run.</p>
+<p>The grammar below builds a dictionary from colon-separated pairs:</p>
+<pre>root   &lt;-  "{" _                           { $$ = new(Container) }<br>           pair ("," _ pair)* "}" _ !.<br><br>pair   &lt;-  key:ident ":" _ val:number _    { [$$][$key] = $val }<br><br>ident  &lt;-  $$=[a-zA-Z]+ _<br>number &lt;-  digits=[0-9]+                   { $$ = evaluate('+' # digits) }<br>           _<br><br>_      &lt;-  [ \t\r\n]*<br></pre>
+<p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <tt>$val</tt>. <tt>number</tt> captures the digits in <tt>$digits</tt> before converting them. Tagged variables remain available until the rule returns. </p>
 
 	</body>
 </html>
