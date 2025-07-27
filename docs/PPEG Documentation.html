@@ -38,83 +38,26 @@
 <p>Below is a minimal example that compiles <tt>examples/digits.ppeg</tt> into a local parsing function and runs it. The script locates both <tt>ppeg.pika</tt> and <tt>digits.ppeg</tt> relative to its own path so it works no matter which directory it is launched from:</p>
 <pre>include('systools.pika');<br>include('stdlib.pika');<br>include(run.root # '../tools/ppeg/ppeg.pika');<br><br>src = load(run.root # 'digits.ppeg');<br>parseDigits = ppeg.compileFunction(src);<br><br>assert(&gt; parseDigits('12345'));<br>assert(&gt; !parseDigits('12a45'));<br></pre>
 <h2><a name="compileFunction">compileFunction</a></h2>
-<pre>'parser' = ppeg.compileFunction(source)<br></pre>
-<p>Converts <tt>source</tt> into a parser function. The generated parser has the <br>
-following signature:</p>
-<pre>'success' = parser(text, [@result], [@endIndex], [rule = 'root'])<br></pre>
-<p><tt>result</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a <br>
-container to collect results.  <tt>endIndex</tt> receives the position where <br>
-parsing stopped.  The optional <tt>rule</tt> argument selects the entry rule <br>
-and defaults to <tt>'root'</tt>.</p>
+<pre>&gt;parser = ppeg.compileFunction(source)<br></pre>
+<p>Converts <tt>source</tt> into a parser function. The generated parser has the following signature:</p>
+<pre>?success = parser(text, [@result], [@endIndex], [rule = 'root'])<br></pre>
+<p><tt>result</tt> is a reference supplying the starting value of <tt>$$</tt>, normally a container to collect results. <tt>endIndex</tt> receives the position where parsing stopped. The optional <tt>rule</tt> argument selects the entry rule and defaults to <tt>'root'</tt>.</p>
 <h2><a name="PikaScript_Actions">PikaScript Actions</a></h2>
-<p>PPEG grammars may attach PikaScript code to an expression. The code is written <br>
- inside braces <tt>{}</tt>. Before the block runs, <tt>$$</tt> already contains the value <br>
- produced by the expression. The action can inspect or modify this value <br>
- directly.</p>
+<p>PPEG grammars may attach PikaScript code to an expression. The code is written inside braces <tt>{}</tt>. Before the block runs, <tt>$$</tt> already contains the value produced by the expression. The action can inspect or modify this value directly.</p>
 <p>The following helpers are available inside an action:</p>
 
 <ul>
-<li><tt>$$</tt> &#8211; current value passed between rules. Use <tt>name=expr</tt> or <tt>$$=expr</tt><br>to capture the substring an expression consumes.
-<br></li>
+<li><tt>$$</tt> &#8211; current value passed between rules.<br></li>
 <li><tt>$$s</tt> &#8211; the source string being parsed.<br></li>
 <li><tt>$$i</tt> &#8211; index within <tt>$$s</tt> for the next character.<br></li>
 <li><tt>$$parser</tt> &#8211; dictionary holding all generated parser functions.</li>
 </ul>
-<p>These identifiers let actions look at the input, build data structures, or <br>
-report errors via <tt>ppeg.fail()</tt>.</p>
+<p>These identifiers let actions look at the input, build data structures, or report errors via <tt>ppeg.fail()</tt>.</p>
 <h2><a name="Tags_and_Captures">Tags and Captures</a></h2>
-<table>
-<tr>
-<td colspan=5>Each rule receives <tt>$$</tt> as both input and output.</td><td>Without a tag, sub-rules</td>
-</tr>
-<tr>
-<td colspan=3>operate on the same value.</td><td colspan=3>Tagging with <tt>name:expr</tt> temporarily rebinds <tt>$$</tt></td>
-</tr>
-<tr>
-<td colspan=4>to <tt>$name</tt> while <tt>expr</tt> runs.</td><td colspan=2>Afterward <tt>$name</tt> holds the result and can be</td>
-</tr>
-<tr>
-<td colspan=2>used in later actions.</td><td colspan=4>When <tt>$$</tt> is a dictionary the tag is also stored there</td>
-</tr>
-<tr>
-<td>automatically.</td><td colspan=5>A capture <tt>name=expr</tt> (or <tt>$$=expr</tt>) stores the consumed</td>
-</tr>
-<tr>
-<td colspan=5>substring before any attached actions run.</td><td>&nbsp;</td>
-</tr>
-</table>
+<p>Each rule receives <tt>$$</tt> as both input and output. Without a tag, sub-rules operate on the same value. Tagging with <tt>name:expr</tt> temporarily rebinds <tt>$$</tt> to <tt>$name</tt> while <tt>expr</tt> runs. Afterward <tt>$name</tt> holds the result and can be used in later actions. A capture <tt>name=expr`(or `$$=expr</tt>) stores the consumed substring before any attached actions run.</p>
 <p>The grammar below builds a dictionary from colon-separated pairs:</p>
-<pre>root &lt;- "{" _            { $$ = new(Container) }<br>         pair ("," _ pair)* "}" _ !.<br><br>pair &lt;- key:ident ":" _ val:number { [$$][$key] = $val }<br><br>ident &lt;- $$=[a-zA-Z]+ _<br>number &lt;- digits=[0-9]+ { $$ = evaluate('+' # digits) } _<br>_ &lt;- [ \t\r\n]*<br></pre>
-<p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <br>
-<tt>$val</tt>.  <tt>number</tt> captures the digits in <tt>$digits</tt> before converting <br>
-them. Tagged variables remain available until the rule returns.</p>
-<h2><a name="Working_with_Custom_Fields">Working with Custom Fields</a></h2>
-<table>
-<tr>
-<td colspan=4>Grammars often store context in a field of <tt>$$</tt>.</td><td>The monolithic JSON parser</td>
-</tr>
-<tr>
-<td colspan=5>writes results into the container referenced by <tt>$$.target</tt>:</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>root</td><td colspan=3>&lt;- _ { $$parser.null = coalesce(@$$.null, &lt;null&gt;); }</td>
-</tr>
-<tr>
-<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>(object / array) !.</td><td>&nbsp;</td>
-</tr>
-</table>
-<pre>object &lt;- "{"_ ( member (","_ member)* )? "}"_<br><br>member &lt;- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }<br>           v:value<br><br>value  &lt;- string                     { [$$.target] = $$ }<br>           / number                  { [$$.target] = $$ }<br>           / "true" _               { [$$.target] = true }<br>           / "false" _              { [$$.target] = false }<br>           / "null" _               { [$$.target] = $$parser.null }<br>           / object<br>           / array<br></pre>
-<table>
-<tr>
-<td>Initialize <tt>$$.target</tt> before parsing.</td><td>Because <tt>target</tt> is just a member of</td>
-</tr>
-<tr>
-<td colspan=2><tt>$$</tt>, all nested rules see it until the current rule finishes.</td>
-</tr>
-</table>
+<pre>root   &lt;-  "{" _                           { $$ = new(Container) }<br>           pair ("," _ pair)* "}" _ !.<br><br>pair   &lt;-  key:ident ":" _ val:number _    { [$$][$key] = $val }<br><br>ident  &lt;-  $$=[a-zA-Z]+ _<br>number &lt;-  digits=[0-9]+                   { $$ = evaluate('+' # digits) }<br>           _<br><br>_      &lt;-  [ \t\r\n]*<br></pre>
+<p><tt>pair</tt> tags the identifier and number so the action can read <tt>$key</tt> and <tt>$val</tt>. <tt>number</tt> captures the digits in <tt>$digits</tt> before converting them. Tagged variables remain available until the rule returns. </p>
 
 	</body>
 </html>

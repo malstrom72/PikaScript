@@ -64,84 +64,52 @@ launched from:
 compileFunction
 ===============
 
-    'parser' = ppeg.compileFunction(source)
+    >parser = ppeg.compileFunction(source)
 
- Converts `source` into a parser function. The generated parser has the
- following signature:
+ Converts `source` into a parser function. The generated parser has the following signature:
 
-    'success' = parser(text, [@result], [@endIndex], [rule = 'root'])
+    ?success = parser(text, [@result], [@endIndex], [rule = 'root'])
 
- `result` is a reference supplying the starting value of `$$`, normally a
- container to collect results.  `endIndex` receives the position where
- parsing stopped.  The optional `rule` argument selects the entry rule
- and defaults to `'root'`.
-
+ `result` is a reference supplying the starting value of `$$`, normally a container to collect results. `endIndex`
+receives the position where parsing stopped. The optional `rule` argument selects the entry rule and defaults to
+`'root'`.
 
 PikaScript Actions
 ==================
 
-PPEG grammars may attach PikaScript code to an expression. The code is written
- inside braces `{}`. Before the block runs, `$$` already contains the value
- produced by the expression. The action can inspect or modify this value
- directly.
+ PPEG grammars may attach PikaScript code to an expression. The code is written inside braces `{}`. Before the block
+runs, `$$` already contains the value produced by the expression. The action can inspect or modify this value
+directly.
 
  The following helpers are available inside an action:
 
--  `$$` – current value passed between rules. Use `name=expr` or `$$=expr`
-   to capture the substring an expression consumes.
--  `$$s` – the source string being parsed.
--  `$$i` – index within `$$s` for the next character.
--  `$$parser` – dictionary holding all generated parser functions.
+- `$$` – current value passed between rules.
+- `$$s` – the source string being parsed.
+- `$$i` – index within `$$s` for the next character.
+- `$$parser` – dictionary holding all generated parser functions.
 
- These identifiers let actions look at the input, build data structures, or
- report errors via `ppeg.fail()`.
+ These identifiers let actions look at the input, build data structures, or report errors via `ppeg.fail()`.
 
 Tags and Captures
 =================
 
- Each rule receives `$$` as both input and output.  Without a tag, sub-rules
- operate on the same value.  Tagging with `name:expr` temporarily rebinds `$$`
- to `$name` while `expr` runs.  Afterward `$name` holds the result and can be
- used in later actions.  When `$$` is a dictionary the tag is also stored there
- automatically.  A capture `name=expr` (or `$$=expr`) stores the consumed
- substring before any attached actions run.
+ Each rule receives `$$` as both input and output. Without a tag, sub-rules operate on the same value. Tagging with
+`name:expr` temporarily rebinds `$$` to `$name` while `expr` runs. Afterward `$name` holds the result and can be used
+in later actions. A capture `name=expr`(or `$$=expr`) stores the consumed substring before any attached actions run.
 
  The grammar below builds a dictionary from colon-separated pairs:
 
-     root <- "{" _            { $$ = new(Container) }
-              pair ("," _ pair)* "}" _ !.
+     root   <-  "{" _                           { $$ = new(Container) }
+                pair ("," _ pair)* "}" _ !.
 
-     pair <- key:ident ":" _ val:number { [$$][$key] = $val }
+     pair   <-  key:ident ":" _ val:number _    { [$$][$key] = $val }
 
-     ident <- $$=[a-zA-Z]+ _
-     number <- digits=[0-9]+ { $$ = evaluate('+' # digits) } _
-     _ <- [ \t\r\n]*
+     ident  <-  $$=[a-zA-Z]+ _
+     number <-  digits=[0-9]+                   { $$ = evaluate('+' # digits) }
+                _
+     
+     _      <-  [ \t\r\n]*
 
- `pair` tags the identifier and number so the action can read `$key` and
- `$val`.  `number` captures the digits in `$digits` before converting
- them. Tagged variables remain available until the rule returns.
+ `pair` tags the identifier and number so the action can read `$key` and `$val`. `number` captures the digits in
+`$digits` before converting them. Tagged variables remain available until the rule returns.
 
-Working with Custom Fields
-==========================
-
- Grammars often store context in a field of `$$`.  The monolithic JSON parser
- writes results into the container referenced by `$$.target`:
-
-     root   <- _ { $$parser.null = coalesce(@$$.null, <null>); }
-                (object / array) !.
-
-     object <- "{"_ ( member (","_ member)* )? "}"_
-
-     member <- id:string ":"_            { $v.target = @[$$.target][undotify($id)] }
-                v:value
-
-     value  <- string                     { [$$.target] = $$ }
-                / number                  { [$$.target] = $$ }
-                / "true" _               { [$$.target] = true }
-                / "false" _              { [$$.target] = false }
-                / "null" _               { [$$.target] = $$parser.null }
-                / object
-                / array
-
- Initialize `$$.target` before parsing.  Because `target` is just a member of
- `$$`, all nested rules see it until the current rule finishes.
