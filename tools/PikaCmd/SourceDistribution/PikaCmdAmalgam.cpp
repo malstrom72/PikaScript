@@ -11,7 +11,7 @@
 	
 	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -603,7 +603,7 @@ typedef Script<StdConfig> StdScript;
 	
 	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -1686,13 +1686,13 @@ TMPL Script<CFG>::Variables::~Variables() { }
 
 	\version
 	
-	Version 0.94
+	Version 0.95
 	
 	\page Copyright
 	
 	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2013, NuEdge Development
+	Copyright (c) 2008-2025, NuEdge Development
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2080,13 +2080,13 @@ bool unitTest();
 	
 	\version
 
-	Version 0.94
+	Version 0.95
 		
 	\page Copyright
 
 	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2013, NuEdge Development
+	Copyright (c) 2008-2025, NuEdge Development
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2186,7 +2186,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2243,13 +2243,13 @@ template struct Script<StdConfig>;
 
 	\version
 	
-	Version 0.94
+	Version 0.95
 	
 	\page Copyright
 	
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2009-2013, NuEdge Development
+	Copyright (c) 2008-2025, NuEdge Development
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2335,11 +2335,11 @@ REGISTER_UNIT_TEST(QStrings::unitTest)
 #endif
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.941\n"
+	"\tdebug.pika v0.95\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
-	"\tCopyright (c) 2009-2013, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -2598,11 +2598,11 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.941\n"
+	"\thelp.pika v0.95\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
-	"\tCopyright (c) 2009-2013, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -2808,11 +2808,11 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.942\n"
+	"\tinteractive.pika v0.95\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
-	"\tCopyright (c) 2009-2014, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -2928,11 +2928,11 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.943\n"
+	"\tstdlib.pika v0.95\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
-	"\tCopyright (c) 2009-2019, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -3231,13 +3231,13 @@ const char* BUILT_IN_STDLIB =
 
 	\version
 
-	Version 0.96
+	Version 0.95
 	
 	\page Copyright
 
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2010-2024, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -3464,7 +3464,7 @@ int main(int argc, const char* argv[]) {
 	std::srand(static_cast<unsigned int>(std::time(0)) ^ static_cast<unsigned int>(std::clock()));
 	rand();
 	if (argc < 2)
-		std::cout << "PikaCmd version " << PIKA_SCRIPT_VERSION << ". (C) 2010-2024 NuEdge Development. "
+		std::cout << "PikaCmd version " << PIKA_SCRIPT_VERSION << ". (C) 2008-2025 NuEdge Development. "
 				"All rights reserved." << std::endl << "Run PikaCmd -h for command-line argument syntax."
 				<< std::endl << std::endl;
 	try {

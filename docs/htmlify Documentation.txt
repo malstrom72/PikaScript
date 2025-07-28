@@ -31,7 +31,7 @@ Markup Syntax
  Any text that does not match a special pattern is HTML escaped to ensure valid output. Source files are assumed to be
 encoded with UTF-8.
 
- Headers become <h1>, <h2> or <h3> respectively and automatically turn into named anchors that can be referenced simply
+ Headers become <h1>, <h2> or <h3> respectively and automatically turn into named anchors that can be referenced simply
 by writing the exact words again elsewhere.
 
 
@@ -86,7 +86,8 @@ indentation it will be "unwrapped"
 until...
    The next indented line.
 
-You can write *bold* statements. And _underline_ of course. /Italic/ is written just like that. Enclose text in "grave accents" for teletype, `like this`.
+ You can write *bold* statements. And _underline_ of course. /Italic/ is written just like that. Enclose text in "grave
+accents" for teletype, `like this`.
 
 Urls, like http://www.soniccharge.com automatically turns into href's.
 
@@ -94,7 +95,9 @@ A single line of `==========` (at least 10 of them) creates a horizontal divider
 
 ======================================================================================================================
 
-If you write the exact name of a header in this file it will become a reference. Like this: see Interesting Fruits. But only if this section isn't under the header you reference. So Main Header, First Chapter and Introduction won't become references right now.
+ If you write the exact name of a header in this file it will become a reference. Like this: see Interesting Fruits. But
+only if this section isn't under the header you reference. So Main Header, First Chapter and Introduction won't become
+references right now.
 
 Local images can be inserted like this:
 
@@ -104,9 +107,11 @@ Local images can be inserted like this:
 
 You can also insert remote images like this: [http://www.soniccharge.com/images/flags/SE.png]
 
-Local `.txt` and `.html` files can be referenced by simply writing a filename anywhere like this: test.txt. You can even reference an anchor inside a local html file. For example: test.html#Interesting_Fruits.
+ Local `.txt` and `.html` files can be referenced by simply writing a filename anywhere like this: test.txt. You can
+even reference an anchor inside a local html file. For example: test.html#Interesting_Fruits.
 
-`^` can be used for superscript in mathematical expressions, for example: x^3*5 + x^(7 * y). (Requirement: no space around `^` but at least one space somewhere before next `^`.)
+ `^` can be used for superscript in mathematical expressions, for example: x^3*5 + x^(7 * y). (Requirement: no space
+around `^` but at least one space somewhere before next `^`.)
 
 One or more asterisks after a word creates a reference to a footnote**...
 
@@ -115,7 +120,8 @@ One or more asterisks after a word creates a reference to a footnote**...
 Interesting Fruits
 ------------------
 
-Lists are identified by 1), 2), 3) etc (for ordered lists) and *) or - (for unordered lists). With proper indentation you can create lists beneath other lists.
+ Lists are identified by 1), 2), 3) etc (for ordered lists) and *) or - (for unordered lists). With proper indentation
+you can create lists beneath other lists.
 
 1)  Apple
     Is `good`
@@ -158,7 +164,8 @@ Lists are identified by 1), 2), 3) etc (for ordered lists) and *) or - (for unor
 Examples
 --------
 
-Examples are indented by four or more spaces and they will be put into <pre> </pre> sections. Take a look at the following example:
+ Examples are indented by four or more spaces and they will be put into <pre> </pre> sections. Take a look at the
+following example:
 
     This is an example.
     +-----------------------------+
@@ -172,7 +179,8 @@ But stops here.
 Table Examples
 --------------
 
-Tables are created when a section contains a line with two or more consecutive spaces. These spaces divide the cells horizontally.
+ Tables are created when a section contains a line with two or more consecutive spaces. These spaces divide the cells
+horizontally.
 
 This is a table without headers:
 
