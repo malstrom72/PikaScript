@@ -73,6 +73,8 @@ template<typename T> inline T maxi(T a, T b) { return (a < b) ? b : a; }
 
 inline ushort ushortChar(char c) { return uchar(c); }
 inline ushort ushortChar(wchar_t c) { return ushort(c); }
+inline ulong ulongChar(char c) { return static_cast<uchar>(c); }
+inline ulong ulongChar(wchar_t c) { return static_cast<ulong>(c); }
 template<class C> std::basic_ostream<C>& xcout();
 template<class C> std::basic_istream<C>& xcin();
 template<> inline std::basic_ostream<char>& xcout() { return std::cout; }
@@ -208,10 +210,11 @@ template<class S> S unescape(typename S::const_iterator& p, const typename S::co
 		if (*p == '\\' && e - p > 1) {
 			d += S(b, p);
 			const CHAR* f = std::find(ESCAPE_CHARS, ESCAPE_CHARS + ESCAPE_CODE_COUNT, *++p);
-			long l;
+			ulong l;
 			if (f != ESCAPE_CHARS + ESCAPE_CODE_COUNT) { ++p; l = ESCAPE_CODES[f - ESCAPE_CHARS]; }
 			else if (*p == 'x') { b = ++p; l = hexToLong<S>(p, (e - p > 2 ? p + 2 : e)); }
 			else if (*p == 'u') { b = ++p; l = hexToLong<S>(p, (e - p > 4 ? p + 4 : e)); }
+			else if (*p == 'U') { b = ++p; l = hexToLong<S>(p, (e - p > 8 ? p + 8 : e)); }
 			else { b = p; l = stringToLong<S>(p, e); }
 			if (p == b) throw Exception<S>(STR("Invalid escape character"));
 			b = p;
@@ -240,7 +243,8 @@ template<class S> S escape(const S& s) {
 		const CHAR* f = std::find(ESCAPE_CODES, ESCAPE_CODES + ESCAPE_CODE_COUNT, *b);
 		if (f != ESCAPE_CODES + ESCAPE_CODE_COUNT) (d += '\\') += ESCAPE_CHARS[f - ESCAPE_CODES];
 		else if (uchar(*b) == ushortChar(*b)) (d += STR("\\x")) += intToString<S>(uchar(*b), 16, 2);
-		else (d += STR("\\u")) += intToString<S>(ushortChar(*b), 16, 4);
+		else if (ushortChar(*b) == ulongChar(*b)) (d += STR("\\u")) += intToString<S>(ushortChar(*b), 16, 4);
+		else (d += STR("\\U")) += intToString<S>(ulongChar(*b), 16, 8);
 		l = ++b;
 	}
 	return (d += '\"');
