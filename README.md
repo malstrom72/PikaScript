@@ -113,6 +113,30 @@ bash build.sh
 
 Windows users should run `build.cmd` instead. The script builds the tool in both modes and then runs the full test suite.
 
+## Building the fuzz target
+
+The `tools/build_pikacmd_fuzz.sh` script compiles `tools/PikaCmd/PikaCmd.cpp`
+with libFuzzer and address sanitizer enabled:
+
+```bash
+bash tools/build_pikacmd_fuzz.sh
+```
+
+The resulting binary is placed in `output/PikaCmdFuzz` and can be run with a
+directory containing seed inputs:
+
+```bash
+./output/PikaCmdFuzz corpus/
+```
+
+On macOS the default clang from Xcode does not ship the libFuzzer runtime.
+Install the `llvm` package via Homebrew and invoke the script with that
+compiler:
+
+```bash
+CPP_COMPILER=$(brew --prefix llvm)/bin/clang++ bash tools/build_pikacmd_fuzz.sh
+```
+
 ## License
 
 PikaScript is released under the BSD 2-Clause license. See [LICENSE](LICENSE) for details.
