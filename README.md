@@ -116,7 +116,9 @@ Windows users should run `build.cmd` instead. The script builds the tool in both
 ## Building the fuzz target
 
 The `tools/build_pikacmd_fuzz.sh` script compiles `tools/PikaCmd/PikaCmd.cpp`
-with libFuzzer and address sanitizer enabled:
+with libFuzzer and address sanitizer enabled. The build forces C++14 because
+`PikaScript` still depends on deprecated functional helpers removed in later
+standards:
 
 ```bash
 bash tools/build_pikacmd_fuzz.sh
