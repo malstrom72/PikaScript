@@ -1,6 +1,6 @@
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.95\n"
+	"\tdebug.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -263,7 +263,7 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.95\n"
+	"\thelp.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -473,7 +473,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.95\n"
+	"\tinteractive.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -593,7 +593,7 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.95\n"
+	"\tstdlib.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
