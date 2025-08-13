@@ -5,7 +5,7 @@
 	
 	\version
 	
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 	
@@ -57,10 +57,10 @@ namespace Pika {
 
 #if (PIKA_UNICODE)
 	#define STR(s) L##s
-	#define PIKA_SCRIPT_VERSION L"0.95"
+	#define PIKA_SCRIPT_VERSION L"0.97"
 #else
 	#define STR(x) x
-	#define PIKA_SCRIPT_VERSION "0.95"
+	#define PIKA_SCRIPT_VERSION "0.97"
 #endif
 
 typedef unsigned char uchar;
@@ -597,7 +597,7 @@ typedef Script<StdConfig> StdScript;
 	                                                                           
 	\version
 	
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 	
@@ -1690,7 +1690,7 @@ TMPL Script<CFG>::Variables::~Variables() { }
 
 	\version
 	
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 	
@@ -2084,7 +2084,7 @@ bool unitTest();
 	
 	\version
 
-	Version 0.95
+	Version 0.97
 		
 	\page Copyright
 
@@ -2184,7 +2184,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	
 	\version
 	
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 	
@@ -2247,7 +2247,7 @@ template struct Script<StdConfig>;
 
 	\version
 	
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 	
@@ -2339,7 +2339,7 @@ REGISTER_UNIT_TEST(QStrings::unitTest)
 #endif
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.95\n"
+	"\tdebug.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -2602,7 +2602,7 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.95\n"
+	"\thelp.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -2812,7 +2812,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.95\n"
+	"\tinteractive.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -2932,7 +2932,7 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.95\n"
+	"\tstdlib.pika v0.97\n"
 	"\n"
 	"\tPikaScript is released under the \"New Simplified BSD License\". http://www.opensource.org/licenses/bsd-license.php\n"
 	"\t\n"
@@ -3235,7 +3235,7 @@ const char* BUILT_IN_STDLIB =
 
 	\version
 
-	Version 0.95
+	Version 0.97
 	
 	\page Copyright
 
@@ -3276,6 +3276,7 @@ const char* BUILT_IN_STDLIB =
 #include <ctime>
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 #if !defined(PikaScript_h)
 #include "../../src/PikaScript.h"
 #endif
