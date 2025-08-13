@@ -115,13 +115,13 @@ Windows users should run `build.cmd` instead. The script builds the tool in both
 
 ## Building the fuzz target
 
-The `tools/build_pikacmd_fuzz.sh` script compiles `tools/PikaCmd/PikaCmd.cpp`
+The `tools/buildPikaCmdFuzz.sh` script compiles `tools/PikaCmd/PikaCmd.cpp`
 with libFuzzer and address sanitizer enabled. The build forces C++14 because
 `PikaScript` still depends on deprecated functional helpers removed in later
 standards:
 
 ```bash
-bash tools/build_pikacmd_fuzz.sh
+bash tools/buildPikaCmdFuzz.sh
 ```
 
 The resulting binary is placed in `output/PikaCmdFuzz` and can be run with a
@@ -136,7 +136,7 @@ Install the `llvm` package via Homebrew and invoke the script with that
 compiler:
 
 ```bash
-CPP_COMPILER=$(brew --prefix llvm)/bin/clang++ bash tools/build_pikacmd_fuzz.sh
+CPP_COMPILER=$(brew --prefix llvm)/bin/clang++ bash tools/buildPikaCmdFuzz.sh
 ```
 
 ## License
