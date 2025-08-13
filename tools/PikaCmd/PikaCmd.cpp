@@ -48,6 +48,7 @@
 #include <ctime>
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 #if !defined(PikaScript_h)
 #include "../../src/PikaScript.h"
 #endif
