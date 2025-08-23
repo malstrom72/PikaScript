@@ -60,8 +60,11 @@
 namespace QStrings {
 
 /* --- Declaration --- */
-
-// TODO : documentation
+/**
+	Lightweight string using pooled, reference-counted buffers.
+	Buffers may be shared by substrings and unshared on modification.
+	Not thread-safe; confine to one thread.
+**/
 template<typename C, size_t PS = (64 - 12)> class QString {
 	public:		enum { npos = 0x7FFFFFFF };
 	public:		typedef size_t size_type;

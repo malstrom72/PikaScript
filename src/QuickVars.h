@@ -45,8 +45,15 @@
 
 namespace Pika {
 
-// TODO : documentation with use example
-// TODO : I think this one could be based on an arbitrary variables class and use assign, lookup etc of the super-class instead of accessing vars directly. The question is if it would affect performance?
+/**
+	Caches a few recently used variables to speed repeated lookups.
+	Example:
+	QuickVars<MyVars> vars;
+	Value v;
+	vars.assign("a", 1);
+	vars.lookup("a", v);     // caches "a"
+	vars.lookup("a", v);     // hits cache
+**/
 template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Super {
 	public:		typedef typename Super::ForScript::String String;
 	public:		typedef typename Super::ForScript::Value Value;
