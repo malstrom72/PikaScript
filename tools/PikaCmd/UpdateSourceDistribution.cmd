@@ -22,7 +22,10 @@ IF ERRORLEVEL 1 (
 )
 
 CD SourceDistribution
-COPY /Y ..\..\..\tests\unittests.pika . >NUL && COPY /Y ..\systools.pika . >NUL && COPY /Y ..\..\..\tests\systoolsTests.pika . >NUL
+COPY /Y ..\..\..\tests\unittests.pika . >NUL ^
+		&& COPY /Y ..\systools.pika . >NUL ^
+		&& COPY /Y ..\..\..\tests\systoolsTests.pika . >NUL ^
+		&& COPY /Y ..\..\..\LICENSE . >NUL
 IF ERRORLEVEL 1 (
 	ECHO Failed copying files
 	EXIT /B 1
