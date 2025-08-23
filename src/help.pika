@@ -1,7 +1,7 @@
 /*
 	help.pika v0.97
-
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
 	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
@@ -74,7 +74,7 @@ help._lookup = function {
 };
 
 help = function { /****    Type help() to get started.    ****/        invoke('help._lookup', , @$) };
-	
+
 describe('#containers', 'ascend',	"@parent = ascend(@child)",						"Returns a reference to the \"parent container\" of @child (i.e. the variable or element that contains the sub-element referred to by @child). If @child is a top-level variable, void is returned.", "ascend(@x['3']) === @x\nascend(@x.y.z) === @x.y\nascend(@x) === void");
 describe('#containers', 'clone',	"@target = clone(@source, @target)",			"Makes a \"deep copy\" of the container @source to @target, meaning that all elements under the source and any sub-elements that they may have (and so on) will be copied to the target. If there is a variable directly at @source it will also be copied to @target. The returned value is the input @target reference.\n\nNotice that this function does not erase any existing elements under @target. You may want to consider calling prune() on @target first.", "clone(@originalData, @myCarbonCopy)", 'copy, prune');
 describe('#containers', 'foreach',	"foreach(@map, >doThis)",						"Traverses all elements under @map (and any sub-elements that they may have and so on) and calls >doThis once for every encountered element. (An alternative description of foreach() is that it calls >doThis for every found variable that begins with the value of @map # '.') Three arguments will be passed to >doThis:\n\n$0 will be the full reference to the found element (e.g. \"::zoo.elephant\")\n$1 will be the name of the element (e.g. \"elephant\")\n$2 will be the value of the element.\n\nThe order with which elements are processed is undefined and depends on the implementation of PikaScript. Any modifications to @map while running foreach() will not be reflected in the calls to >doThis. Notice that you normally would not use foreach() on arrays since it would also include the 'n' element (the element count). Use iterate() or a simple for-loop instead.", "foreach(map(@a, 'Asia', 4157, 'Africa', 1030, 'Americas', 929, 'Europe', 739, 'Oceania', 35), >print($1 # '=' # $2))", 'iterate');

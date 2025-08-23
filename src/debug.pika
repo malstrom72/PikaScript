@@ -1,7 +1,7 @@
 /*
 	debug.pika v0.97
-
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
 	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
@@ -208,7 +208,7 @@ traceErrors = function {
 profile = function {
 	::profiler.dump = function { dump(@::profiler.counters); };
 	::profiler.reset = function { prune(@::profiler.counters); };
-	::profiler.tick = function { 
+	::profiler.tick = function {
 		::profiler.ticker = ::profiler.skip;
 		if ((t = time()) != ::profiler.last) {
 			::profiler.last = t;

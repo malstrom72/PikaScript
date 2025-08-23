@@ -1,30 +1,30 @@
 /**
 	\file QuickVars.h
-
+	
 	QuickVars is a (generally) faster version of the reference implementation's STLVariable.
 	
 	It achieves its better performance by caching the most recently used variables in a super-tiny hash table. The
 	downside is that it uses more stack memory, especially if you have deep calling stacks with few local variables.
 	
 	\version
-
-	Version 0.97
-		
-	\page Copyright
-
-	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2008-2025, NuEdge Development
+	Version 0.97
+	
+	\page Copyright
+	
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
+	
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
-
+	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 	following conditions are met:
-
+	
 	Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-	disclaimer. 
+	disclaimer.
 	
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
+	disclaimer in the documentation and/or other materials provided with the distribution.
 	
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -51,7 +51,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	public:		typedef typename Super::ForScript::String String;
 	public:		typedef typename Super::ForScript::Value Value;
 	public:		typedef std::pair<String, Value> CacheEntry;
-			
+
 	public:		unsigned int hash(const String& s) {
 					unsigned int l = static_cast<unsigned int>(s.size());
 					if (s.size() == 1 && s[0] >= 'a' && s[0] <= 'z') return (s[0] - 'a') % CACHE_SIZE;

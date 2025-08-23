@@ -9,19 +9,19 @@
 	
 	\page Copyright
 	
-	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
 	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
-
+	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 	following conditions are met:
-
+	
 	Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-	disclaimer. 
+	disclaimer.
 	
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
+	disclaimer in the documentation and/or other materials provided with the distribution.
 	
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -70,9 +70,9 @@ typedef unsigned long ulong;
 
 /**
 	\name Conversion routines for string <-> other types.
-	
+
 	For some of these we could use stdlib implementations yes, but:
-	
+
 	-# Some of them (e.g. atof, strtod) behaves differently depending on global "locale" setting. We can't have that.
 	-# The stdlib implementations can be slow (e.g. my double->string conversion is about 3 times faster than MSVC CRT).
 	-# Pika requires high-precision string representation and proper handling of trailing 9's etc.
@@ -95,7 +95,7 @@ template<class S> S escape(const S& s);																					///< Depending on th
 	bound_mem_fun_t is a member functor bound to a specific C++ object through a pointer. You may use this class instead
 	of "manually" binding a std::mem_fun functor to an object. Besides being more convenient, this class solves a
 	problem in some STL implementations that prevents you from having reference arguments in the functor.
-	
+
 	You would normally use the helper function bound_mem_fun() to automatically instantiate the correct template.
 */
 template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_function<A0, R> {
@@ -110,10 +110,10 @@ template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_f
 	instead of "manually" binding a std::mem_fun functor to an object. For example the following code: \code
 	std::bind1st(std::mem_fun(&Dancer::tapDance), fredAstaire))); \endcode can be replaced with \code
 	bound_mem_fun(&Dancer::tapDance, fredAstaire); \endcode
-	
+
 	Furthermore, bound_mem_fun does not suffer from a problem that some STL implementations has which prevents you from
 	using member functors with reference arguments.
-	
+
 	bound_mem_fun is used in PikaScript to directly bind a native function to a member function of a certain C++ object.
 */
 template<class C, class A0, class R> inline bound_mem_fun_t<C, A0, R> bound_mem_fun(R (C::*m)(A0), C* o) {
@@ -146,12 +146,12 @@ template<class S> class Exception : public std::exception {
 	reasons. This way we avoid a lot of unnecessary temporary objects when we cast to and from strings. (Unfortunately
 	it is not possible to make this inheritance private and add conversion operators to the \p S class. Explicit
 	conversion operators in C++ have lower priority than implicit base class conversions.)
-	
+
 	Although it may seem inefficient to store all variables in textual representation it makes PikaScript easy to
 	interface with and debug for. With the custom value <-> text conversion routines in PikaScript the performance isn't
 	too bad. It mainly depends on the performance of the string implementation which is the reason why this class is a
 	template. The standard variant of STLValue uses std::string, but you may want to "plug in" a more efficient class.
-		
+
 	STLValue supports construction from and casting to the following C++ types:
 
 	- \c bool
@@ -254,10 +254,10 @@ enum Precedence {
 /**
 	Script is a meta-class that groups all the core classes of the PikaScript interpreter together (except for the value
 	class). The benefit of having a class like this is that we can declare types that are common to all sub-classes.
-	
+
 	The class is a template that takes another meta-class for configuring PikaScript. The configuration class should
 	contain the following typedefs:
-	
+
 	-# \c Value			(use this class for all PikaScript values, e.g. STLValue<std::string>)
 	-# \c Locals		(when a function call occurs, this sub-class of Variables will be instantiated for the callee)
 	-# \c Globals		(this sub-class of Variables is used for the FullRoot class)
@@ -270,18 +270,18 @@ template<class Config> struct Script {
 	typedef typename String::size_type SizeType;																		///< The length type for all strings (defined by the string class). E.g. \c size_t.
 	typedef typename String::const_iterator StringIt;																	///< The const_iterator of the string is used so frequently it deserves its own typedef.
 	typedef Exception<String> Xception;																					///< The exception type.
-	
+
 	class Native;
 	class Root;
-	
+
 	/**
 		Variables is an abstract base class which implements the interface to the variable space that a Frame works on.
 		In the configuration meta-class class (Script::Config) two typedefs exist that determines which sub-classes of
 		Variables should be used for the "root frame" (= Globals) and subsequently for the "sub-frames" (= Locals).
-		
+
 		A standard Variables class is supplied in this header file (STLVariables). Custom sub-classes are useful for
 		optimization and special integration needs.
-		
+
 		Notice that the separation of Frames and Variables makes it possible to have more than one Frame referencing
 		the same variable space. This could be useful for example in a threaded situation where several concurrent
 		threads running PikaScript should share global variables. In this case each thread should still have a distinct
@@ -298,10 +298,10 @@ template<class Config> struct Script {
 		public:		virtual bool assignNative(const String& identifier, Native* native) = 0;							///< Assign the native function (or object) \p native to \p identifier, replacing any already existing definition. \details Once assigned, the native is considered "owned" by this variable space. This class is responsible for deleting its natives on destruction and also delete the existing definition when an identifier is being reassigned.
 		public:		virtual ~Variables();																				///< Destructor. \details Don't forget to delete all registered natives.
 	};
-	
+
 	/**
 		The execution context and interpreter for PikaScript.
-		
+
 		This is where the magic happens. A Frame represents an execution context for a PikaScript function and it
 		contains the source code interpreter. Normally you do not create instances of Frame yourself. They are created
 		on stack whenever a function call is made. Notice that this implementation of PikaScript does not run in a
@@ -316,7 +316,7 @@ template<class Config> struct Script {
 		/// \name Properties.
 		//@{
 		public:		Variables& getVariables() const throw() { return vars; }											///< Returns a reference to the Variable instance associated with this Frame. Simple as that.
-		public:		Root& getRoot() const throw() { return root; }														///< Returns a reference to the "root frame" for this Frame. (No brainer.)		
+		public:		Root& getRoot() const throw() { return root; }														///< Returns a reference to the "root frame" for this Frame. (No brainer.)
 		public:		Frame& getPrevious() const throw() { assert(previous != 0); return *previous; }						///< Returns a reference to the previous frame (i.e. the frame of the caller of this frame). Must not be called on the root frame (will assert).
 		//@}
 		/// \name Getting, setting and referencing variables.
@@ -380,23 +380,23 @@ template<class Config> struct Script {
 		protected:	Frame* closure;
 		protected:	const String* source;
 		protected:	const String label;
-		
+
 		private:	Frame(const Frame& copy); // N/A
 		private:	Frame& operator=(const Frame& copy); // N/A
 	};
-	
+
 	/**
 		The Root is the first Frame you instantiate. It is the starting point for the execution of PikaScript code. Its
 		variables can be accessed from any frame with the special "frame identifier" \c ::. Furthermore, its variable
 		space is often checked as a "backup" for symbols that cannot be retrieved from local "sub-frames".
-		
+
 		The class also offers a few functions out of which you may overload trace() and setTracer() if you want to
 		customize the tracing mechanism in PikaScript. The default implementation calls a PikaScript function that you
 		can designate with the standard library function "trace".
-		
+
 		In case you use PikaScript concurrently in different threads, you need a Root for every thread, but you could
 		implement and share a sub-class of Variables that accesses shared data in a thread-safe manner.
-		
+
 		If you just want to use the standard Root implementation with a standard variable space you may want to use
 		FullRoot instead.
 	*/
@@ -413,7 +413,7 @@ template<class Config> struct Script {
 		protected:	Char autoLabel[32];																					///< The last generated frame label (padded with leading ':').
 		protected:	Char* autoLabelStart;																				///< The first character of the last generated frame label (begins at autoLabel + 30 and slowly moves backwards when necessary).
 	};
-	
+
 	/**
 		FullRoot inherits from both Root and Config::Globals (which should be a descendant to Variable). Its
 		constructor adds the natives of the standard library. This means that by instantiating this class you will get
@@ -424,12 +424,12 @@ template<class Config> struct Script {
 						addLibraryNatives(*this, includeIONatives);
 					}
 	};
-	
+
 	/**
 		STLVariables is the reference implementation of a variable space. It simply uses two std::map's for the
 		PikaScript variables and the natives respectively. All registered natives are deleted on the destruction of this
 		class.
-		
+
 		See Variables for descriptions on the overloaded member functions in this class.
 	*/
 	class STLVariables : public Variables {
@@ -445,13 +445,13 @@ template<class Config> struct Script {
 		public:		VariableMap vars;
 		public:		NativeMap natives;
 	};
-	
+
 	/**
 		Native is the base class for the native functions and objects that can be accessed from PikaScript. It has a
 		single virtual member function which should process a call to the native. Since natives are owned by the
 		variable space once they are registered (and destroyed when the variable space destructs), they often act as
 		simple bridges to other C++ functions and objects.
-		
+
 		The easiest way to register a native is by calling one of the Frame::registerNative() member functions
 		(typically on the "root frame"). You will find a couple of template functions there that allows you to register
 		functors directly. They will create the necessary Native classes for you in the background.
@@ -466,16 +466,16 @@ template<class Config> struct Script {
 		argument (UnaryFunctor) and one that takes two arguments (BinaryFunctor). A "functor" is either a class that
 		has an overloaded operator() or a C / C++ function. It is a concept introduced to C++ with STL so please refer
 		to your STL documentation of choice for more info. (For example: http://www.sgi.com/tech/stl/functors.html )
-		
+
 		Thanks to some clever template tricks, these classes are very flexible when it comes to what type of arguments
 		your functor can take and what type it may return. Here are your options:
-		
+
 		- Any argument can be of a type that is convertible from Script::Value (e.g., \c bool, \c long, \c double etc).
 		- Likewise, the functor can return any type that is convertible to a Script::Value.
 		- You can also use a functor with \c void result type.
 		- The functor may take a single argument type of Script::Frame&. You can then retrieve all the arguments for
 		the call by reading \c $0, \c $1, \c $2 etc from the Frame (via Frame::get() or Frame::getOptional()).
-		
+
 		In Frame you will find a template function (Frame::registerNative()) that allows you to register a native C++
 		function directly through a functor. It will construct the proper functor instance for you "in the background".
 
@@ -492,7 +492,7 @@ template<class Config> struct Script {
 		public:		virtual Value pikaCall(Frame& f) { return call(arg(f, Dumb<A0>()), Dumb<R>()); }
 		protected:	F func;
 	};
-	
+
 	/**
 		See UnaryFunctor for documentation.
 	*/
@@ -504,7 +504,7 @@ template<class Config> struct Script {
 		public:		virtual Value pikaCall(Frame& f) { return call(f.get(STR("$0")), f.get(STR("$1")), Dumb<R>()); }
 		protected:	F func;
 	};
-	
+
 	template<class F> static UnaryFunctor<F>* newUnaryFunctor(const F& f) { return new UnaryFunctor<F>(f); }			///< Helper function to create a UnaryFunctor class with correct template parameters.
 	template<class F> static BinaryFunctor<F>* newBinaryFunctor(const F& f) { return new BinaryFunctor<F>(f); }			///< Helper function to create a BinaryFunctor class with correct template parameters.
 
@@ -512,14 +512,14 @@ template<class Config> struct Script {
 		getThisAndMethod splits the \c $callee variable of \p frame into object ("this") and method. The returned value
 		is a pair, where the \c first value ("this") is a reference to the object and the \c second value is the
 		"method" name as a string.
-		
+
 		\details
 		Notice that if the $callee variable does not begin with a "frame specifier", it is assumed that the object
 		belongs to the previous frame (e.g. the caller of the method). This holds true even if the method is actually
 		defined in the root frame. For example \code function { obj.meth() } \endcode would trigger an error even if
 		\c ::obj is defined since \c obj isn't defined in our function. While \code function { ::obj.meth() } \endcode
 		works.
-		
+
 		One common use for this function is in a PikaScript object constructor for extracting the "this" reference
 		that should be constructed. Another situation where this routine is useful is if you use the "elevate" function
 		to aggregate various methods into a single C++ function. You may then use this function to extract the method
@@ -560,7 +560,7 @@ template<class Config> struct Script {
 		static Value tryer(Frame& frame);
 		static String upper(String s);
 	};
-	
+
 	static void addLibraryNatives(Frame& frame, bool includeIO = true);													///< Registers the standard library native functions to \p frame. If \p includeIO is false, 'load', 'save', 'input', 'print' and 'system' will not be registered. Please, refer to the PikaScript standard library reference guide for more info on individual native functions.
 
 }; // struct Script
