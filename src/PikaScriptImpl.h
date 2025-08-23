@@ -6,26 +6,26 @@
 	You only need to include this file if you want to instantiate a customization on the reference implementation on
 	PikaScript. If you are satisfied with the reference implementation (StdScript), you only need to include
 	PikaScript.h and add PikaScript.cpp to your project.
-	                                                                           
+	
 	\version
 	
 	Version 0.97
 	
 	\page Copyright
 	
-	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
 	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
-
+	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 	following conditions are met:
-
+	
 	Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-	disclaimer. 
+	disclaimer.
 	
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
+	disclaimer in the documentation and/or other materials provided with the distribution.
 	
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -60,7 +60,7 @@ template<typename T> inline T maxi(T a, T b) { return (a < b) ? b : a; }
 
 // Usually I am pretty militant against macros, but sorry, the following ones are just too handy.
 
-// FIX : is there *some* way to solve this without ugly macros? 
+// FIX : is there *some* way to solve this without ugly macros?
 #if (PIKA_UNICODE)
 	#define STR(s) L##s
 #else
@@ -158,7 +158,7 @@ template<class S> bool stringToDouble(const S& s, double& d) {
 
 template<class S> S doubleToString(double d, int precision) {
 	assert(1 <= precision && precision <= 24);
-	const double EPSILON = 1.0e-300, SMALL = 1.0e-5, LARGE = 1.0e+10;	
+	const double EPSILON = 1.0e-300, SMALL = 1.0e-5, LARGE = 1.0e+10;
 	double x = fabs(d), y = x;
 	if (y <= EPSILON) return S(STR("0"));
 	else if (precision >= 12 && y < LARGE && long(d) == d) return intToString<S, long>(long(d));
@@ -191,7 +191,7 @@ template<class S> S doubleToString(double d, int precision) {
 	*pp = '.';
 	if (ep > pp) while (ep[-1] == '0') --ep;
 	if (ep - 1 == pp) --ep;
-	if (d < 0) *--bp = '-';	
+	if (d < 0) *--bp = '-';
 	return S(bp, ep - bp);
 }
 
@@ -458,7 +458,7 @@ TMPL template<class E, class I, class S> bool Script<CFG>::Frame::lgtOp(StringIt
 
 TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, bool dry) {
 	assert(p <= e);
-	StringIt b = p;	
+	StringIt b = p;
 	switch (p < e ? *p : 0) {
 		case 0:		return false;
 		case '!':	expr(++p, e, v, false, dry, PREFIX); if (!dry) v = XValue(false, !rvalue(v)); return true;			// <-- logical not
@@ -473,7 +473,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 		case 'e':	if (token(p, e, STR("lse"))) throw Xception(STR("Unexpected 'else' (preceded by ';'?)")); break;	// <-- error on unexpected else
 		case 't':	if (token(p, e, STR("rue"))) { if (!dry) v = XValue(false, true); return true; } break;				// <-- true literal
 		case 'v':	if (token(p, e, STR("oid"))) { if (!dry) v = XValue(false, Value()); return true; } break;			// <-- void literal
-		
+
 		case '>':	if (++p < e && maybeWhite(*p)) white(p, e);															// <-- lambda
 					b = p;
 					expr(p, e, v, false, true, STATEMENT);
@@ -485,7 +485,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					if (*p != '}') throw Xception(STR("Syntax error (missing ';')?"));
 					++p;
 					return true;
-		
+
 		case '+': case '-':
 					if (token(p, e, STR("infinity"))) p = b + 1; /* and continue to stringToDouble */					// <-- infinity literal
 					else if (++p >= e) return false;
@@ -498,20 +498,20 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 						if (!dry) v = XValue(false, *b == '-' ? -double(rvalue(v)) : double(rvalue(v)));
 						return true;
 					} /* else continue */
-							
+
 		case '0':	if (e - p > 1 && p[1] == 'x') {
 						ulong l = hexToLong<String>(p += 2, e);															// <-- hexadecimal literal
 						if (p == b + 2) throw Xception(STR("Invalid hexadecimal number"));
 						if (!dry) v = XValue(false, *b == '-' ? -long(l) : l);
 						return true;
 					} /* else continue */
-		
+
 		case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': {						// <-- numeric literal
 						double d = stringToDouble<String>(p, e);
 						if (!dry) v = XValue(false, *b == '-' ? -d : d);
 					}
 					return true;
-					
+
 		case 'f': 	if (token(p, e, STR("alse"))) { if (!dry) v = XValue(false, false); return true; }					// <-- false literal
 					else if (token(p, e, STR("or"))) {
 						if (p >= e || *p != '(') throw Xception(STR("Expected '('"));									// <-- for
@@ -585,7 +585,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 		case '^':	return assignableOp(p, e, v, dry, thres, 1, BIT_XOR, bitXor);										// <-- xor
 		case '<':	return lgtOp(p, e, v, dry, thres, std::less<Value>(), std::less_equal<Value>(), shiftLeft);			// <-- shift left
 		case '>':	return lgtOp(p, e, v, dry, thres, std::greater<Value>(), std::greater_equal<Value>(), shiftRight);	// <-- shift right
-		
+
 		case '!':	if (e - p > 2 && p[2] == '=' && p[1] == '=')
 						return binaryOp(p, e, v, dry, thres, 3, EQUALITY, std::not_equal_to<String>());					// <-- literal not equals
 					else if (e - p > 1 && p[1] == '=')
@@ -612,7 +612,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 						return true;
 					}
 					break;
-		
+
 		case '|': 	if (e - p < 2 || p[1] != '|') return assignableOp(p, e, v, dry, thres, 1, BIT_OR, bitOr);			// <-- bitwise or
 					else if (thres < LOGICAL_OR) {
 						bool l = dry || rvalue(v);																		// <-- logical or
@@ -621,7 +621,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 						return true;
 					}
 					break;
-		
+
 		case '.':	{																									// <-- member
 						if (++p < e && maybeWhite(*p)) white(p, e);
 						StringIt b = p;
@@ -629,7 +629,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 						if (!dry) v = XValue(true, lvalue(v)[String(b, p)]);
 						return true;
 					}
-					
+
 		case '[':	if (thres < POSTFIX) {																				// <-- subscript
 						XValue element;
 						termExpr(++p, e, element, false, dry, BRACKETS, ']');
@@ -637,7 +637,7 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 						return true;
 					}
 					break;
-					
+
 		case '{':	if (thres < POSTFIX) {																				// <-- substring
 						XValue index;
 						bool gotIndex = expr(++p, e, index, true, dry, BRACKETS);
@@ -768,7 +768,7 @@ TMPL T_TYPE(StringIt) Script<CFG>::Frame::parse(const StringIt& begin, const Str
 		case 'v': token(p, e, STR("oid")); break;
 		case '+': case '-': if (token(p, e, STR("infinity")) || p + 1 >= e || p[1] < '0' || p[1] > '9') break;
 		case '<': case '>': case '0': case '\'': case '"': case '1': case '2': case '3': case '4': case '5': case '6':
-		case '7': case '8': case '9': pre(p, e, dummy, true); break;		
+		case '7': case '8': case '9': pre(p, e, dummy, true); break;
 	}
 	return p;
 }
@@ -922,7 +922,7 @@ TMPL ulong Script<CFG>::lib::find(const String& a, const String& b) {
 
 TMPL void Script<CFG>::lib::foreach(Frame& f) {
 	Value arg1 = f.get(STR("$1"));
-	std::pair<Frame*, String> fs = f.getPrevious().resolveFrame(f.get(STR("$0"))[Value()]); 
+	std::pair<Frame*, String> fs = f.getPrevious().resolveFrame(f.get(STR("$0"))[Value()]);
 	typename Variables::VarList list;
 	fs.first->getVariables().list(fs.second, list);
 	for (typename Variables::VarList::const_iterator it = list.begin(); it != list.end(); ++it) {

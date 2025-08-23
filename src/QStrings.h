@@ -14,26 +14,26 @@
 	WARNING! The current implementation of the memory pool is *not* thread-safe due to unprotected use of shared global
 	data. You must only use QStrings in single-threaded applications or in the case of a multi-threaded application you
 	must only use QStrings from a single thread at a time!
-
+	
 	\version
 	
 	Version 0.97
 	
 	\page Copyright
 	
-	PikaScript is released under the BSD 2-Clause License. http://www.opensource.org/licenses/bsd-license.php
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development
+	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
-
+	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 	following conditions are met:
-
+	
 	Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-	disclaimer. 
+	disclaimer.
 	
 	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
+	disclaimer in the documentation and/or other materials provided with the distribution.
 	
 	
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -139,7 +139,7 @@ template<typename C, size_t PS> class QString<C, PS>::Buffer {
 
 	public:		Buffer(size_type n) : rc(1), size(n > PS ? n : PS), chars(n > PS ? new C[n] : internal) { };
 	public:		~Buffer() { if (chars != internal) delete [] chars; }
-	
+
 	public:		static void* operator new(size_t count) {
 					assert(count == sizeof (Buffer));
 					Buffer* h = obtainPoolHead();
@@ -147,13 +147,13 @@ template<typename C, size_t PS> class QString<C, PS>::Buffer {
 					else obtainPoolHead() = obtainPoolHead()->next;
 					return h;
 				}
-				
+
 	public:		static void operator delete(void* pointer) throw() {
 					Buffer* h = reinterpret_cast<Buffer*>(pointer);
 					h->next = obtainPoolHead();
 					obtainPoolHead() = h;
 				}
-				
+
 	public:		static void cleanPool() throw() {
 					while (obtainPoolHead() != 0) {
 						Buffer* h = obtainPoolHead();
@@ -161,7 +161,7 @@ template<typename C, size_t PS> class QString<C, PS>::Buffer {
 						::operator delete(h);
 					}
 				}
-				
+
 	protected:	union {
 					struct {
 						C internal[PS];
@@ -178,7 +178,7 @@ template<typename C, size_t PS> void QString<C, PS>::deinit() throw() { Buffer::
 template<typename C, size_t PS> typename QString<C, PS>::size_type QString<C, PS>::size() const { return length; }
 template<typename C, size_t PS> bool QString<C, PS>::empty() const { return (length == 0); }
 template<typename C, size_t PS> const C* QString<C, PS>::data() const { return pointer; }
-	
+
 template<typename C, size_t PS> template<typename E, class Q> class QString<C, PS>::_iterator
 		: public std::iterator<std::random_access_iterator_tag, E> { // FIX : is there some good base-class for this in STL?
 	friend class QString;
@@ -320,7 +320,7 @@ template<typename C, size_t PS> QString<C, PS>& QString<C, PS>::append(const C* 
 	}
 	if (buffer->rc != 1 || !fit)
 		(*this) = QString(pointer, length, l + (length < 65536 ? length : 65536)); // FIX : constant
-	
+
 	copychars(pointer + length, p, l);
 	length += l;
 	assert(buffer->rc == 1);

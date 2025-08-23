@@ -2,8 +2,8 @@
 
 /*
 	interactive.pika v0.97
-
-	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
+	
+	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
 	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
@@ -16,31 +16,31 @@ Enter expressions to evaluate them interactively line by line. E.g.:
     3+3
     print(''hello world'')
     run(''chess.pika'')
-    
+
 You can evaluate a multi-line expression by ending the first line with an opening curly bracket (''{''). Finish the expression with a single closing curly bracket (''}''). E.g.:
 
     f = function {
         print(''hello world'');
     }
-    
+
 The special global variable ''_'' holds the result of the last evaluated expression. E.g.:
 
     25 * 25
     sqrt(_)
     _ == 25
-	
+
 Special commands are:
 
     ?                        this help
     <page>?                  shows a page from the standard library help system (type ''help?'' for more info)
     =                        displays the full definition of the last evaluated expression
-    <variable>=              displays the full definition of a variable / function / container 
+    <variable>=              displays the full definition of a variable / function / container
     %                        re-run last executed PikaScript source file
     %['']<path>[''] [args...]  runs a PikaScript source file (optionally with arguments)
     !<command>               executes a command with the operating system''s command interpreter
     exit                     exits
 ';
-	
+
 	args(@prompt, @where);
 	printReturn = printError = print;
 	RETURN_COLOR = ERROR_COLOR = '';
@@ -66,7 +66,7 @@ Special commands are:
 			::__ = void;
 			tryThis => (::__ = evaluate(s, where));
 			printThis = RETURN_COLOR # '----- ( {oneLine(toSource(::__))} )';
-			
+
 			if (s{0} === '!') tryThis => (::__ = system(s{1:}))
 			else if (s{0} === '%') {
 				if (s === '%' && !exists(@arglist.n)) {
