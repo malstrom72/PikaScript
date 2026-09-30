@@ -8,7 +8,7 @@
 	\version
 
 	Version 0.971
-
+	
 	\page Copyright
 
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
@@ -167,16 +167,16 @@ Script::String overloadedLoad(const Script::String& filename) {
 }
 
 Script::String loadBinary(const Script::String& filename) {
-	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
-	std::basic_ifstream<Script::Char> instream(name.c_str(), std::ios::in | std::ios::binary);
+	std::string name(Pika::toStdString(filename));
+	std::basic_ifstream<Script::Char> instream(name.c_str(), std::ios::binary);
 	if (!instream.good())
 		throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
 	return loadFile(instream, name);
 }
 
 void saveBinary(const Script::String& filename, const Script::String& chars) {
-	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
-	std::basic_ofstream<Script::Char> outstream(name.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+	std::string name(Pika::toStdString(filename));
+	std::basic_ofstream<Script::Char> outstream(name.c_str(), std::ios::binary);
 	if (!outstream.good())
 		throw Script::Xception(Script::String("Cannot open file for writing: ") += Pika::escape(filename));
 	outstream.write(chars.data(), chars.size());
