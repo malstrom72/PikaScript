@@ -7,13 +7,13 @@
 
 	\version
 
-	Version 0.97
-	
+	Version 0.971
+
 	\page Copyright
 
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -37,6 +37,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define PIKA_CMD_VERSION "0.971"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 
@@ -93,6 +94,11 @@ const char* BUILT_IN_USAGE =
 		"The process exit code will be that of the global variable ''exitCode'' (default is 0), or 255 if an exception "
 		"occurs. ''PLATFORM'' will contain an operating system identifier (e.g. ''WINDOWS''). ''s'' = "
 		"getenv(''var'') can be used to retrieve environment variables.\n"
+		"\n"
+		"''contents'' = loadBinary(''filePath'') and saveBinary(''filePath'', ''contents'') work like ''load'' and "
+		"''save'' but open files in binary mode, so every byte (including CR, LF, 0x1A and 0x00) is read and written "
+		"unchanged, one character per byte. Unlike ''load'', ''loadBinary'' only looks for the file at the given "
+		"path.\n"
 		"\n"
 		"Notice that you may need to enclose <code> in double quotes (\") to prevent the special interpretation of "
 		"some characters (e.g. < and >). Double quotes inside <code> may need to be escaped, for example: \\\".\n"
@@ -158,6 +164,24 @@ Script::String overloadedLoad(const Script::String& filename) {
 			if (filename == BUILT_IN_FILES[i].first) return BUILT_IN_FILES[i].second;
 	}
 	throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+}
+
+Script::String loadBinary(const Script::String& filename) {
+	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
+	std::basic_ifstream<Script::Char> instream(name.c_str(), std::ios::in | std::ios::binary);
+	if (!instream.good())
+		throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+	return loadFile(instream, name);
+}
+
+void saveBinary(const Script::String& filename, const Script::String& chars) {
+	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
+	std::basic_ofstream<Script::Char> outstream(name.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+	if (!outstream.good())
+		throw Script::Xception(Script::String("Cannot open file for writing: ") += Pika::escape(filename));
+	outstream.write(chars.data(), chars.size());
+	if (!outstream.good())
+		throw Script::Xception(Script::String("Error writing to file: ") += Pika::escape(filename));
 }
 
 Script::String getEnvironmentVar(const Script::String& var) {
@@ -241,7 +265,7 @@ int main(int argc, const char* argv[]) {
 	std::srand(static_cast<unsigned int>(std::time(0)) ^ static_cast<unsigned int>(std::clock()));
 	rand();
 	if (argc < 2)
-		std::cout << "PikaCmd version " << PIKA_SCRIPT_VERSION << ". (C) 2008-2025 NuEdge Development. "
+		std::cout << "PikaCmd version " << PIKA_CMD_VERSION << ". (C) 2008-2026 NuEdge Development. "
 				"All rights reserved." << std::endl << "Run PikaCmd -h for command-line argument syntax."
 				<< std::endl << std::endl;
 	try {
@@ -251,6 +275,8 @@ int main(int argc, const char* argv[]) {
 		else pikaCmdDir = pikaCmdDir.substr(0, pos + 1);
 		Script::FullRoot root;
 		root.registerNative("load", overloadedLoad);
+		root.registerNative("loadBinary", loadBinary);
+		root.registerNative("saveBinary", saveBinary);
 		root.registerNative("getenv", getEnvironmentVar);
 		root.assign("exitCode", Script::Value(0));
 		root.assign("PLATFORM", Script::String(TO_STRING(PLATFORM_STRING)));
