@@ -77,6 +77,16 @@
 	typedef Pika::StdScript Script;
 #endif
 
+#if defined(_WIN32)
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <windows.h>
+#elif defined(__APPLE__)
+	#include <mach-o/dyld.h>
+#elif defined(__linux__)
+	#include <unistd.h>
+#endif
+
 #define STRINGIFY(x) #x
 #define TO_STRING(x) STRINGIFY(x)
 
@@ -149,6 +159,22 @@ static Script::String loadFile(std::basic_ifstream<Script::Char>& instream, cons
 
 std::string pikaCmdDir;
 
+static std::string executablePath(const char* argv0) {	/// full path of the running executable, falls back to `argv0`
+	char buffer[4096];
+#if defined(_WIN32)
+	DWORD n = GetModuleFileNameA(0, buffer, sizeof (buffer));
+	if (n > 0 && n < sizeof (buffer)) return std::string(buffer, n);
+#elif defined(__APPLE__)
+	uint32_t size = sizeof (buffer);
+	if (_NSGetExecutablePath(buffer, &size) == 0) return std::string(buffer);
+#elif defined(__linux__)
+	ssize_t n = readlink("/proc/self/exe", buffer, sizeof (buffer));
+	if (n > 0 && n < ssize_t(sizeof (buffer))) return std::string(buffer, n);
+#endif
+	(void)buffer;
+	return argv0;
+}
+
 Script::String overloadedLoad(const Script::String& filename) {
 	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	{
@@ -180,7 +206,8 @@ void saveBinary(const Script::String& filename, const Script::String& chars) {
 	if (!outstream.good())
 		throw Script::Xception(Script::String("Cannot open file for writing: ") += Pika::escape(filename));
 	outstream.write(chars.data(), chars.size());
-	if (!outstream.good())
+	outstream.close();	// Flush now so errors writing the last buffered bytes are not lost in the destructor.
+	if (outstream.fail())
 		throw Script::Xception(Script::String("Error writing to file: ") += Pika::escape(filename));
 }
 
@@ -269,7 +296,7 @@ int main(int argc, const char* argv[]) {
 				"All rights reserved." << std::endl << "Run PikaCmd -h for command-line argument syntax."
 				<< std::endl << std::endl;
 	try {
-		pikaCmdDir = argv[0];
+		pikaCmdDir = executablePath(argv[0]);	// argv[0] has no directory when PikaCmd is found through PATH.
 		size_t pos = pikaCmdDir.find_last_of("/\\:");
 		if (pos == std::string::npos) pikaCmdDir.clear();
 		else pikaCmdDir = pikaCmdDir.substr(0, pos + 1);
@@ -289,8 +316,11 @@ int main(int argc, const char* argv[]) {
 		}
 		root.call("run", (fn[0] == '{' ? Script::String(BUILT_IN_DIRECT) : Script::Value()), args.size(), &args[0]);
 		exitCode = static_cast<int>(root.getOptional("exitCode"));
-	} catch (const Script::Xception& x) {
+	} catch (const std::exception& x) {	// Script::Xception, but also e.g. std::bad_alloc.
 		std::cerr << "!!!! " << x.what() << std::endl;
+		exitCode = 255;
+	} catch (...) {
+		std::cerr << "!!!! Unknown exception" << std::endl;
 		exitCode = 255;
 	}
 #if (QUICKER_SCRIPT)

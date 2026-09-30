@@ -98,7 +98,9 @@ template<class S> S escape(const S& s);																					///< Depending on th
 
 	You would normally use the helper function bound_mem_fun() to automatically instantiate the correct template.
 */
-template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_function<A0, R> {
+template<class C, class A0, class R> class bound_mem_fun_t {
+	public:		typedef A0 argument_type;
+	public:		typedef R result_type;
 	public:		bound_mem_fun_t(R (C::*m)(A0), C* o) : m(m), o(o) { }
 	public:		R operator()(A0 a) const { return (o->*m)(a); }
 	protected:	R (C::*m)(A0);
@@ -119,6 +121,30 @@ template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_f
 template<class C, class A0, class R> inline bound_mem_fun_t<C, A0, R> bound_mem_fun(R (C::*m)(A0), C* o) {
 	return bound_mem_fun_t<C, A0, R>(m, o);
 }
+
+/**
+	unary_fun_t wraps a pointer to a unary C++ function in a functor with the argument_type and result_type typedefs
+	that UnaryFunctor needs. It replaces std::ptr_fun, which was removed in C++17.
+*/
+template<class A0, class R> class unary_fun_t {
+	public:		typedef A0 argument_type;
+	public:		typedef R result_type;
+	public:		explicit unary_fun_t(R (*f)(A0)) : f(f) { }
+	public:		R operator()(A0 a) const { return f(a); }
+	protected:	R (*f)(A0);
+};
+
+/**
+	binary_fun_t is the binary counterpart of unary_fun_t (for BinaryFunctor).
+*/
+template<class A0, class A1, class R> class binary_fun_t {
+	public:		typedef A0 first_argument_type;
+	public:		typedef A1 second_argument_type;
+	public:		typedef R result_type;
+	public:		explicit binary_fun_t(R (*f)(A0, A1)) : f(f) { }
+	public:		R operator()(A0 a0, A1 a1) const { return f(a0, a1); }
+	protected:	R (*f)(A0, A1);
+};
 
 /**
 	We use this dummy class to specialize member functions for arbitrary types (including void, references etc).
@@ -194,9 +220,9 @@ template<class S> class STLValue : public S {
 	public:		operator long() const;																					///< Converts the value to a signed long integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator double() const;																				///< Converts the value to a double precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
 	public:		operator float() const { return float(double(*this)); }													///< Converts the value to a single precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
-	public:		operator ulong() const { return ulong(long(*this)); }													///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator ulong() const;													///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator int() const { return int(long(*this)); }														///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator uint() const { return uint(int(*this)); }														///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator uint() const { return uint(ulong(*this)); }														///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
 	//@}
 	/// \name Overloaded operators (comparisons and subscript).
 	//@{
@@ -338,10 +364,10 @@ template<class Config> struct Script {
 		//@{
 		public:		void registerNative(const String& identifier, Native* native);										///< Registers the native function (or object) \p native with \p identifier in the appropriate variable space (determined by any "frame identifier" present in \p identifier). \details Once registered, the native is considered "owned" by the variable space. In other words, all registered natives will be deleted by the Variables destructor. Also, if you register a new native on an already used identifier, the old native for that identifier will be deleted automatically. Besides assigning the native with Variables::assignNative() this method also sets the variable \p identifier to \c <identifier> (unless \p native is a null-pointer).
 		public:		template<class A0, class R> void registerNative(const String& i, R (*f)(A0)) {
-						registerNative(i, newUnaryFunctor(std::ptr_fun(f)));
+						registerNative(i, newUnaryFunctor(unary_fun_t<A0, R>(f)));
 					}																									///< Helper template for easily registering a unary C++ function. \details The C++ function should take a single argument of either Frame& or any of the native types that are convertible from Script::Value. It should return a value of any type that is convertible to Script::Value or void.
 		public:		template<class A0, class A1, class R> void registerNative(const String& i, R (*f)(A0, A1)) {
-						registerNative(i, newBinaryFunctor(std::ptr_fun(f)));
+						registerNative(i, newBinaryFunctor(binary_fun_t<A0, A1, R>(f)));
 					}																									///< Helper template for easily registering a binary C++ function. \details The C++ function should take two arguments of any of the native types that are convertible from Script::Value. It should return a value of any type that is convertible to Script::Value or void.
 		public:		template<class C, class A0, class R> void registerNative(const String& i, C* o, R (C::*m)(A0)) {
 						registerNative(i, newUnaryFunctor(bound_mem_fun(m, o)));
@@ -671,8 +697,8 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline ulong shiftRight(ulong l, int r) { return l >> r; }
-inline ulong shiftLeft(ulong l, int r) { return l << r; }
+inline ulong shiftRight(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l >> r; }			// Out of range shift counts are undefined behavior in C++.
+inline ulong shiftLeft(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l << r; }
 inline ulong bitAnd(ulong l, ulong r) { return l & r; }
 inline ulong bitOr(ulong l, ulong r) { return l | r; }
 inline ulong bitXor(ulong l, ulong r) { return l ^ r; }
@@ -699,9 +725,10 @@ template<class S> ulong hexToLong(typename S::const_iterator& p, const typename 
 template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
 	assert(p <= e);
 	bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	long l = 0;
-	for (; p < e && *p >= '0' && *p <= '9'; ++p) l = l * 10 + (*p - '0');
-	return negative ? -l : l;
+	const ulong limit = ulong(std::numeric_limits<long>::max()) + (negative ? 1 : 0);
+	ulong l = 0;
+	for (; p < e && *p >= '0' && *p <= '9' && l <= (limit - (*p - '0')) / 10; ++p) l = l * 10 + (*p - '0');		// Stops before overflowing, leaving p on the first digit that did not fit.
+	return negative ? (l == 0 ? 0 : -long(l - 1) - 1) : long(l);
 }
 
 template<class S, class T> S intToString(T i, int radix, int minLength) {
@@ -732,6 +759,7 @@ template<class S> double stringToDouble(typename S::const_iterator& p, const typ
 		if (e - p > 1 && (*p == 'E' || *p == 'e')) {
 			typename S::const_iterator b = p;
 			d *= pow(10, double(stringToLong<S>(++p, e)));
+			while (p < e && *p >= '0' && *p <= '9') ++p;																// Skip digits of exponents too large for a long (the partial exponent already yields infinity or 0).
 			if (p == b + 1) p = b;
 		}
 	}
@@ -748,6 +776,7 @@ template<class S> S doubleToString(double d, int precision) {
 	assert(1 <= precision && precision <= 24);
 	const double EPSILON = 1.0e-300, SMALL = 1.0e-5, LARGE = 1.0e+10;
 	double x = fabs(d), y = x;
+	if (d != d) return S(STR("nan"));																					// NaN fails every other test below and would be formatted as garbage.
 	if (y <= EPSILON) return S(STR("0"));
 	else if (precision >= 12 && y < LARGE && long(d) == d) return intToString<S, long>(long(d));
 	else if (std::numeric_limits<double>::has_infinity && x == std::numeric_limits<double>::infinity())
@@ -851,6 +880,16 @@ template<class S> STLValue<S>::operator long() const {
 	long y = stringToLong<S>(p, S::end());
 	if (p == S::begin() || p < S::end()) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
 	return y;
+}
+
+template<class S> STLValue<S>::operator ulong() const {
+	typename S::const_iterator p = S::begin(), e = S::end();
+	bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
+	const typename S::const_iterator b = p;
+	ulong y = 0;
+	for (; p < e && *p >= '0' && *p <= '9'; ++p) y = y * 10 + (*p - '0');												// Wraps modulo 2^N (well defined for unsigned), keeping the low bits for the bitwise operators.
+	if (p == b || p < e) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
+	return negative ? 0 - y : y;																						// Negative values convert to two's complement.
 }
 
 template<class S> STLValue<S>::operator double() const {
@@ -1079,7 +1118,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					else if (++p >= e) return false;
 					else if (*p == *b) {
 						expr(++p, e, v, false, dry, PREFIX);															// <-- pre inc/dec
-						if (!dry) v = XValue(false, set(lvalue(v), long(rvalue(v, false)) + (*b == '-' ? -1 : 1)));
+						if (!dry) v = XValue(false, set(lvalue(v), double(long(rvalue(v, false))) + (*b == '-' ? -1 : 1)));	// Add in double (like post inc/dec) so we can't overflow.
 						return true;
 					} else if (*p < '0' || *p > '9') {
 						expr(p, e, v, false, dry, PREFIX);																// <-- positive / negative
@@ -1090,7 +1129,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 		case '0':	if (e - p > 1 && p[1] == 'x') {
 						ulong l = hexToLong<String>(p += 2, e);															// <-- hexadecimal literal
 						if (p == b + 2) throw Xception(STR("Invalid hexadecimal number"));
-						if (!dry) v = XValue(false, *b == '-' ? -long(l) : l);
+						if (!dry) v = XValue(false, *b == '-' ? Value(-double(l)) : Value(l));
 						return true;
 					} /* else continue */
 
@@ -1152,6 +1191,9 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 TMPL long Script<CFG>::Frame::intDiv(long x, long y) {
 	if (y == 0) {
 		throw Xception(STR("Division by zero"));
+	}
+	if (y == -1 && x == std::numeric_limits<long>::min()) {													// LONG_MIN / -1 does not fit in a long and traps on x86 (just like division by zero).
+		throw Xception(STR("Integer overflow"));
 	}
 	return x / y;
 }
@@ -1468,12 +1510,14 @@ TMPL void Script<CFG>::lib::thrower(const String& s) { throw Xception(s); }
 TMPL T_TYPE(Value) Script<CFG>::lib::time(const Frame&) { return double(::time(0)); }
 
 TMPL T_TYPE(String) Script<CFG>::lib::upper(String s) {
-	transform(s.begin(), s.end(), s.begin(), std::bind2nd(std::ptr_fun(std::toupper<Char>), std::locale::classic()));
+	const std::locale& loc = std::locale::classic();
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::toupper(*it, loc);
 	return s;
 }
 
 TMPL T_TYPE(String) Script<CFG>::lib::lower(String s) {
-	transform(s.begin(), s.end(), s.begin(), std::bind2nd(std::ptr_fun(std::tolower<Char>), std::locale::classic()));
+	const std::locale& loc = std::locale::classic();
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::tolower(*it, loc);
 	return s;
 }
 
@@ -1575,7 +1619,8 @@ TMPL void Script<CFG>::lib::save(const String& file, const String& chars) {
 	std::basic_ofstream<Char> outstream(toStdString(file).c_str());															// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	if (!outstream.good()) throw Xception(String(STR("Cannot open file for writing: ")) += escape(file));
 	outstream.write(chars.data(), chars.size());
-	if (!outstream.good()) throw Xception(String(STR("Error writing to file: ")) += escape(file));
+	outstream.close();																										// Flush now so errors writing the last buffered bytes are not lost in the destructor.
+	if (outstream.fail()) throw Xception(String(STR("Error writing to file: ")) += escape(file));
 }
 
 TMPL ulong Script<CFG>::lib::search(const String& a, const String& b) {
@@ -3309,6 +3354,16 @@ const char* BUILT_IN_STDLIB =
 	typedef Pika::StdScript Script;
 #endif
 
+#if defined(_WIN32)
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <windows.h>
+#elif defined(__APPLE__)
+	#include <mach-o/dyld.h>
+#elif defined(__linux__)
+	#include <unistd.h>
+#endif
+
 #define STRINGIFY(x) #x
 #define TO_STRING(x) STRINGIFY(x)
 
@@ -3381,6 +3436,22 @@ static Script::String loadFile(std::basic_ifstream<Script::Char>& instream, cons
 
 std::string pikaCmdDir;
 
+static std::string executablePath(const char* argv0) {	/// full path of the running executable, falls back to `argv0`
+	char buffer[4096];
+#if defined(_WIN32)
+	DWORD n = GetModuleFileNameA(0, buffer, sizeof (buffer));
+	if (n > 0 && n < sizeof (buffer)) return std::string(buffer, n);
+#elif defined(__APPLE__)
+	uint32_t size = sizeof (buffer);
+	if (_NSGetExecutablePath(buffer, &size) == 0) return std::string(buffer);
+#elif defined(__linux__)
+	ssize_t n = readlink("/proc/self/exe", buffer, sizeof (buffer));
+	if (n > 0 && n < ssize_t(sizeof (buffer))) return std::string(buffer, n);
+#endif
+	(void)buffer;
+	return argv0;
+}
+
 Script::String overloadedLoad(const Script::String& filename) {
 	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	{
@@ -3412,7 +3483,8 @@ void saveBinary(const Script::String& filename, const Script::String& chars) {
 	if (!outstream.good())
 		throw Script::Xception(Script::String("Cannot open file for writing: ") += Pika::escape(filename));
 	outstream.write(chars.data(), chars.size());
-	if (!outstream.good())
+	outstream.close();	// Flush now so errors writing the last buffered bytes are not lost in the destructor.
+	if (outstream.fail())
 		throw Script::Xception(Script::String("Error writing to file: ") += Pika::escape(filename));
 }
 
@@ -3501,7 +3573,7 @@ int main(int argc, const char* argv[]) {
 				"All rights reserved." << std::endl << "Run PikaCmd -h for command-line argument syntax."
 				<< std::endl << std::endl;
 	try {
-		pikaCmdDir = argv[0];
+		pikaCmdDir = executablePath(argv[0]);	// argv[0] has no directory when PikaCmd is found through PATH.
 		size_t pos = pikaCmdDir.find_last_of("/\\:");
 		if (pos == std::string::npos) pikaCmdDir.clear();
 		else pikaCmdDir = pikaCmdDir.substr(0, pos + 1);
@@ -3521,8 +3593,11 @@ int main(int argc, const char* argv[]) {
 		}
 		root.call("run", (fn[0] == '{' ? Script::String(BUILT_IN_DIRECT) : Script::Value()), args.size(), &args[0]);
 		exitCode = static_cast<int>(root.getOptional("exitCode"));
-	} catch (const Script::Xception& x) {
+	} catch (const std::exception& x) {	// Script::Xception, but also e.g. std::bad_alloc.
 		std::cerr << "!!!! " << x.what() << std::endl;
+		exitCode = 255;
+	} catch (...) {
+		std::cerr << "!!!! Unknown exception" << std::endl;
 		exitCode = 255;
 	}
 #if (QUICKER_SCRIPT)

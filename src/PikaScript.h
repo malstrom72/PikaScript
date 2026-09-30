@@ -98,7 +98,9 @@ template<class S> S escape(const S& s);																					///< Depending on th
 
 	You would normally use the helper function bound_mem_fun() to automatically instantiate the correct template.
 */
-template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_function<A0, R> {
+template<class C, class A0, class R> class bound_mem_fun_t {
+	public:		typedef A0 argument_type;
+	public:		typedef R result_type;
 	public:		bound_mem_fun_t(R (C::*m)(A0), C* o) : m(m), o(o) { }
 	public:		R operator()(A0 a) const { return (o->*m)(a); }
 	protected:	R (C::*m)(A0);
@@ -119,6 +121,30 @@ template<class C, class A0, class R> class bound_mem_fun_t : public std::unary_f
 template<class C, class A0, class R> inline bound_mem_fun_t<C, A0, R> bound_mem_fun(R (C::*m)(A0), C* o) {
 	return bound_mem_fun_t<C, A0, R>(m, o);
 }
+
+/**
+	unary_fun_t wraps a pointer to a unary C++ function in a functor with the argument_type and result_type typedefs
+	that UnaryFunctor needs. It replaces std::ptr_fun, which was removed in C++17.
+*/
+template<class A0, class R> class unary_fun_t {
+	public:		typedef A0 argument_type;
+	public:		typedef R result_type;
+	public:		explicit unary_fun_t(R (*f)(A0)) : f(f) { }
+	public:		R operator()(A0 a) const { return f(a); }
+	protected:	R (*f)(A0);
+};
+
+/**
+	binary_fun_t is the binary counterpart of unary_fun_t (for BinaryFunctor).
+*/
+template<class A0, class A1, class R> class binary_fun_t {
+	public:		typedef A0 first_argument_type;
+	public:		typedef A1 second_argument_type;
+	public:		typedef R result_type;
+	public:		explicit binary_fun_t(R (*f)(A0, A1)) : f(f) { }
+	public:		R operator()(A0 a0, A1 a1) const { return f(a0, a1); }
+	protected:	R (*f)(A0, A1);
+};
 
 /**
 	We use this dummy class to specialize member functions for arbitrary types (including void, references etc).
@@ -194,9 +220,9 @@ template<class S> class STLValue : public S {
 	public:		operator long() const;																					///< Converts the value to a signed long integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator double() const;																				///< Converts the value to a double precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
 	public:		operator float() const { return float(double(*this)); }													///< Converts the value to a single precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
-	public:		operator ulong() const { return ulong(long(*this)); }													///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator ulong() const;													///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator int() const { return int(long(*this)); }														///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator uint() const { return uint(int(*this)); }														///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator uint() const { return uint(ulong(*this)); }														///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
 	//@}
 	/// \name Overloaded operators (comparisons and subscript).
 	//@{
@@ -338,10 +364,10 @@ template<class Config> struct Script {
 		//@{
 		public:		void registerNative(const String& identifier, Native* native);										///< Registers the native function (or object) \p native with \p identifier in the appropriate variable space (determined by any "frame identifier" present in \p identifier). \details Once registered, the native is considered "owned" by the variable space. In other words, all registered natives will be deleted by the Variables destructor. Also, if you register a new native on an already used identifier, the old native for that identifier will be deleted automatically. Besides assigning the native with Variables::assignNative() this method also sets the variable \p identifier to \c <identifier> (unless \p native is a null-pointer).
 		public:		template<class A0, class R> void registerNative(const String& i, R (*f)(A0)) {
-						registerNative(i, newUnaryFunctor(std::ptr_fun(f)));
+						registerNative(i, newUnaryFunctor(unary_fun_t<A0, R>(f)));
 					}																									///< Helper template for easily registering a unary C++ function. \details The C++ function should take a single argument of either Frame& or any of the native types that are convertible from Script::Value. It should return a value of any type that is convertible to Script::Value or void.
 		public:		template<class A0, class A1, class R> void registerNative(const String& i, R (*f)(A0, A1)) {
-						registerNative(i, newBinaryFunctor(std::ptr_fun(f)));
+						registerNative(i, newBinaryFunctor(binary_fun_t<A0, A1, R>(f)));
 					}																									///< Helper template for easily registering a binary C++ function. \details The C++ function should take two arguments of any of the native types that are convertible from Script::Value. It should return a value of any type that is convertible to Script::Value or void.
 		public:		template<class C, class A0, class R> void registerNative(const String& i, C* o, R (C::*m)(A0)) {
 						registerNative(i, newUnaryFunctor(bound_mem_fun(m, o)));
