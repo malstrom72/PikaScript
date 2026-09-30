@@ -83,8 +83,8 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline ulong shiftRight(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l >> r; }			// Out of range shift counts are undefined behavior in C++.
-inline ulong shiftLeft(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l << r; }
+inline ulong shiftRight(ulong l, int r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l >> r; }						// Out of range (and negative) shift counts are undefined behavior in C++.
+inline ulong shiftLeft(ulong l, int r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l << r; }
 inline ulong bitAnd(ulong l, ulong r) { return l & r; }
 inline ulong bitOr(ulong l, ulong r) { return l | r; }
 inline ulong bitXor(ulong l, ulong r) { return l ^ r; }
@@ -108,13 +108,19 @@ template<class S> ulong hexToLong(typename S::const_iterator& p, const typename 
 	return l;
 }
 
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e
+		, bool* overflow) {
 	assert(p <= e);
 	bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	const ulong limit = ulong(std::numeric_limits<long>::max()) + (negative ? 1 : 0);
+	const ulong limit = ulong(std::numeric_limits<long>::max()) + negative;
 	ulong l = 0;
-	for (; p < e && *p >= '0' && *p <= '9' && l <= (limit - (*p - '0')) / 10; ++p) l = l * 10 + (*p - '0');		// Stops before overflowing, leaving p on the first digit that did not fit.
-	return negative ? (l == 0 ? 0 : -long(l - 1) - 1) : long(l);
+	bool saturated = false;
+	for (; p < e && *p >= '0' && *p <= '9'; ++p) {
+		const ulong d = *p - '0';
+		if (l > (limit - d) / 10) { l = limit; saturated = true; } else l = l * 10 + d;
+	}
+	if (overflow != 0) *overflow = saturated;
+	return long(negative ? 0 - l : l);
 }
 
 template<class S, class T> S intToString(T i, int radix, int minLength) {
@@ -144,8 +150,7 @@ template<class S> double stringToDouble(typename S::const_iterator& p, const typ
 		}
 		if (e - p > 1 && (*p == 'E' || *p == 'e')) {
 			typename S::const_iterator b = p;
-			d *= pow(10, double(stringToLong<S>(++p, e)));
-			while (p < e && *p >= '0' && *p <= '9') ++p;																// Skip digits of exponents too large for a long (the partial exponent already yields infinity or 0).
+			d *= pow(10, double(stringToLong<S>(++p, e)));																// (Saturates on overflow, which still yields infinity or 0.)
 			if (p == b + 1) p = b;
 		}
 	}
@@ -162,7 +167,7 @@ template<class S> S doubleToString(double d, int precision) {
 	assert(1 <= precision && precision <= 24);
 	const double EPSILON = 1.0e-300, SMALL = 1.0e-5, LARGE = 1.0e+10;
 	double x = fabs(d), y = x;
-	if (d != d) return S(STR("nan"));																					// NaN fails every other test below and would be formatted as garbage.
+	if (d != d) return S(STR("nan"));																					// NaN fails all tests below.
 	if (y <= EPSILON) return S(STR("0"));
 	else if (precision >= 12 && y < LARGE && long(d) == d) return intToString<S, long>(long(d));
 	else if (std::numeric_limits<double>::has_infinity && x == std::numeric_limits<double>::infinity())
@@ -263,9 +268,17 @@ template<class S> STLValue<S>::operator bool() const {
 
 template<class S> STLValue<S>::operator long() const {
 	typename S::const_iterator p = S::begin();
-	long y = stringToLong<S>(p, S::end());
-	if (p == S::begin() || p < S::end()) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
+	bool overflow;
+	long y = stringToLong<S>(p, S::end(), &overflow);
+	if (p == S::begin() || p < S::end() || overflow) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
 	return y;
+}
+
+template<class S> STLValue<S>::operator int() const {
+	long y = long(*this);
+	if (y < std::numeric_limits<int>::min() || y > std::numeric_limits<int>::max())
+		throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
+	return int(y);
 }
 
 template<class S> STLValue<S>::operator ulong() const {
@@ -454,7 +467,7 @@ TMPL template<class F> bool Script<CFG>::Frame::addSubOp(StringIt& p, const Stri
 	else if (thres >= POSTFIX) return false;
 	else if (!dry) {
 		Value r = rvalue(v, false);																						// <-- post inc/dec
-		set(lvalue(v), f(long(r), 1));
+		set(lvalue(v), incDec(long(r), *p == '-' ? -1 : 1));
 		v = XValue(false, r);
 	}
 	p += 2;
@@ -504,7 +517,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					else if (++p >= e) return false;
 					else if (*p == *b) {
 						expr(++p, e, v, false, dry, PREFIX);															// <-- pre inc/dec
-						if (!dry) v = XValue(false, set(lvalue(v), double(long(rvalue(v, false))) + (*b == '-' ? -1 : 1)));	// Add in double (like post inc/dec) so we can't overflow.
+						if (!dry) v = XValue(false, set(lvalue(v), incDec(long(rvalue(v, false)), *b == '-' ? -1 : 1)));
 						return true;
 					} else if (*p < '0' || *p > '9') {
 						expr(p, e, v, false, dry, PREFIX);																// <-- positive / negative
@@ -582,6 +595,11 @@ TMPL long Script<CFG>::Frame::intDiv(long x, long y) {
 		throw Xception(STR("Integer overflow"));
 	}
 	return x / y;
+}
+
+TMPL T_TYPE(Value) Script<CFG>::Frame::incDec(long x, long d) {
+	const bool fits = (d < 0 ? x > std::numeric_limits<long>::min() : x < std::numeric_limits<long>::max());
+	return fits ? Value(x + d) : Value(double(x) + d);																	// Only step into double at the very edge of the long range.
 }
 
 TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bool dry, Precedence thres) {
@@ -896,14 +914,12 @@ TMPL void Script<CFG>::lib::thrower(const String& s) { throw Xception(s); }
 TMPL T_TYPE(Value) Script<CFG>::lib::time(const Frame&) { return double(::time(0)); }
 
 TMPL T_TYPE(String) Script<CFG>::lib::upper(String s) {
-	const std::locale& loc = std::locale::classic();
-	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::toupper(*it, loc);
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::toupper(*it, std::locale::classic());
 	return s;
 }
 
 TMPL T_TYPE(String) Script<CFG>::lib::lower(String s) {
-	const std::locale& loc = std::locale::classic();
-	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::tolower(*it, loc);
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::tolower(*it, std::locale::classic());
 	return s;
 }
 

@@ -160,18 +160,19 @@ static Script::String loadFile(std::basic_ifstream<Script::Char>& instream, cons
 std::string pikaCmdDir;
 
 static std::string executablePath(const char* argv0) {	/// full path of the running executable, falls back to `argv0`
-	char buffer[4096];
 #if defined(_WIN32)
+	char buffer[4096];
 	DWORD n = GetModuleFileNameA(0, buffer, sizeof (buffer));
 	if (n > 0 && n < sizeof (buffer)) return std::string(buffer, n);
 #elif defined(__APPLE__)
+	char buffer[4096];
 	uint32_t size = sizeof (buffer);
 	if (_NSGetExecutablePath(buffer, &size) == 0) return std::string(buffer);
 #elif defined(__linux__)
+	char buffer[4096];
 	ssize_t n = readlink("/proc/self/exe", buffer, sizeof (buffer));
 	if (n > 0 && n < ssize_t(sizeof (buffer))) return std::string(buffer, n);
 #endif
-	(void)buffer;
 	return argv0;
 }
 

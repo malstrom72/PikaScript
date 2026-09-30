@@ -81,7 +81,7 @@ typedef unsigned long ulong;
 
 template<class S> std::string toStdString(const S& s);																	///< Converts the string \p s to a standard C++ string. \details The default implementation is std::string(s.begin(), s.end()). You should specialize this template if necessary.
 template<class S> ulong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);					///< Converts a string in hexadecimal form to an ulong integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e, bool* overflow = 0);	///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S, typename T> S intToString(T i, int radix = 10, int minLength = 1);									///< Converts the integer \p i to a string with a radix and minimum length of your choice. \details \p radix can be anything between 1 (binary) and 16 (hexadecimal).
 template<class S> double stringToDouble(typename S::const_iterator& p, const typename S::const_iterator& e);			///< Converts a string in scientific e notation (e.g. -12.34e-3) to a double floating point value. \details Spaces before 'e' are not accepted. Uppercase 'E' is allowed. Positive and negative 'infinity' is supported (provided the compiler allows it).\p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S> bool stringToDouble(const S& s, double& d);															///< A convenient utility routine that tries to convert the entire string \p s (in scientific e notation) to a double, returning true on success or false if the string is not in valid syntax.
@@ -220,9 +220,9 @@ template<class S> class STLValue : public S {
 	public:		operator long() const;																					///< Converts the value to a signed long integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator double() const;																				///< Converts the value to a double precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
 	public:		operator float() const { return float(double(*this)); }													///< Converts the value to a single precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
-	public:		operator ulong() const;													///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator int() const { return int(long(*this)); }														///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator uint() const { return uint(ulong(*this)); }														///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator ulong() const;																					///< Converts the value to an ulong integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator int() const;																					///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
+	public:		operator uint() const { return uint(ulong(*this)); }													///< Converts the value to an unsigned integer. \details If the value isn't in valid integer format an exception is thrown.
 	//@}
 	/// \name Overloaded operators (comparisons and subscript).
 	//@{
@@ -399,6 +399,7 @@ template<class Config> struct Script {
 		protected:	bool termExpr(StringIt& p, const StringIt& e, XValue& v, bool emptyOk, bool dry, Precedence thres
 							, Char term);
 		protected:	static long intDiv(long x, long y);
+		protected:	static Value incDec(long x, long d);
 
 		protected:	Variables& vars;
 		protected:	Root& root;
@@ -697,8 +698,8 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline ulong shiftRight(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l >> r; }			// Out of range shift counts are undefined behavior in C++.
-inline ulong shiftLeft(ulong l, int r) { return (r < 0 || r >= int(sizeof (ulong) * 8)) ? 0 : l << r; }
+inline ulong shiftRight(ulong l, int r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l >> r; }						// Out of range (and negative) shift counts are undefined behavior in C++.
+inline ulong shiftLeft(ulong l, int r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l << r; }
 inline ulong bitAnd(ulong l, ulong r) { return l & r; }
 inline ulong bitOr(ulong l, ulong r) { return l | r; }
 inline ulong bitXor(ulong l, ulong r) { return l ^ r; }
@@ -722,13 +723,19 @@ template<class S> ulong hexToLong(typename S::const_iterator& p, const typename 
 	return l;
 }
 
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e
+		, bool* overflow) {
 	assert(p <= e);
 	bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	const ulong limit = ulong(std::numeric_limits<long>::max()) + (negative ? 1 : 0);
+	const ulong limit = ulong(std::numeric_limits<long>::max()) + negative;
 	ulong l = 0;
-	for (; p < e && *p >= '0' && *p <= '9' && l <= (limit - (*p - '0')) / 10; ++p) l = l * 10 + (*p - '0');		// Stops before overflowing, leaving p on the first digit that did not fit.
-	return negative ? (l == 0 ? 0 : -long(l - 1) - 1) : long(l);
+	bool saturated = false;
+	for (; p < e && *p >= '0' && *p <= '9'; ++p) {
+		const ulong d = *p - '0';
+		if (l > (limit - d) / 10) { l = limit; saturated = true; } else l = l * 10 + d;
+	}
+	if (overflow != 0) *overflow = saturated;
+	return long(negative ? 0 - l : l);
 }
 
 template<class S, class T> S intToString(T i, int radix, int minLength) {
@@ -758,8 +765,7 @@ template<class S> double stringToDouble(typename S::const_iterator& p, const typ
 		}
 		if (e - p > 1 && (*p == 'E' || *p == 'e')) {
 			typename S::const_iterator b = p;
-			d *= pow(10, double(stringToLong<S>(++p, e)));
-			while (p < e && *p >= '0' && *p <= '9') ++p;																// Skip digits of exponents too large for a long (the partial exponent already yields infinity or 0).
+			d *= pow(10, double(stringToLong<S>(++p, e)));																// (Saturates on overflow, which still yields infinity or 0.)
 			if (p == b + 1) p = b;
 		}
 	}
@@ -776,7 +782,7 @@ template<class S> S doubleToString(double d, int precision) {
 	assert(1 <= precision && precision <= 24);
 	const double EPSILON = 1.0e-300, SMALL = 1.0e-5, LARGE = 1.0e+10;
 	double x = fabs(d), y = x;
-	if (d != d) return S(STR("nan"));																					// NaN fails every other test below and would be formatted as garbage.
+	if (d != d) return S(STR("nan"));																					// NaN fails all tests below.
 	if (y <= EPSILON) return S(STR("0"));
 	else if (precision >= 12 && y < LARGE && long(d) == d) return intToString<S, long>(long(d));
 	else if (std::numeric_limits<double>::has_infinity && x == std::numeric_limits<double>::infinity())
@@ -877,9 +883,17 @@ template<class S> STLValue<S>::operator bool() const {
 
 template<class S> STLValue<S>::operator long() const {
 	typename S::const_iterator p = S::begin();
-	long y = stringToLong<S>(p, S::end());
-	if (p == S::begin() || p < S::end()) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
+	bool overflow;
+	long y = stringToLong<S>(p, S::end(), &overflow);
+	if (p == S::begin() || p < S::end() || overflow) throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
 	return y;
+}
+
+template<class S> STLValue<S>::operator int() const {
+	long y = long(*this);
+	if (y < std::numeric_limits<int>::min() || y > std::numeric_limits<int>::max())
+		throw Exception<S>(S(STR("Invalid integer: ")) += escape(S(*this)));
+	return int(y);
 }
 
 template<class S> STLValue<S>::operator ulong() const {
@@ -1068,7 +1082,7 @@ TMPL template<class F> bool Script<CFG>::Frame::addSubOp(StringIt& p, const Stri
 	else if (thres >= POSTFIX) return false;
 	else if (!dry) {
 		Value r = rvalue(v, false);																						// <-- post inc/dec
-		set(lvalue(v), f(long(r), 1));
+		set(lvalue(v), incDec(long(r), *p == '-' ? -1 : 1));
 		v = XValue(false, r);
 	}
 	p += 2;
@@ -1118,7 +1132,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					else if (++p >= e) return false;
 					else if (*p == *b) {
 						expr(++p, e, v, false, dry, PREFIX);															// <-- pre inc/dec
-						if (!dry) v = XValue(false, set(lvalue(v), double(long(rvalue(v, false))) + (*b == '-' ? -1 : 1)));	// Add in double (like post inc/dec) so we can't overflow.
+						if (!dry) v = XValue(false, set(lvalue(v), incDec(long(rvalue(v, false)), *b == '-' ? -1 : 1)));
 						return true;
 					} else if (*p < '0' || *p > '9') {
 						expr(p, e, v, false, dry, PREFIX);																// <-- positive / negative
@@ -1196,6 +1210,11 @@ TMPL long Script<CFG>::Frame::intDiv(long x, long y) {
 		throw Xception(STR("Integer overflow"));
 	}
 	return x / y;
+}
+
+TMPL T_TYPE(Value) Script<CFG>::Frame::incDec(long x, long d) {
+	const bool fits = (d < 0 ? x > std::numeric_limits<long>::min() : x < std::numeric_limits<long>::max());
+	return fits ? Value(x + d) : Value(double(x) + d);																	// Only step into double at the very edge of the long range.
 }
 
 TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bool dry, Precedence thres) {
@@ -1510,14 +1529,12 @@ TMPL void Script<CFG>::lib::thrower(const String& s) { throw Xception(s); }
 TMPL T_TYPE(Value) Script<CFG>::lib::time(const Frame&) { return double(::time(0)); }
 
 TMPL T_TYPE(String) Script<CFG>::lib::upper(String s) {
-	const std::locale& loc = std::locale::classic();
-	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::toupper(*it, loc);
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::toupper(*it, std::locale::classic());
 	return s;
 }
 
 TMPL T_TYPE(String) Script<CFG>::lib::lower(String s) {
-	const std::locale& loc = std::locale::classic();
-	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::tolower(*it, loc);
+	for (typename String::iterator it = s.begin(), e = s.end(); it != e; ++it) *it = std::tolower(*it, std::locale::classic());
 	return s;
 }
 
@@ -3437,18 +3454,19 @@ static Script::String loadFile(std::basic_ifstream<Script::Char>& instream, cons
 std::string pikaCmdDir;
 
 static std::string executablePath(const char* argv0) {	/// full path of the running executable, falls back to `argv0`
-	char buffer[4096];
 #if defined(_WIN32)
+	char buffer[4096];
 	DWORD n = GetModuleFileNameA(0, buffer, sizeof (buffer));
 	if (n > 0 && n < sizeof (buffer)) return std::string(buffer, n);
 #elif defined(__APPLE__)
+	char buffer[4096];
 	uint32_t size = sizeof (buffer);
 	if (_NSGetExecutablePath(buffer, &size) == 0) return std::string(buffer);
 #elif defined(__linux__)
+	char buffer[4096];
 	ssize_t n = readlink("/proc/self/exe", buffer, sizeof (buffer));
 	if (n > 0 && n < ssize_t(sizeof (buffer))) return std::string(buffer, n);
 #endif
-	(void)buffer;
 	return argv0;
 }
 
