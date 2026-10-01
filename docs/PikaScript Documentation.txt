@@ -110,13 +110,14 @@ result in `nan` ("not a number"), which is not accepted as a number by any other
 
  The integer world consists of the operations that only work on integers:
 
- -  Increment and decrement: `++x`, `--x`, `x++` and `x--` (signed).
+ -  Increment and decrement: `++x`, `--x`, `x++` and `x--`.
    
- -  Integer division: `x \ y` (signed, rounds towards zero).
+ -  Integer division: `x \ y` (rounds towards zero).
    
- -  The bitwise operators: `~x`, `x & y`, `x | y`, `x ^ y`, `x << y` and `x >> y` (unsigned).
+ -  The bitwise operators: `~x`, `x & y`, `x | y`, `x ^ y`, `x << y` and `x >> y`.
    
- -  Hexadecimal literals, e.g. `0xFF` and `-0x10`.
+ -  Hexadecimal literals, e.g. `0xFF` and `-0x10`. (The sign is part of the literal. Negating a value, as in
+   `-(0x10)` or `-x`, is a floating point operation.)
 
  These operations use the C++ `long` integer type of the platform (or its unsigned counterpart for the bitwise
 operators). Notice that `long` is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of
@@ -124,16 +125,21 @@ integers depends on the platform.
 
  Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit
 integers `x = 2147483647; ++x` gives `-2147483648`, `-0xFFFFFFFF` gives `1` and `~0` gives `4294967295`. Negative values
-are treated as two's complement by the bitwise operators (e.g. `-1 & 0xFF` is `255`). Shifting by a negative count, or
-by as many bits as the integer has or more, gives `0`. Integer division by zero throws `'Division by zero'` and dividing
-the most negative integer by `-1` throws `'Integer overflow'`.
+are treated as two's complement by the bitwise operators (e.g. `-1 & 0xFF` is `255`). The shift count is a signed
+integer, and shifting by a negative count, or by as many bits as the integer has or more, gives `0`. Integer division by
+zero throws `'Division by zero'` and dividing the most negative integer by `-1` throws `'Integer overflow'`.
 
  A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent),
 otherwise `'Invalid integer'` is thrown. E.g. `1.5 \ 1` throws, and since large decimal numbers are written in
 exponential notation, so does `10000000000 \ 1`. An integer that is too large for the range is cut down to its lowest
 bits by the bitwise operators (e.g. `(4294967296 + 5) & 0xFF` is `5`), but it throws `'Invalid integer'` for `++`, `--`
-and `\`. The same applies wherever an integer is expected, such as substring offsets and the integer arguments of
-library functions.
+and `\`. Integers expected elsewhere, such as substring offsets and the integer arguments of `radix()` and
+`precision()`, follow the same rule as `++`, `--` and `\` (except the value converted by `radix()`, which follows the
+rule of the bitwise operators).
+
+ Notice that `==`, `<` and the other comparisons compare numbers as floating point values. Integers that are too large
+to be represented exactly in double precision (beyond 2^53) may therefore compare as equal even when they differ. Use
+`===` to compare such integers exactly.
 
 Operators
 =========
@@ -184,7 +190,7 @@ x | y                       11      Bitwise or (only works on integers, see Numb
 x && y                      10       Logical and. `y` is only evaluated if `x` is `true`.
 x || y                      9       Logical or. `y` is only evaluated if `x` is `false`.
 x = y                       8       Assignment (right to left associative, e.g. `a = b = 3` is ok.)
-*= /= %=
+*= /= \= %=
 += -=
 <<= >>= #=
 &= ^= |=                    8       Assignment by operation, e.g. `a += 3` adds 3 to `a`.

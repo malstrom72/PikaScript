@@ -149,23 +149,25 @@
 <p>The integer world consists of the operations that only work on integers:</p>
 
 <ul>
-<li>Increment and decrement: <tt>++x</tt>, <tt>--x</tt>, <tt>x++</tt> and <tt>x--</tt> (signed).</li>
+<li>Increment and decrement: <tt>++x</tt>, <tt>--x</tt>, <tt>x++</tt> and <tt>x--</tt>.</li>
 </ul>
 
 <ul>
-<li>Integer division: <tt>x \ y</tt> (signed, rounds towards zero).</li>
+<li>Integer division: <tt>x \ y</tt> (rounds towards zero).</li>
 </ul>
 
 <ul>
-<li>The bitwise operators: <tt>~x</tt>, <tt>x &amp; y</tt>, <tt>x | y</tt>, <tt>x ^ y</tt>, <tt>x &lt;&lt; y</tt> and <tt>x &gt;&gt; y</tt> (unsigned).</li>
+<li>The bitwise operators: <tt>~x</tt>, <tt>x &amp; y</tt>, <tt>x | y</tt>, <tt>x ^ y</tt>, <tt>x &lt;&lt; y</tt> and <tt>x &gt;&gt; y</tt>.</li>
 </ul>
 
 <ul>
-<li>Hexadecimal literals, e.g. <tt>0xFF</tt> and <tt>-0x10</tt>.</li>
+<li>Hexadecimal literals, e.g. <tt>0xFF</tt> and <tt>-0x10</tt>. (The sign is part of the literal. Negating a value, as in <tt>-(0x10)</tt> or <tt>-x</tt>, is a floating point operation.)
+</li>
 </ul>
 <p>These operations use the C++ <tt>long</tt> integer type of the platform (or its unsigned counterpart for the bitwise operators). Notice that <tt>long</tt> is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of integers depends on the platform.</p>
-<p>Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit integers <tt>x = 2147483647; ++x</tt> gives <tt>-2147483648</tt>, <tt>-0xFFFFFFFF</tt> gives <tt>1</tt> and <tt>~0</tt> gives <tt>4294967295</tt>. Negative values are treated as two's complement by the bitwise operators (e.g. <tt>-1 &amp; 0xFF</tt> is <tt>255</tt>). Shifting by a negative count, or by as many bits as the integer has or more, gives <tt>0</tt>. Integer division by zero throws <tt>'Division by zero'</tt> and dividing the most negative integer by <tt>-1</tt> throws <tt>'Integer overflow'</tt>.</p>
-<p>A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent), otherwise <tt>'Invalid integer'</tt> is thrown. E.g. <tt>1.5 \ 1</tt> throws, and since large decimal numbers are written in exponential notation, so does <tt>10000000000 \ 1</tt>. An integer that is too large for the range is cut down to its lowest bits by the bitwise operators (e.g. <tt>(4294967296 + 5) &amp; 0xFF</tt> is <tt>5</tt>), but it throws <tt>'Invalid integer'</tt> for <tt>++</tt>, <tt>--</tt> and <tt>\</tt>. The same applies wherever an integer is expected, such as substring offsets and the integer arguments of library functions.</p>
+<p>Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit integers <tt>x = 2147483647; ++x</tt> gives <tt>-2147483648</tt>, <tt>-0xFFFFFFFF</tt> gives <tt>1</tt> and <tt>~0</tt> gives <tt>4294967295</tt>. Negative values are treated as two's complement by the bitwise operators (e.g. <tt>-1 &amp; 0xFF</tt> is <tt>255</tt>). The shift count is a signed integer, and shifting by a negative count, or by as many bits as the integer has or more, gives <tt>0</tt>. Integer division by zero throws <tt>'Division by zero'</tt> and dividing the most negative integer by <tt>-1</tt> throws <tt>'Integer overflow'</tt>.</p>
+<p>A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent), otherwise <tt>'Invalid integer'</tt> is thrown. E.g. <tt>1.5 \ 1</tt> throws, and since large decimal numbers are written in exponential notation, so does <tt>10000000000 \ 1</tt>. An integer that is too large for the range is cut down to its lowest bits by the bitwise operators (e.g. <tt>(4294967296 + 5) &amp; 0xFF</tt> is <tt>5</tt>), but it throws <tt>'Invalid integer'</tt> for <tt>++</tt>, <tt>--</tt> and <tt>\</tt>. Integers expected elsewhere, such as substring offsets and the integer arguments of <tt>radix()</tt> and <tt>precision()</tt>, follow the same rule as <tt>++</tt>, <tt>--</tt> and <tt>\</tt> (except the value converted by <tt>radix()</tt>, which follows the rule of the bitwise operators).</p>
+<p>Notice that <tt>==</tt>, <tt>&lt;</tt> and the other comparisons compare numbers as floating point values. Integers that are too large to be represented exactly in double precision (beyond 2<sup>53</sup>) may therefore compare as equal even when they differ. Use <tt>===</tt> to compare such integers exactly.</p>
 <h2><a name="Operators">Operators</a></h2>
 <p>Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements (such as <tt>if</tt> and <tt>for</tt>) are actually operators rather than statements. See <a href="#Expressions">Expressions</a> for more on this.</p>
 <p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Levels 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
@@ -285,7 +287,7 @@
 <td>x = y</td><td>8</td><td colspan=2>Assignment (right to left associative, e.g. <tt>a = b = 3</tt> is ok.)</td>
 </tr>
 <tr>
-<td>*= /= %=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+<td>*= /= \= %=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
 <td>+= -=</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
