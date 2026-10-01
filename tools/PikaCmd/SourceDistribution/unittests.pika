@@ -612,8 +612,9 @@ assert(> right(radix(-1, 16), 8) === 'ffffffff');							// Negative values are s
 assert(> ((4294967296 + 5) & 0xFF) == 5);									// Bitwise operators still keep the low bits of values that are too large.
 assert(> 1e99999999999 == +infinity && 1e-99999999999 == 0);				// Huge exponents still parse.
 assert(> try(>1 << 4294967297) !== void);									// Shift counts must fit in an int (used to be truncated to 1 on 64-bit).
-assert(>{ x = 2147483647; ++x; x == 2147483648 });							// Bug: pre-increment overflowed.
-assert(>{ x = -2147483648; x--; x == -2147483649 });						// - " -
+maxLong = (if (longIs32) '2147483647' else '9223372036854775807');
+assert(>{ x = maxLong; ++x; x === minLong });								// ++ / -- are pure long operations that wrap around (used to be undefined behavior).
+assert(>{ x = minLong; x--; x === maxLong });								// - " -
 assert(> longIs32 || { x = 9999999999; ++x; x++; x === '10000000001' });	// Stays an integer (not 1.0000000001e+10) when long is 64 bits.
 assert(> -0x10 == -16 && +0xff == 255);										// Bug: negative hex literals became huge unsigned values.
 assert(> 0 / 0 === 'nan' && 0 / 0 != 0);									// Bug: NaN was formatted as '0'.

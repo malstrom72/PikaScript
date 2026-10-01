@@ -399,7 +399,7 @@ template<class Config> struct Script {
 		protected:	bool termExpr(StringIt& p, const StringIt& e, XValue& v, bool emptyOk, bool dry, Precedence thres
 							, Char term);
 		protected:	static long intDiv(long x, long y);
-		protected:	static Value incDec(long x, long d);
+		protected:	static long incDec(long x, long d);
 
 		protected:	Variables& vars;
 		protected:	Root& root;

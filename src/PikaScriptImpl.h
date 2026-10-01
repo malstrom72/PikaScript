@@ -597,9 +597,8 @@ TMPL long Script<CFG>::Frame::intDiv(long x, long y) {
 	return x / y;
 }
 
-TMPL T_TYPE(Value) Script<CFG>::Frame::incDec(long x, long d) {
-	const bool fits = (d < 0 ? x > std::numeric_limits<long>::min() : x < std::numeric_limits<long>::max());
-	return fits ? Value(x + d) : Value(double(x) + d);																	// Only step into double at the very edge of the long range.
+TMPL long Script<CFG>::Frame::incDec(long x, long d) {
+	return long(ulong(x) + ulong(d));																					// Wraps around at the ends of the long range (in unsigned arithmetic, which is well defined).
 }
 
 TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bool dry, Precedence thres) {
