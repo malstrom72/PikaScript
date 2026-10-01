@@ -528,7 +528,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 		case '0':	if (e - p > 1 && p[1] == 'x') {
 						ulong l = hexToLong<String>(p += 2, e);															// <-- hexadecimal literal
 						if (p == b + 2) throw Xception(STR("Invalid hexadecimal number"));
-						if (!dry) v = XValue(false, *b == '-' ? Value(-double(l)) : Value(l));
+						if (!dry) v = XValue(false, *b == '-' ? Value(long(0 - l)) : Value(l));						// Hex literals are integers and wrap like the bitwise operators.
 						return true;
 					} /* else continue */
 

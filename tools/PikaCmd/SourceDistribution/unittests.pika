@@ -616,7 +616,8 @@ maxLong = (if (longIs32) '2147483647' else '9223372036854775807');
 assert(>{ x = maxLong; ++x; x === minLong });								// ++ / -- are pure long operations that wrap around (used to be undefined behavior).
 assert(>{ x = minLong; x--; x === maxLong });								// - " -
 assert(> longIs32 || { x = 9999999999; ++x; x++; x === '10000000001' });	// Stays an integer (not 1.0000000001e+10) when long is 64 bits.
-assert(> -0x10 == -16 && +0xff == 255);										// Bug: negative hex literals became huge unsigned values.
+assert(> -0x10 === '-16' && +0xff === '255');								// Bug: negative hex literals became huge unsigned values.
+assert(> -0xFFFFFFFF === (if (longIs32) '1' else '-4294967295'));			// Hex literals are integers and wrap like the bitwise operators.
 assert(> 0 / 0 === 'nan' && 0 / 0 != 0);									// Bug: NaN was formatted as '0'.
 assert(> 1 << 64 == 0 && 1 << -1 == 0);										// Bug: out of range shift counts were undefined behavior.
 assert(> 256 >> 64 == 0 && 256 >> -1 == 0);									// - " -
