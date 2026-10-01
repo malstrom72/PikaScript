@@ -84,7 +84,7 @@
 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>number</td><td><tt>23</tt></td><td><tt>23</tt></td><td>Numerical value. Numbers must begin with a digit (or <tt>+</tt> or <tt>-</tt>) and end with a digit. (Except for <tt>infinity</tt> of course.)</td>
+<td>number</td><td><tt>23</tt></td><td><tt>23</tt></td><td>Numerical value. <a href="#Numbers">Numbers</a> must begin with a digit (or <tt>+</tt> or <tt>-</tt>) and end with a digit. (Except for <tt>infinity</tt> of course.)</td>
 </tr>
 <tr>
 <td>&nbsp;</td><td><tt>-0x94</tt></td><td><tt>-148</tt></td><td>E.g, ".3" and "3." are not considered valid numbers.</td>
@@ -143,9 +143,32 @@
 </table>
 <p>PikaScript is pretty strict with the kind of values it allows for many operations. For example, <tt>true</tt> and <tt>false</tt> are the only legal values for logical expressions (such as <tt>if</tt> and <tt>for</tt>). <a href="#Functions">Functions</a> and <i>lambda expressions</i> are the only legal targets for function calls and numbers are the only acceptable values for arithmetic operations.</p>
 <p>In PikaScript you simply declare variables by assigning them values (in fact, this is the only way to create new variables). Unless a variable is global (prefixed with <tt>::</tt>), it will be destroyed when the function wherein it is declared returns. Read more about variable scopes under <a href="#Functions">Functions</a>.</p>
+<h2><a name="Numbers">Numbers</a></h2>
+<p>There is only one kind of number value in PikaScript, but there are two different sets of rules for calculating with it. You can think of it as two worlds: the <i>floating point world</i> and the <i>integer world</i>. (JavaScript works in a similar way.)</p>
+<p>The floating point world is the default. Decimal literals (e.g. <tt>12</tt>, <tt>3.5</tt>, <tt>1e-8</tt> and <tt>infinity</tt>), the arithmetic operators <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>/</tt> and <tt>%</tt>, the numerical comparisons and the math functions all work with double precision floating point numbers. Results are written with up to 14 significant digits and integers of ten billion or more are written in exponential notation (e.g. <tt>10000000000</tt> becomes <tt>1e+10</tt>). Invalid operations such as <tt>0 / 0</tt> or <tt>sqrt(-1)</tt> result in <tt>nan</tt> ("not a number"), which is not accepted as a number by any other operation.</p>
+<p>The integer world consists of the operations that only work on integers:</p>
+
+<ul>
+<li>Increment and decrement: <tt>++x</tt>, <tt>--x</tt>, <tt>x++</tt> and <tt>x--</tt> (signed).</li>
+</ul>
+
+<ul>
+<li>Integer division: <tt>x \ y</tt> (signed, rounds towards zero).</li>
+</ul>
+
+<ul>
+<li>The bitwise operators: <tt>~x</tt>, <tt>x &amp; y</tt>, <tt>x | y</tt>, <tt>x ^ y</tt>, <tt>x &lt;&lt; y</tt> and <tt>x &gt;&gt; y</tt> (unsigned).</li>
+</ul>
+
+<ul>
+<li>Hexadecimal literals, e.g. <tt>0xFF</tt> and <tt>-0x10</tt>.</li>
+</ul>
+<p>These operations use the C++ <tt>long</tt> integer type of the platform (or its unsigned counterpart for the bitwise operators). Notice that <tt>long</tt> is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of integers depends on the platform.</p>
+<p>Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit integers <tt>x = 2147483647; ++x</tt> gives <tt>-2147483648</tt>, <tt>-0xFFFFFFFF</tt> gives <tt>1</tt> and <tt>~0</tt> gives <tt>4294967295</tt>. Negative values are treated as two's complement by the bitwise operators (e.g. <tt>-1 &amp; 0xFF</tt> is <tt>255</tt>). Shifting by a negative count, or by as many bits as the integer has or more, gives <tt>0</tt>. Integer division by zero throws <tt>'Division by zero'</tt> and dividing the most negative integer by <tt>-1</tt> throws <tt>'Integer overflow'</tt>.</p>
+<p>A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent), otherwise <tt>'Invalid integer'</tt> is thrown. E.g. <tt>1.5 \ 1</tt> throws, and since large decimal numbers are written in exponential notation, so does <tt>10000000000 \ 1</tt>. An integer that is too large for the range is cut down to its lowest bits by the bitwise operators (e.g. <tt>(4294967296 + 5) &amp; 0xFF</tt> is <tt>5</tt>), but it throws <tt>'Invalid integer'</tt> for <tt>++</tt>, <tt>--</tt> and <tt>\</tt>. The same applies wherever an integer is expected, such as substring offsets and the integer arguments of library functions.</p>
 <h2><a name="Operators">Operators</a></h2>
 <p>Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements (such as <tt>if</tt> and <tt>for</tt>) are actually operators rather than statements. See <a href="#Expressions">Expressions</a> for more on this.</p>
-<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Numbers 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
+<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Levels 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
 <table>
 <tr>
 <th>Operator</th><th>Prec.</th><th colspan=2>Comment</th>
@@ -166,10 +189,10 @@
 <td>x{[o]:[l]}</td><td>21</td><td colspan=2>Substring operator. Returns a sub-string of <tt>l</tt> characters from <tt>x</tt> starting at offset <tt>o</tt> .<a href="#fn0001"><sup>*</sup></a></td>
 </tr>
 <tr>
-<td>x++</td><td>21</td><td colspan=2>Postfix increment. Value is that of <tt>x</tt> before the increment. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
+<td>x++</td><td>21</td><td colspan=2>Postfix increment. Value is that of <tt>x</tt> before the increment. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> Wraps around (see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
-<td>x--</td><td>21</td><td colspan=2>Postfix decrement. Value is that of <tt>x</tt> before the decrement. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a></td>
+<td>x--</td><td>21</td><td colspan=2>Postfix decrement. Value is that of <tt>x</tt> before the decrement. <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> Wraps around (see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
 <td>@x</td><td>20</td><td colspan=2>Reference operator. See <a href="#References">References</a> for more info.</td>
@@ -178,7 +201,7 @@
 <td>!x</td><td>20</td><td colspan=2>Logical not (<tt>false</tt> -&gt; <tt>true</tt> and vice versa). (<tt>!!x</tt> can be used to assert that <tt>x</tt> is a boolean.)</td>
 </tr>
 <tr>
-<td>~x</td><td>20</td><td colspan=2>Bitwise not (only works on integers) (<tt>~~x</tt> can be used to assert that <tt>x</tt> is an integer value.)</td>
+<td>~x</td><td>20</td><td colspan=2>Bitwise not (only works on integers, see <a href="#Numbers">Numbers</a>) (<tt>~~x</tt> can be used to assert that <tt>x</tt> is an integer value.)</td>
 </tr>
 <tr>
 <td>+x</td><td>20</td><td colspan=2>Prefix plus, verifies that <tt>x</tt> is a number and "normalizes" it. (<tt>+x</tt> can be used to assert that <tt>x</tt> is a number.)</td>
@@ -187,16 +210,19 @@
 <td>-x</td><td>20</td><td colspan=2>Negate, only works on numbers.</td>
 </tr>
 <tr>
-<td>++x</td><td>20</td><td colspan=2>Prefix increment, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use += for floating point numbers.)</td>
+<td>++x</td><td>20</td><td colspan=2>Prefix increment, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> Wraps around (see <a href="#Numbers">Numbers</a>). (Use += for floating point numbers.)</td>
 </tr>
 <tr>
-<td>--x</td><td>20</td><td colspan=2>Prefix decrement, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> (Use -= for floating point numbers.)</td>
+<td>--x</td><td>20</td><td colspan=2>Prefix decrement, <tt>x</tt> must be an integer <i>lvalue</i> .<a href="#fn0002"><sup>**</sup></a> Wraps around (see <a href="#Numbers">Numbers</a>). (Use -= for floating point numbers.)</td>
 </tr>
 <tr>
 <td>x * y</td><td>19</td><td colspan=2>Multiplication (only works on numbers).</td>
 </tr>
 <tr>
 <td>x / y</td><td>19</td><td colspan=2>Division (only works on numbers).</td>
+</tr>
+<tr>
+<td>x \ y</td><td>19</td><td colspan=2>Integer division, rounds towards zero (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
 <td>x % y</td><td>19</td><td colspan=2>Modulo (only works on numbers). (Result is platform dependent if <tt>x</tt> is negative.)</td>
@@ -208,25 +234,25 @@
 <td>x - y</td><td>18</td><td colspan=2>Subtraction (only works on numbers).</td>
 </tr>
 <tr>
-<td>x &lt;&lt; y</td><td>17</td><td colspan=2>Bit-shift left (only works on positive integers).</td>
+<td>x &lt;&lt; y</td><td>17</td><td colspan=2>Bit-shift left (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
-<td>x &gt;&gt; y</td><td>17</td><td colspan=2>Bit-shift right (only works on positive integers).</td>
+<td>x &gt;&gt; y</td><td>17</td><td colspan=2>Bit-shift right (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
 <td>x # y</td><td>16</td><td colspan=2>String concatenation.</td>
 </tr>
 <tr>
-<td>x &lt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &lt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less than <tt>y</tt>. <a href="#Numbers">Numbers</a> are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &lt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &lt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is less or equal to <tt>y</tt>. <a href="#Numbers">Numbers</a> are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &gt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater or equal to <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &gt;= y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater or equal to <tt>y</tt>. <a href="#Numbers">Numbers</a> are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
-<td>x &gt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater than <tt>y</tt>. Numbers are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
+<td>x &gt; y</td><td>15</td><td colspan=2><tt>true</tt> if <tt>x</tt> is greater than <tt>y</tt>. <a href="#Numbers">Numbers</a> are considered lesser than all non-numerical strings (incl <tt>''</tt> / <tt>void</tt>).</td>
 </tr>
 <tr>
 <td>x === y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is literally equal to <tt>y</tt> (character by character).</td>
@@ -241,13 +267,13 @@
 <td>x != y</td><td>14</td><td colspan=2><tt>true</tt> if <tt>x</tt> is not equal to <tt>y</tt>, numerically (if both <tt>x</tt> and <tt>y</tt> are valid numbers) or literally.</td>
 </tr>
 <tr>
-<td>x &amp; y</td><td>13</td><td colspan=2>Bitwise and (only works on positive integers).</td>
+<td>x &amp; y</td><td>13</td><td colspan=2>Bitwise and (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
-<td>x ^ y</td><td>12</td><td colspan=2>Bitwise xor (only works on positive integers).</td>
+<td>x ^ y</td><td>12</td><td colspan=2>Bitwise xor (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
-<td>x | y</td><td>11</td><td colspan=2>Bitwise or (only works on positive integers).</td>
+<td>x | y</td><td>11</td><td colspan=2>Bitwise or (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
 <td>x &amp;&amp; y</td><td>10</td><td>&nbsp;</td><td>Logical and. <tt>y</tt> is only evaluated if <tt>x</tt> is <tt>true</tt>.</td>

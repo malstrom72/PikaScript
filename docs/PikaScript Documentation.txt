@@ -95,13 +95,53 @@ legal targets for function calls and numbers are the only acceptable values for 
 variables). Unless a variable is global (prefixed with `::`), it will be destroyed when the function wherein it is
 declared returns. Read more about variable scopes under Functions.
 
+Numbers
+=======
+
+ There is only one kind of number value in PikaScript, but there are two different sets of rules for calculating with
+it. You can think of it as two worlds: the /floating point world/ and the /integer world/. (JavaScript works in a
+similar way.)
+
+ The floating point world is the default. Decimal literals (e.g. `12`, `3.5`, `1e-8` and `infinity`), the arithmetic
+operators `+`, `-`, `*`, `/` and `%`, the numerical comparisons and the math functions all work with double precision
+floating point numbers. Results are written with up to 14 significant digits and integers of ten billion or more are
+written in exponential notation (e.g. `10000000000` becomes `1e+10`). Invalid operations such as `0 / 0` or `sqrt(-1)`
+result in `nan` ("not a number"), which is not accepted as a number by any other operation.
+
+ The integer world consists of the operations that only work on integers:
+
+ -  Increment and decrement: `++x`, `--x`, `x++` and `x--` (signed).
+   
+ -  Integer division: `x \ y` (signed, rounds towards zero).
+   
+ -  The bitwise operators: `~x`, `x & y`, `x | y`, `x ^ y`, `x << y` and `x >> y` (unsigned).
+   
+ -  Hexadecimal literals, e.g. `0xFF` and `-0x10`.
+
+ These operations use the C++ `long` integer type of the platform (or its unsigned counterpart for the bitwise
+operators). Notice that `long` is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of
+integers depends on the platform.
+
+ Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit
+integers `x = 2147483647; ++x` gives `-2147483648`, `-0xFFFFFFFF` gives `1` and `~0` gives `4294967295`. Negative values
+are treated as two's complement by the bitwise operators (e.g. `-1 & 0xFF` is `255`). Shifting by a negative count, or
+by as many bits as the integer has or more, gives `0`. Integer division by zero throws `'Division by zero'` and dividing
+the most negative integer by `-1` throws `'Integer overflow'`.
+
+ A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent),
+otherwise `'Invalid integer'` is thrown. E.g. `1.5 \ 1` throws, and since large decimal numbers are written in
+exponential notation, so does `10000000000 \ 1`. An integer that is too large for the range is cut down to its lowest
+bits by the bitwise operators (e.g. `(4294967296 + 5) & 0xFF` is `5`), but it throws `'Invalid integer'` for `++`, `--`
+and `\`. The same applies wherever an integer is expected, such as substring offsets and the integer arguments of
+library functions.
+
 Operators
 =========
 
  Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements
 (such as `if` and `for`) are actually operators rather than statements. See Expressions for more on this.
 
- The precedence values used in the table below match the `Precedence` enumeration in the header. Numbers 0–3 are
+ The precedence values used in the table below match the `Precedence` enumeration in the header. Levels 0–3 are
 artificial levels reserved for the tracing system and the `tick()` callback. They never appear in actual expressions.
 Real operators start at the `STATEMENT` level (4) and continue upward with higher values meaning higher precedence.
 
@@ -112,22 +152,23 @@ x([a][,b][,c]...)           21      Function call. (All arguments are optional a
 x.y                         21      Element operator (`y` must be a valid symbol literal).
 x[y]                        21      Subscript operator.
 x{[o]:[l]}                  21      Substring operator. Returns a sub-string of `l` characters from `x` starting at offset `o` .*
-x++                         21      Postfix increment. Value is that of `x` before the increment. `x` must be an integer /lvalue/ .**
-x--                         21      Postfix decrement. Value is that of `x` before the decrement. `x` must be an integer /lvalue/ .**
+x++                         21      Postfix increment. Value is that of `x` before the increment. `x` must be an integer /lvalue/ .** Wraps around (see Numbers).
+x--                         21      Postfix decrement. Value is that of `x` before the decrement. `x` must be an integer /lvalue/ .** Wraps around (see Numbers).
 @x                          20      Reference operator. See References for more info.
 !x                          20      Logical not (`false` -> `true` and vice versa). (`!!x` can be used to assert that `x` is a boolean.)
-~x                          20      Bitwise not (only works on integers) (`~~x` can be used to assert that `x` is an integer value.)
+~x                          20      Bitwise not (only works on integers, see Numbers) (`~~x` can be used to assert that `x` is an integer value.)
 +x                          20      Prefix plus, verifies that `x` is a number and "normalizes" it. (`+x` can be used to assert that `x` is a number.)
 -x                          20      Negate, only works on numbers.
-++x                         20      Prefix increment, `x` must be an integer /lvalue/ .** (Use += for floating point numbers.)
---x                         20      Prefix decrement, `x` must be an integer /lvalue/ .** (Use -= for floating point numbers.)
+++x                         20      Prefix increment, `x` must be an integer /lvalue/ .** Wraps around (see Numbers). (Use += for floating point numbers.)
+--x                         20      Prefix decrement, `x` must be an integer /lvalue/ .** Wraps around (see Numbers). (Use -= for floating point numbers.)
 x * y                       19      Multiplication (only works on numbers).
 x / y                       19      Division (only works on numbers).
+x \ y                       19      Integer division, rounds towards zero (only works on integers, see Numbers).
 x % y                       19      Modulo (only works on numbers). (Result is platform dependent if `x` is negative.)
 x + y                       18      Addition (only works on numbers).
 x - y                       18      Subtraction (only works on numbers).
-x << y                      17      Bit-shift left (only works on positive integers).
-x >> y                      17      Bit-shift right (only works on positive integers).
+x << y                      17      Bit-shift left (only works on integers, see Numbers).
+x >> y                      17      Bit-shift right (only works on integers, see Numbers).
 x # y                       16      String concatenation.
 x < y                       15      `true` if `x` is less than `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
 x <= y                      15      `true` if `x` is less or equal to `y`. Numbers are considered lesser than all non-numerical strings (incl `''` / `void`).
@@ -137,9 +178,9 @@ x === y                     14      `true` if `x` is literally equal to `y` (cha
 x == y                      14      `true` if `x` is equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
 x !== y                     14      `true` if `x` is not literally equal to `y` (character by character).
 x != y                      14      `true` if `x` is not equal to `y`, numerically (if both `x` and `y` are valid numbers) or literally.
-x & y                       13      Bitwise and (only works on positive integers).
-x ^ y                       12      Bitwise xor (only works on positive integers).
-x | y                       11      Bitwise or (only works on positive integers).
+x & y                       13      Bitwise and (only works on integers, see Numbers).
+x ^ y                       12      Bitwise xor (only works on integers, see Numbers).
+x | y                       11      Bitwise or (only works on integers, see Numbers).
 x && y                      10       Logical and. `y` is only evaluated if `x` is `true`.
 x || y                      9       Logical or. `y` is only evaluated if `x` is `false`.
 x = y                       8       Assignment (right to left associative, e.g. `a = b = 3` is ok.)
