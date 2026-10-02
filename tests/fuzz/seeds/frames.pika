@@ -1,0 +1,18 @@
+x = 1;
+outer = function {
+	y = 2;
+	inner = function { ^y = 3; [@^y] + ::x + $0 };
+	lambda = >y * $0;
+	r = @y;
+	[r] = inner(4) + lambda(5);
+	exists(@y) && exists(@::x) && !exists(@z)
+};
+outer();
+evaluate('w = 42', @::);
+evaluate('$q = 1; $q + 1', @$);
+delete(@::w);
+foreach(@::, >{ $0 # $1 });
+try(>throw('oops')) # try(>undefinedFunction()) # try(>{ ::x = ::x + 1 });
+trace(>void, 3); trace();
+invoke('max', , @args, 0, 2);
+elevate;

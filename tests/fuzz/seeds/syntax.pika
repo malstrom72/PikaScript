@@ -1,0 +1,15 @@
+/* block comment */ a = 1; // line comment
+b = { c = 2; d = c * 3; d - 1 };
+e = if (a < b) 'less' else if (a == b) 'equal' else 'more';
+i = for (j = 0; j < 5; ++j) k = j # ',' # k;
+f = function { args(@x, @y); x * y + $n };
+g = >$0 + $1;
+h = f(3, 4) + g(5, 6) + (>$0 * 2)(7);
+m.a.b[1]['two'] = 'deep';
+n = [@m.a.b][1] # m.a.b.two;
+o = !true || false && !(1 > 2) || 1 <= 2 && 2 >= 1 && 1 != 2;
+p = 1 + 2 * 3 - 4 / 5 % 6 # 7;
+q = ((((1))));
+r = { };
+s = void;
+t = <print>;
