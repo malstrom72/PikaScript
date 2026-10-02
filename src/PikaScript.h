@@ -72,13 +72,11 @@ typedef long long llong;
 typedef unsigned long long ullong;
 
 /**
-	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators and
-	hexadecimal literals). They are 32 bits on every platform, or 64 bits if PIKA_64_BIT_INTEGERS is defined to 1.
+	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators,
+	hexadecimal literals and the radix() value). They are 32 bits on every platform, or 64 bits if PIKA_64_BIT_INTEGERS
+	is defined to 1.
 	(STLValue converts them through its int / long / long long overloads.)
 **/
-#if !defined(PIKA_64_BIT_INTEGERS)
-	#define PIKA_64_BIT_INTEGERS 0
-#endif
 #if (PIKA_64_BIT_INTEGERS)
 	typedef int64_t Int;
 	typedef uint64_t UInt;
@@ -100,7 +98,7 @@ typedef unsigned long long ullong;
 
 template<class S> std::string toStdString(const S& s);																	///< Converts the string \p s to a standard C++ string. \details The default implementation is std::string(s.begin(), s.end()). You should specialize this template if necessary.
 template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);					///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e, bool* overflow = 0);	///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit and \p *overflow (if \p overflow is not null) is set to true.
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit.
 template<class S, typename T> S intToString(T i, int radix = 10, int minLength = 1);									///< Converts the integer \p i to a string with a radix and minimum length of your choice. \details \p radix can be anything between 1 (binary) and 16 (hexadecimal).
 template<class S> double stringToDouble(typename S::const_iterator& p, const typename S::const_iterator& e);			///< Converts a string in scientific e notation (e.g. -12.34e-3) to a double floating point value. \details Spaces before 'e' are not accepted. Uppercase 'E' is allowed. Positive and negative 'infinity' is supported (provided the compiler allows it).\p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S> bool stringToDouble(const S& s, double& d);															///< A convenient utility routine that tries to convert the entire string \p s (in scientific e notation) to a double, returning true on success or false if the string is not in valid syntax.

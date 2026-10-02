@@ -72,13 +72,11 @@ typedef long long llong;
 typedef unsigned long long ullong;
 
 /**
-	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators and
-	hexadecimal literals). They are 32 bits on every platform, or 64 bits if PIKA_64_BIT_INTEGERS is defined to 1.
+	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators,
+	hexadecimal literals and the radix() value). They are 32 bits on every platform, or 64 bits if PIKA_64_BIT_INTEGERS
+	is defined to 1.
 	(STLValue converts them through its int / long / long long overloads.)
 **/
-#if !defined(PIKA_64_BIT_INTEGERS)
-	#define PIKA_64_BIT_INTEGERS 0
-#endif
 #if (PIKA_64_BIT_INTEGERS)
 	typedef int64_t Int;
 	typedef uint64_t UInt;
@@ -100,7 +98,7 @@ typedef unsigned long long ullong;
 
 template<class S> std::string toStdString(const S& s);																	///< Converts the string \p s to a standard C++ string. \details The default implementation is std::string(s.begin(), s.end()). You should specialize this template if necessary.
 template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);					///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e, bool* overflow = 0);	///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit and \p *overflow (if \p overflow is not null) is set to true.
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit.
 template<class S, typename T> S intToString(T i, int radix = 10, int minLength = 1);									///< Converts the integer \p i to a string with a radix and minimum length of your choice. \details \p radix can be anything between 1 (binary) and 16 (hexadecimal).
 template<class S> double stringToDouble(typename S::const_iterator& p, const typename S::const_iterator& e);			///< Converts a string in scientific e notation (e.g. -12.34e-3) to a double floating point value. \details Spaces before 'e' are not accepted. Uppercase 'E' is allowed. Positive and negative 'infinity' is supported (provided the compiler allows it).\p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S> bool stringToDouble(const S& s, double& d);															///< A convenient utility routine that tries to convert the entire string \p s (in scientific e notation) to a double, returning true on success or false if the string is not in valid syntax.
@@ -720,9 +718,9 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }							// Out of range (and negative) shift counts are undefined behavior in C++.
+inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }								// Out of range (and negative) shift counts are undefined behavior in C++.
 inline UInt shiftLeft(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l << r; }
-inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }														// Increment and decrement wrap around (well defined in unsigned).
+inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }															// Increment and decrement wrap around (well defined in unsigned).
 inline UInt bitAnd(UInt l, UInt r) { return l & r; }
 inline UInt bitOr(UInt l, UInt r) { return l | r; }
 inline UInt bitXor(UInt l, UInt r) { return l ^ r; }
@@ -746,30 +744,29 @@ template<class S> ullong hexToLong(typename S::const_iterator& p, const typename
 	return l;
 }
 
-// Scans an optionally signed decimal integer and returns its magnitude in the unsigned type `U` (wrapped modulo 2^N).
-// `overflow` is set if the magnitude is larger than `maxPositive` (or `maxPositive` + 1 for a negative integer).
-template<class S, class U> U scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
-		, U maxPositive, bool& negative, bool& overflow) {
+// Scans an optionally signed decimal integer and returns it in two's complement (wrapped modulo 2^64). `overflow` is set
+// if it does not fit in a signed integer type whose largest value is `maxPositive`.
+template<class S> ullong scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
+		, ullong maxPositive, bool& overflow) {
 	assert(p <= e);
-	negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	const U limit = (negative ? maxPositive + 1 : maxPositive), cutoff = limit / 10, cutlim = limit % 10;
-	U l = 0;
+	const bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
+	const ullong limit = (negative ? maxPositive + 1 : maxPositive), cutoff = limit / 10, cutlim = limit % 10;
+	ullong l = 0;
 	overflow = false;
 	for (; p < e && *p >= '0' && *p <= '9'; ++p) {
-		const U d = U(*p - '0');
+		const ullong d = *p - '0';
 		overflow = overflow || l > cutoff || (l == cutoff && d > cutlim);
 		l = l * 10 + d;
 	}
-	return l;
+	return (negative ? 0 - l : l);
 }
 
-template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e
-		, bool* overflow) {
-	bool negative, saturated;
-	const ulong l = scanInteger<S, ulong>(p, e, std::numeric_limits<long>::max(), negative, saturated);
-	if (overflow != 0) *overflow = saturated;
-	if (saturated) return (negative ? std::numeric_limits<long>::min() : std::numeric_limits<long>::max());
-	return long(negative ? 0 - l : l);
+template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
+	const bool negative = (p < e && *p == '-');
+	bool overflow;
+	const ullong l = scanInteger<S>(p, e, std::numeric_limits<long>::max(), overflow);
+	if (overflow) return (negative ? std::numeric_limits<long>::min() : std::numeric_limits<long>::max());
+	return long(l);
 }
 
 template<class S, class T> S intToString(T i, int radix, int minLength) {
@@ -818,7 +815,7 @@ template<class S> S doubleToString(double d, int precision) {
 	double x = fabs(d), y = x;
 	if (d != d) return S(STR("nan"));																					// NaN fails all tests below.
 	if (y <= EPSILON) return S(STR("0"));
-	else if (precision >= 12 && y < LARGE && long(d) == d) return intToString<S, long>(long(d));
+	else if (precision >= 12 && y < LARGE && llong(d) == d) return intToString<S, llong>(llong(d));
 	else if (std::numeric_limits<double>::has_infinity && x == std::numeric_limits<double>::infinity())
 		return d < 0 ? S(STR("-infinity")) : S(STR("+infinity"));
 	typename S::value_type buffer[32], * bp = buffer + 2, * dp = bp, * pp = dp + 1, * ep = pp + precision;
@@ -867,11 +864,11 @@ template<class S> S unescape(typename S::const_iterator& p, const typename S::co
 		if (*p == '\\' && e - p > 1) {
 			d += S(b, p);
 			const CHAR* f = std::find(ESCAPE_CHARS, ESCAPE_CHARS + ESCAPE_CODE_COUNT, *++p);
-			ulong l;
+			ullong l;
 			if (f != ESCAPE_CHARS + ESCAPE_CODE_COUNT) { ++p; l = ESCAPE_CODES[f - ESCAPE_CHARS]; }
-			else if (*p == 'x') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 2 ? p + 2 : e))); }
-			else if (*p == 'u') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 4 ? p + 4 : e))); }
-			else if (*p == 'U') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 8 ? p + 8 : e))); }
+			else if (*p == 'x') { b = ++p; l = hexToLong<S>(p, (e - p > 2 ? p + 2 : e)); }
+			else if (*p == 'u') { b = ++p; l = hexToLong<S>(p, (e - p > 4 ? p + 4 : e)); }
+			else if (*p == 'U') { b = ++p; l = hexToLong<S>(p, (e - p > 8 ? p + 8 : e)); }
 			else { b = p; l = stringToLong<S>(p, e); }
 			if (p == b) throw Exception<S>(STR("Invalid escape character"));
 			b = p;
@@ -917,35 +914,25 @@ template<class S> STLValue<S>::operator bool() const {
 
 template<class S> void throwInvalidInteger(const S& s) { throw Exception<S>(S(STR("Invalid integer: ")) += escape(s)); }
 
-template<class S> STLValue<S>::operator long() const {
-	typename S::const_iterator p = S::begin();
-	bool overflow;
-	long y = stringToLong<S>(p, S::end(), &overflow);
-	if (p == S::begin() || p < S::end() || overflow) throwInvalidInteger<S>(*this);
+// Converts all of `s` with scanInteger(), throwing 'Invalid integer' if it is not a decimal integer.
+template<class S> ullong scanValue(const S& s, ullong maxPositive, bool& overflow) {
+	typename S::const_iterator p = s.begin();
+	const ullong y = scanInteger<S>(p, s.end(), maxPositive, overflow);
+	if (p == s.begin() || p < s.end()) throwInvalidInteger(s);
 	return y;
 }
 
-template<class S> STLValue<S>::operator int() const {
-	long y = long(*this);
-	if (y < std::numeric_limits<int>::min() || y > std::numeric_limits<int>::max()) throwInvalidInteger<S>(*this);
-	return int(y);
+template<class T, class S> T toSignedInteger(const S& s) {
+	bool overflow;
+	const ullong y = scanValue(s, std::numeric_limits<T>::max(), overflow);
+	if (overflow) throwInvalidInteger(s);
+	return T(y);
 }
 
-template<class S> STLValue<S>::operator llong() const {
-	typename S::const_iterator p = S::begin();
-	bool negative, overflow;
-	const ullong y = scanInteger<S, ullong>(p, S::end(), std::numeric_limits<llong>::max(), negative, overflow);
-	if (p == S::begin() || p < S::end() || overflow) throwInvalidInteger<S>(*this);
-	return llong(negative ? 0 - y : y);
-}
-
-template<class S> STLValue<S>::operator ullong() const {
-	typename S::const_iterator p = S::begin();
-	bool negative, overflow;
-	const ullong y = scanInteger<S, ullong>(p, S::end(), std::numeric_limits<llong>::max(), negative, overflow);		// Ignores overflow, keeping the low bits for the bitwise operators.
-	if (p == S::begin() || p < S::end()) throwInvalidInteger<S>(*this);
-	return negative ? 0 - y : y;																						// Negative values convert to two's complement.
-}
+template<class S> STLValue<S>::operator long() const { return toSignedInteger<long, S>(*this); }
+template<class S> STLValue<S>::operator int() const { return toSignedInteger<int, S>(*this); }
+template<class S> STLValue<S>::operator llong() const { return toSignedInteger<llong, S>(*this); }
+template<class S> STLValue<S>::operator ullong() const { bool overflow; return scanValue<S>(*this, 0, overflow); }	// Ignores overflow, keeping the lowest bits.
 
 template<class S> STLValue<S>::operator double() const {
 	double d;
@@ -1182,9 +1169,9 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					} /* else continue */
 
 		case '0':	if (e - p > 1 && p[1] == 'x') {
-						const UInt l = UInt(hexToLong<String>(p += 2, e));															// <-- hexadecimal literal
+						const UInt l = UInt(hexToLong<String>(p += 2, e));												// <-- hexadecimal literal
 						if (p == b + 2) throw Xception(STR("Invalid hexadecimal number"));
-						if (!dry) v = XValue(false, *b == '-' ? Value(Int(0 - l)) : Value(l));						// Hex literals are integers and wrap like the bitwise operators.
+						if (!dry) v = XValue(false, *b == '-' ? Value(Int(0 - l)) : Value(l));							// Hex literals are integers and wrap like the bitwise operators.
 						return true;
 					} /* else continue */
 
@@ -1244,12 +1231,8 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 }
 
 TMPL Int Script<CFG>::Frame::intDiv(Int x, Int y) {
-	if (y == 0) {
-		throw Xception(STR("Division by zero"));
-	}
-	if (y == -1 && x == std::numeric_limits<Int>::min()) {													// The most negative integer / -1 does not fit and traps on x86 (just like division by zero).
-		throw Xception(STR("Integer overflow"));
-	}
+	if (y == 0) throw Xception(STR("Division by zero"));
+	if (y == -1 && x == std::numeric_limits<Int>::min()) throw Xception(STR("Integer overflow"));						// The most negative integer / -1 does not fit and traps on x86.
 	return x / y;
 }
 
@@ -1667,7 +1650,7 @@ TMPL T_TYPE(String) Script<CFG>::lib::radix(const Frame& f) {
 	int minLength = f.getOptional(STR("$2"), 1);
 	if (minLength < 0 || minLength > int(sizeof (UInt) * 8))
 		throw Xception(String(STR("Minimum length out of range: ")) += intToString<String>(minLength));
-	return intToString<String, UInt>(UInt(f.get(STR("$0"))), radix, minLength);
+	return intToString<String>(UInt(f.get(STR("$0"))), radix, minLength);
 }
 
 TMPL void Script<CFG>::lib::save(const String& file, const String& chars) {
@@ -2867,7 +2850,7 @@ const char* BUILT_IN_HELP =
 	"describe('#strings', 'mismatch',\t\"+offset = mismatch('first', 'second')\",\t\t\t\"Compares the 'first' and 'second' strings character by character and returns the zero-based offset of the first mismatch (e.g. 0 = first character). If the strings are identical in contents, the returned value is the length of the shortest string. As usual, the comparison is case sensitive.\", \"mismatch('abcd', 'abcd') == 4\\nmismatch('abc', 'abcd') == 3\\nmismatch('abCd', 'abcd') == 2\", 'find, search, span');\n"
 	"describe('#strings', 'ordinal',\t\t\"+code = ordinal('character')\",\t\t\t\t\t\t\"Returns the ordinal (i.e. the character code) of the single character string 'character'. Depending on how PikaScript is configured, the character code is an ASCII or Unicode value. If 'character' cannot be converted to a character code the exception 'Value is not single character: {character}' will be thrown.\\n\\nInverse: char(+code).\", \"ordinal('A') == 65\\nordinal(char(211)) == 211\", 'char');\n"
 	"describe('#strings', 'precision',\t\"'string' = precision(+value, +precision)\",\t\t\t\"Converts +value to a decimal number string (in scientific E notation if required). +precision is the maximum number of digits to include in the output. Scientific E notation (e.g. 1.3e+3) will be used if +precision is smaller than the number of digits required to express +value in decimal notation. The maximum number of characters returned is +precision plus 7 (for possible minus sign, decimal point and exponent).\", \"precision(12345, 3) === '1.23e+4'\\nprecision(9876, 8) === '9876'\\nprecision(9876.54321, 8) === '9876.5432'\\nprecision(-0.000000123456, 5) === '-1.2346e-7'\\nprecision(+infinity, 1) === '+infinity'\", \"radix, trunc\");\n"
-	"describe('#strings', 'radix',\t\t\"'string' = radix(+value, +radix, [+minLength])\",\t\"Converts the integer +value to a string using a selectable radix between 2 (binary) and 16 (hexadecimal). If +minLength is specified and the string becomes shorter than this, it will be padded with leading zeroes. May throw 'Radix out of range: {radix}' or 'Minimum length out of range: {minLength}'.\", \"radix(0xaa, 2, 12) === '000010101010'\\nradix(3735928559, 16) === 'deadbeef'\\nradix(0x2710, 10) === 10000\", 'precision');\n"
+	"describe('#strings', 'radix',\t\t\"'string' = radix(+value, +radix, [+minLength])\",\t\"Converts the integer +value to a string using a selectable radix between 2 (binary) and 16 (hexadecimal). +value is treated like an operand of the bitwise operators, i.e. as an unsigned integer where negative values become their two's complement. If +minLength is specified and the string becomes shorter than this, it will be padded with leading zeroes. May throw 'Radix out of range: {radix}' or 'Minimum length out of range: {minLength}'.\", \"radix(0xaa, 2, 12) === '000010101010'\\nradix(3735928559, 16) === 'deadbeef'\\nradix(0x2710, 10) === 10000\", 'precision');\n"
 	"describe('#strings', 'repeat',\t\t\"'repeated' = repeat('repeatme', +count)\",\t\t\t\"Concatenates 'repeatme' +count number of times.\", \"repeat(' ', 5) === '     '\\nrepeat('-#-', 10) === '-#--#--#--#--#--#--#--#--#--#-'\");\n"
 	"describe('#strings', 'replace',\t\t\"'processed' = replace('source', 'what', 'with', [>findFunction = search], [+dropCount = length(what)], [>replaceFunction = >$1])\",\t\"Replaces all occurrences of 'what' with 'with' in the 'source' string.\\n\\nThe optional >findFunction allows you to modify how the function finds occurrences of 'what' and +dropCount determines how many characters are replaced on each occurrence. The default >findFunction is ::search (and +dropCount is the number of characters in 'what'), which means that 'what' represents a substring to substitute. If you want this function to substitute any occurrence of any character in 'what', you can let >findFunction be ::find and +dropCount be 1. Similarly, you may use ::span to substitute occurrences of all characters not present in 'what'.\\n\\nFinally, >replaceFunction lets you customize how substrings should be replaced. It will be called with two arguments, the source substring in $0 and 'with' in $1, and it is expected to return the replacement substring.\", \"replace('Barbazoo', 'zoo', 'bright') === 'Barbabright'\\nreplace('Barbalama', 'lm', 'p', find, 1) === 'Barbapapa'\\nreplace('Bqaxrbzzabypeillme', 'Bbarel', '', span, 1) === 'Barbabelle'\\nreplace('B03102020', '0123', 'abmr', find, 1, >$1{$0}) === 'Barbamama'\", \"bake, find, search, span\");\n"
 	"describe('#strings', 'reverse',\t\t\"'backwards' = reverse('string')\",\t\t\t\t\t\"Returns 'string' reversed.\", \"reverse('stressed') === 'desserts'\");\n"

@@ -98,16 +98,17 @@ declared returns. Read more about variable scopes under Functions.
 Numbers
 =======
 
- PikaScript calculates in two different ways. Most operations use double precision floating point, but a few are
-integer operations with their own rules.
+ Most operations use double precision floating point, but a few are integer operations with their own rules.
 
  *Floating point:* decimal literals (e.g. `12`, `3.5`, `1e-8` and `+infinity`), `+`, `-`, `*`, `/`, `%`, comparisons and
 the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get
 exponential notation (`10000000000` becomes `1e+10`) and comparisons are only exact up to 2^53 (use `===` beyond that).
 Invalid operations such as `0 / 0` give `nan`, which no operation accepts as a number.
 
- *Integer:* `++`, `--`, `\` (rounds towards zero), the bitwise operators `~`, `&`, `|`, `^`, `<<`, `>>` and hexadecimal
-literals. Integers are 32 bits on every platform, or 64 bits if PikaScript is compiled with `PIKA_64_BIT_INTEGERS`.
+ *Integer:* `++`, `--`, `\` (rounds towards zero), the bitwise operators `~`, `&`, `|`, `^`, `<<`, `>>`, hexadecimal
+literals and the value of `radix()` (treated like a bitwise operand). Integers are 32 bits on every platform, or 64
+bits if PikaScript is compiled with `PIKA_64_BIT_INTEGERS`. (Substring offsets and other integer arguments of library
+functions are not part of this.)
 
  -  `++`, `--`, `\` and the shift count are signed. The bitwise operators are unsigned and treat negative values as
    two's complement (`~0` is `4294967295` and `-1 & 0xFF` is `255`).

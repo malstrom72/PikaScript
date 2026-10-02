@@ -127,7 +127,7 @@
 	<h4>Syntax</h4>
 	<pre class="syntax">'string' = radix(+value, +radix, [+minLength])</pre>
 	<h4>Description</h4>
-	<div class="description"><p>Converts the integer +value to a string using a selectable radix between 2 (binary) and 16 (hexadecimal). If +minLength is specified and the string becomes shorter than this, it will be padded with leading zeroes. May throw 'Radix out of range: {radix}' or 'Minimum length out of range: {minLength}'.</p></div>
+	<div class="description"><p>Converts the integer +value to a string using a selectable radix between 2 (binary) and 16 (hexadecimal). +value is treated like an operand of the bitwise operators, i.e. as an unsigned integer where negative values become their two's complement. If +minLength is specified and the string becomes shorter than this, it will be padded with leading zeroes. May throw 'Radix out of range: {radix}' or 'Minimum length out of range: {minLength}'.</p></div>
 	<h4>Examples</h4><pre class="examples">radix(0xaa, 2, 12) === '000010101010'<br>radix(3735928559, 16) === 'deadbeef'<br>radix(0x2710, 10) === 10000</pre>
 	<h4>See Also</h4><p class="seealso"><a href="#precision">precision</a></p>
 </div>
