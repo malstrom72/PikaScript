@@ -7,7 +7,7 @@
 
 	\version
 
-	Version 0.971
+	Version 0.98
 	
 	\page Copyright
 
@@ -37,7 +37,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define PIKA_CMD_VERSION "0.971"
+#define PIKA_CMD_VERSION "0.98"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 

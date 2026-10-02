@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.97
+	Version 0.98
 	
 	\page Copyright
 	

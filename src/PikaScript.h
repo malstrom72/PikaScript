@@ -5,7 +5,7 @@
 	
 	\version
 	
-	Version 0.97
+	Version 0.98
 	
 	\page Copyright
 	
@@ -58,10 +58,10 @@ namespace Pika {
 
 #if (PIKA_UNICODE)
 	#define STR(s) L##s
-	#define PIKA_SCRIPT_VERSION L"0.97"
+	#define PIKA_SCRIPT_VERSION L"0.98"
 #else
 	#define STR(x) x
-	#define PIKA_SCRIPT_VERSION "0.97"
+	#define PIKA_SCRIPT_VERSION "0.98"
 #endif
 
 typedef unsigned char uchar;

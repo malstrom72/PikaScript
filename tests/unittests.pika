@@ -1,5 +1,5 @@
 /*
-	unittests.pika v0.97
+	unittests.pika v0.98
 
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
@@ -592,7 +592,7 @@ assert(> try(>evaluate("a=3e;")) != void);		// Syntax bug: accepted non-existing
 assert(> try(>evaluate("a=3e+(3)")) != void);	// - " -
 assert(> try(>{a="3e+";+a}) != void);			// - " -
 
-// After 0.97
+// 0.97 -> 0.98
 
 intIs32 = (~0 == 4294967295);					// Integers are 32 bits (or 64 bits with PIKA_64_BIT_INTEGERS) on every platform.
 minInt = (if (intIs32) '-2147483648' else '-9223372036854775808');
