@@ -98,8 +98,8 @@ declared returns. Read more about variable scopes under Functions.
 Numbers
 =======
 
- PikaScript calculates in two different ways, a little like JavaScript. Most operations use double precision floating
-point, but a few are integer operations with their own rules.
+ PikaScript calculates in two different ways. Most operations use double precision floating point, but a few are
+integer operations with their own rules.
 
  *Floating point:* decimal literals (e.g. `12`, `3.5`, `1e-8` and `infinity`), `+`, `-`, `*`, `/`, `%`, comparisons
 and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get
