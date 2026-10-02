@@ -3542,8 +3542,8 @@ struct TimeOutException { };
 
 class LibFuzzRoot : public Script::FullRoot {
 	typedef Script::FullRoot Super;
-	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), counter(0), deadline(0), callDepth(0) {
-					deadline = time(0) + 5;
+	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), counter(0), deadline(std::clock() + CLOCKS_PER_SEC / 10)
+						, callDepth(0) {
 					updateTracer();
 				}
 	public:		virtual void trace(Frame& frame, const Script::String& source, Script::SizeType offset, bool lvalue
@@ -3551,10 +3551,7 @@ class LibFuzzRoot : public Script::FullRoot {
 					if (level <= userLevel) Super::trace(frame, source, offset, lvalue, value, level, exit);
 					if (level <= Pika::TRACE_LOOP && ++counter >= 100) {
 						counter = 0;
-						int timeNow = time(0);
-						if (deadline - timeNow < 0) {
-							throw TimeOutException();
-						}
+						if (std::clock() > deadline) throw TimeOutException();
 					}
 					if (level == Pika::TRACE_CALL) {
 						if (!exit && callDepth >= 20) {
@@ -3576,7 +3573,7 @@ class LibFuzzRoot : public Script::FullRoot {
 	protected:	Pika::Precedence userLevel;
 	protected:	Script::Value userTracer;
 	protected:	int counter;
-	protected:	int deadline;
+	protected:	std::clock_t deadline;
 	protected:	int callDepth;
 };
 
@@ -3588,18 +3585,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 		root.assign("exitCode", Script::Value(0));
 		root.assign("PLATFORM", Script::String(TO_STRING(PLATFORM_STRING)));
 		root.assign("save", Script::String("{}"));
+		root.assign("print", Script::String("{}"));
 		root.assign("input", Script::String("{void}"));
 		root.erase("system");
 		root.evaluate(Script::String(reinterpret_cast<const char*>(Data), reinterpret_cast<const char*>(Data) + Size));
 	}
-	catch (const Script::Xception& x) {
-	}
-	catch (const TimeOutException&) {
-		std::cerr << "timed out" << std::endl;
-	}
-	catch (const CallDepthException&) {
-		std::cerr << "call depth limit exceeded" << std::endl;
-	}
+	catch (const Script::Xception&) { }
+	catch (const TimeOutException&) { }
+	catch (const CallDepthException&) { }
   	return 0;  // Non-zero return values are reserved for future use.
 }
 

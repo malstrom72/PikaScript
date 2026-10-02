@@ -1,0 +1,10 @@
+a = "\a\b\f\n\r\t\v\\\"\'\x41B\U00000043\65\0\x\u12";
+b = 'it''s' # "it's" # '';
+c = a{1:3} # a{-2:4} # a{5} # a{:2} # a{2:} # a{100:-1};
+d = escape(a) # unescape(escape(b)) # length(c);
+e = upper('abc') # lower('XYZ') # reverse('pika') # char(65) # ordinal('A');
+f = find('hello', 'lo') + search('hello', 'll') + span('aaab', 'a') + mismatch('abc', 'abd');
+g = 'b' < 'a' || '10' < '9' || '10' < 'a' || '' < 'x';
+h = '1.0' == '1' && '1.0' !== '1' && 'abc' === 'abc';
+i = precision(1 / 3, 5) # precision(123456789, 2) # 1.23456789012345678;
+j = parse('3 + 3; rest', false) + parse('"str" rest', true);
