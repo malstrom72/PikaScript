@@ -84,7 +84,7 @@
 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 </tr>
 <tr>
-<td>number</td><td><tt>23</tt></td><td><tt>23</tt></td><td>Numerical value. <a href="#Numbers">Numbers</a> must begin with a digit (or <tt>+</tt> or <tt>-</tt>) and end with a digit. (Except for <tt>infinity</tt> of course.)</td>
+<td>number</td><td><tt>23</tt></td><td><tt>23</tt></td><td>Numerical value. <a href="#Numbers">Numbers</a> must begin with a digit (or <tt>+</tt> or <tt>-</tt>) and end with a digit. (Except for <tt>+infinity</tt> and <tt>-infinity</tt> of course.)</td>
 </tr>
 <tr>
 <td>&nbsp;</td><td><tt>-0x94</tt></td><td><tt>-148</tt></td><td>E.g, ".3" and "3." are not considered valid numbers.</td>
@@ -96,7 +96,7 @@
 <td>&nbsp;</td><td><tt>5.930e-77</tt></td><td><tt>5.93e-77</tt></td><td>Numerical literals are "normalized" so that identical numbers are also identical strings</td>
 </tr>
 <tr>
-<td>&nbsp;</td><td><tt>infinity</tt></td><td><tt>infinity</tt></td><td>(e.g. 1.00, 1e0, 0x01 and 1 are all normalized to <tt>1</tt>).</td>
+<td>&nbsp;</td><td><tt>+infinity</tt></td><td><tt>+infinity</tt></td><td>(e.g. 1.00, 1e0, 0x01 and 1 are all normalized to <tt>1</tt>).</td>
 </tr>
 <tr>
 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
@@ -145,7 +145,7 @@
 <p>In PikaScript you simply declare variables by assigning them values (in fact, this is the only way to create new variables). Unless a variable is global (prefixed with <tt>::</tt>), it will be destroyed when the function wherein it is declared returns. Read more about variable scopes under <a href="#Functions">Functions</a>.</p>
 <h2><a name="Numbers">Numbers</a></h2>
 <p>PikaScript calculates in two different ways. Most operations use double precision floating point, but a few are integer operations with their own rules.</p>
-<p><b>Floating point:</b> decimal literals (e.g. <tt>12</tt>, <tt>3.5</tt>, <tt>1e-8</tt> and <tt>infinity</tt>), <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>/</tt>, <tt>%</tt>, comparisons and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get exponential notation (<tt>10000000000</tt> becomes <tt>1e+10</tt>) and comparisons are only exact up to 2<sup>53</sup> (use <tt>===</tt> beyond that). Invalid operations such as <tt>0 / 0</tt> give <tt>nan</tt>, which no operation accepts as a number.</p>
+<p><b>Floating point:</b> decimal literals (e.g. <tt>12</tt>, <tt>3.5</tt>, <tt>1e-8</tt> and <tt>+infinity</tt>), <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>/</tt>, <tt>%</tt>, comparisons and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get exponential notation (<tt>10000000000</tt> becomes <tt>1e+10</tt>) and comparisons are only exact up to 2<sup>53</sup> (use <tt>===</tt> beyond that). Invalid operations such as <tt>0 / 0</tt> give <tt>nan</tt>, which no operation accepts as a number.</p>
 <p><b>Integer:</b> <tt>++</tt>, <tt>--</tt>, <tt>\</tt> (rounds towards zero), the bitwise operators <tt>~</tt>, <tt>&amp;</tt>, <tt>|</tt>, <tt>^</tt>, <tt>&lt;&lt;</tt>, <tt>&gt;&gt;</tt> and hexadecimal literals. Integers are 32 bits on every platform, or 64 bits if PikaScript is compiled with <tt>PIKA_64_BIT_INTEGERS</tt>.</p>
 
 <ul>
@@ -231,7 +231,7 @@
 <td>x \ y</td><td>19</td><td colspan=2>Integer division, rounds towards zero (only works on integers, see <a href="#Numbers">Numbers</a>).</td>
 </tr>
 <tr>
-<td>x % y</td><td>19</td><td colspan=2>Modulo (only works on numbers). (Result is platform dependent if <tt>x</tt> is negative.)</td>
+<td>x % y</td><td>19</td><td colspan=2>Modulo (only works on numbers). (The result has the sign of <tt>x</tt>, e.g. <tt>-7 % 3</tt> is <tt>-1</tt>.)</td>
 </tr>
 <tr>
 <td>x + y</td><td>18</td><td colspan=2>Addition (only works on numbers).</td>

@@ -438,7 +438,7 @@ testHelpExamples = function {
 				if (!exists(@::skiptests[expr])) {
 //print('Testing: ' # expr);
 					x = try(>v = evaluate(expr, @::));
-					if (x !== void) report("FAILED : " # escape(expr))
+					if (x !== void) throw('Help example failed: ' # escape(expr) # ' (' # x # ')')
 					else if (classify(v) === 'boolean') assert(v, expr);
 				}
 			});

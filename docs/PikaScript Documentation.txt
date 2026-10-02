@@ -67,11 +67,11 @@ handled by the various expressions, operators and library functions:
  boolean    `false`                     `false`                     The input and output of logical expressions (such as `&&` and `||`).
             `true`                      `true`                      Always represented by a lowercase `false` or `true`.
  
- number     `23`                        `23`                        Numerical value. Numbers must begin with a digit (or `+` or `-`) and end with a digit. (Except for `infinity` of course.)
+ number     `23`                        `23`                        Numerical value. Numbers must begin with a digit (or `+` or `-`) and end with a digit. (Except for `+infinity` and `-infinity` of course.)
             `-0x94`                     `-148`                      E.g, ".3" and "3." are not considered valid numbers. 
             `0.00000003`                `3e-8`                      They may contain an exponential prefixed with `e`.
             `5.930e-77`                 `5.93e-77`                  Numerical literals are "normalized" so that identical numbers are also identical strings
-            `infinity`                  `infinity`                  (e.g. 1.00, 1e0, 0x01 and 1 are all normalized to `1`).
+            `+infinity`                 `+infinity`                 (e.g. 1.00, 1e0, 0x01 and 1 are all normalized to `1`).
  
  string     `'orange'`                  `orange`                    As said, all values are stored internally in string format, so in practice all values are valid strings.
             `'I "love" Pika'`           `I "love" Pika`             String literals are enclosed in either single quote (') or double quote (").
@@ -101,10 +101,10 @@ Numbers
  PikaScript calculates in two different ways. Most operations use double precision floating point, but a few are
 integer operations with their own rules.
 
- *Floating point:* decimal literals (e.g. `12`, `3.5`, `1e-8` and `infinity`), `+`, `-`, `*`, `/`, `%`, comparisons
-and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get
-exponential notation (`10000000000` becomes `1e+10`) and comparisons are only exact up to 2^53 (use `===` beyond
-that). Invalid operations such as `0 / 0` give `nan`, which no operation accepts as a number.
+ *Floating point:* decimal literals (e.g. `12`, `3.5`, `1e-8` and `+infinity`), `+`, `-`, `*`, `/`, `%`, comparisons and
+the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get
+exponential notation (`10000000000` becomes `1e+10`) and comparisons are only exact up to 2^53 (use `===` beyond that).
+Invalid operations such as `0 / 0` give `nan`, which no operation accepts as a number.
 
  *Integer:* `++`, `--`, `\` (rounds towards zero), the bitwise operators `~`, `&`, `|`, `^`, `<<`, `>>` and hexadecimal
 literals. Integers are 32 bits on every platform, or 64 bits if PikaScript is compiled with `PIKA_64_BIT_INTEGERS`.
@@ -153,7 +153,7 @@ x--                         21      Postfix decrement. Value is that of `x` befo
 x * y                       19      Multiplication (only works on numbers).
 x / y                       19      Division (only works on numbers).
 x \ y                       19      Integer division, rounds towards zero (only works on integers, see Numbers).
-x % y                       19      Modulo (only works on numbers). (Result is platform dependent if `x` is negative.)
+x % y                       19      Modulo (only works on numbers). (The result has the sign of `x`, e.g. `-7 % 3` is `-1`.)
 x + y                       18      Addition (only works on numbers).
 x - y                       18      Subtraction (only works on numbers).
 x << y                      17      Bit-shift left (only works on integers, see Numbers).

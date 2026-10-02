@@ -29,7 +29,7 @@
 	<pre class="syntax">'character' = char(+code)</pre>
 	<h4>Description</h4>
 	<div class="description"><p>Returns the character represented by +code as a string. +code is either an ASCII or Unicode value (depending on how PikaScript is configured). If +code is not a valid character code the exception 'Illegal character code: {code}' will be thrown.</p><p>Inverse: ordinal('character').</p></div>
-	<h4>Examples</h4><pre class="examples">char(65) === 'A'<br>char(ordinal('å')) === 'å'</pre>
+	<h4>Examples</h4><pre class="examples">char(65) === 'A'<br>ordinal(char(229)) == 229</pre>
 	<h4>See Also</h4><p class="seealso"><a href="#ordinal">ordinal</a></p>
 </div>
 <hr>

@@ -5,7 +5,7 @@ CD /D "%~dp0"
 IF NOT EXIST PikaCmd.exe (
         REM Use the portable build script from SourceDistribution to avoid
         REM platform-specific flags not supported by all compilers
-        CALL SourceDistribution\BuildCpp PikaCmd.exe -DPLATFORM_STRING=WINDOWS PikaCmd.cpp BuiltIns.cpp ..\..\src\*.cpp
+        CALL SourceDistribution\BuildCpp PikaCmd.exe /D "PLATFORM_STRING=WINDOWS" PikaCmd.cpp BuiltIns.cpp ..\..\src\*.cpp
         IF ERRORLEVEL 1 EXIT /B 1
 )
 
