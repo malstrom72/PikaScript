@@ -98,48 +98,31 @@ declared returns. Read more about variable scopes under Functions.
 Numbers
 =======
 
- There is only one kind of number value in PikaScript, but there are two different sets of rules for calculating with
-it. You can think of it as two worlds: the /floating point world/ and the /integer world/. (JavaScript works in a
-similar way.)
+ PikaScript calculates in two different ways, a little like JavaScript. Most operations use double precision floating
+point, but a few are integer operations with their own rules.
 
- The floating point world is the default. Decimal literals (e.g. `12`, `3.5`, `1e-8` and `infinity`), the arithmetic
-operators `+`, `-`, `*`, `/` and `%`, the numerical comparisons and the math functions all work with double precision
-floating point numbers. Results are written with up to 14 significant digits and integers of ten billion or more are
-written in exponential notation (e.g. `10000000000` becomes `1e+10`). Invalid operations such as `0 / 0` or `sqrt(-1)`
-result in `nan` ("not a number"), which is not accepted as a number by any other operation.
+ *Floating point:* decimal literals (e.g. `12`, `3.5`, `1e-8` and `infinity`), `+`, `-`, `*`, `/`, `%`, comparisons
+and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get
+exponential notation (`10000000000` becomes `1e+10`) and comparisons are only exact up to 2^53 (use `===` beyond
+that). Invalid operations such as `0 / 0` give `nan`, which no operation accepts as a number.
 
- The integer world consists of the operations that only work on integers:
+ *Integer:* `++`, `--`, `\` (rounds towards zero), the bitwise operators `~`, `&`, `|`, `^`, `<<`, `>>` and hexadecimal
+literals. Integers are 32 bits on every platform, or 64 bits if PikaScript is compiled with `PIKA_64_BIT_INTEGERS`.
 
- -  Increment and decrement: `++x`, `--x`, `x++` and `x--`.
-   
- -  Integer division: `x \ y` (rounds towards zero).
-   
- -  The bitwise operators: `~x`, `x & y`, `x | y`, `x ^ y`, `x << y` and `x >> y`.
-   
- -  Hexadecimal literals, e.g. `0xFF` and `-0x10`. (The sign is part of the literal. Negating a value, as in
-   `-(0x10)` or `-x`, is a floating point operation.)
+ -  `++`, `--`, `\` and the shift count are signed. The bitwise operators are unsigned and treat negative values as
+   two's complement (`~0` is `4294967295` and `-1 & 0xFF` is `255`).
 
- These operations use the C++ `long` integer type of the platform (or its unsigned counterpart for the bitwise
-operators). Notice that `long` is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of
-integers depends on the platform.
+ -  A hexadecimal literal is unsigned (`0xFFFFFFFF` is `4294967295`), unless it has a minus sign, which is part of the
+   literal (`-0x10` is `-16`). `-(0x10)` and `-x` are floating point negations.
 
- Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit
-integers `x = 2147483647; ++x` gives `-2147483648`, `-0xFFFFFFFF` gives `1` and `~0` gives `4294967295`. Negative values
-are treated as two's complement by the bitwise operators (e.g. `-1 & 0xFF` is `255`). The shift count is a signed
-integer, and shifting by a negative count, or by as many bits as the integer has or more, gives `0`. Integer division by
-zero throws `'Division by zero'` and dividing the most negative integer by `-1` throws `'Integer overflow'`.
+ -  Results wrap around like in C: `x = 2147483647; ++x` gives `-2147483648` and `-0xFFFFFFFF` gives `1` (with 32
+   bits). Shifting by a negative count, or by the number of bits or more, gives `0`.
 
- A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent),
-otherwise `'Invalid integer'` is thrown. E.g. `1.5 \ 1` throws, and since large decimal numbers are written in
-exponential notation, so does `10000000000 \ 1`. An integer that is too large for the range is cut down to its lowest
-bits by the bitwise operators (e.g. `(4294967296 + 5) & 0xFF` is `5`), but it throws `'Invalid integer'` for `++`, `--`
-and `\`. Integers expected elsewhere, such as substring offsets and the integer arguments of `radix()` and
-`precision()`, follow the same rule as `++`, `--` and `\` (except the value converted by `radix()`, which follows the
-rule of the bitwise operators).
+ -  Operands must be integers in decimal form, otherwise `'Invalid integer'` is thrown (e.g. `1.5 \ 1` and
+   `1e+10 \ 1`). Integers that are too large throw the same error for the signed operations, while the bitwise
+   operators keep their lowest bits (`(4294967296 + 5) & 0xFF` is `5`).
 
- Notice that `==`, `<` and the other comparisons compare numbers as floating point values. Integers that are too large
-to be represented exactly in double precision (beyond 2^53) may therefore compare as equal even when they differ. Use
-`===` to compare such integers exactly.
+ -  `x \ 0` throws `'Division by zero'` and the most negative integer `\ -1` throws `'Integer overflow'`.
 
 Operators
 =========

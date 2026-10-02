@@ -83,12 +83,12 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline ulong shiftRight(ulong l, long r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l >> r; }					// Out of range (and negative) shift counts are undefined behavior in C++.
-inline ulong shiftLeft(ulong l, long r) { return (ulong(r) >= sizeof (ulong) * 8) ? 0 : l << r; }
-inline long incDec(long x, long d) { return long(ulong(x) + ulong(d)); }												// ++ / -- wrap around (well defined in unsigned).
-inline ulong bitAnd(ulong l, ulong r) { return l & r; }
-inline ulong bitOr(ulong l, ulong r) { return l | r; }
-inline ulong bitXor(ulong l, ulong r) { return l ^ r; }
+inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }							// Out of range (and negative) shift counts are undefined behavior in C++.
+inline UInt shiftLeft(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l << r; }
+inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }														// ++ / -- wrap around (well defined in unsigned).
+inline UInt bitAnd(UInt l, UInt r) { return l & r; }
+inline UInt bitOr(UInt l, UInt r) { return l | r; }
+inline UInt bitXor(UInt l, UInt r) { return l ^ r; }
 inline double modulo(double x, double y) { return fmod(x, y); }
 
 template<class C> inline bool isSymbolChar(C c) {
@@ -101,25 +101,25 @@ template<class S> std::string toStdString(const S& s) { return std::string(s.beg
 template<> std::string toStdString(const std::string& s);
 inline std::string& toStdString(std::string& s) { return s; }
 
-template<class S> ulong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
+template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
 	assert(p <= e);
-	ulong l = 0;
+	ullong l = 0;
 	for (; p < e && ((*p >= '0' && *p <= '9') || (*p >= 'A' && *p <= 'F') || (*p >= 'a' && *p <= 'f')); ++p)
 		l = (l << 4) + (*p <= '9' ? *p - '0' : (*p & ~0x20) - ('A' - 10));
 	return l;
 }
 
-// Scans an optionally signed decimal integer and returns its magnitude (wrapped modulo 2^N). `overflow` is set if the
-// magnitude does not fit in a long of that sign.
-template<class S> ulong scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e, bool& negative
-		, bool& overflow) {
+// Scans an optionally signed decimal integer and returns its magnitude in the unsigned type `U` (wrapped modulo 2^N).
+// `overflow` is set if the magnitude is larger than `maxPositive` (or `maxPositive` + 1 for a negative integer).
+template<class S, class U> U scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
+		, U maxPositive, bool& negative, bool& overflow) {
 	assert(p <= e);
 	negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	const ulong limit = ulong(std::numeric_limits<long>::max()) + negative, cutoff = limit / 10, cutlim = limit % 10;
-	ulong l = 0;
+	const U limit = (negative ? maxPositive + 1 : maxPositive), cutoff = limit / 10, cutlim = limit % 10;
+	U l = 0;
 	overflow = false;
 	for (; p < e && *p >= '0' && *p <= '9'; ++p) {
-		const ulong d = *p - '0';
+		const U d = U(*p - '0');
 		overflow = overflow || l > cutoff || (l == cutoff && d > cutlim);
 		l = l * 10 + d;
 	}
@@ -129,9 +129,9 @@ template<class S> ulong scanInteger(typename S::const_iterator& p, const typenam
 template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e
 		, bool* overflow) {
 	bool negative, saturated;
-	ulong l = scanInteger<S>(p, e, negative, saturated);
-	if (saturated) l = ulong(std::numeric_limits<long>::max()) + negative;
+	const ulong l = scanInteger<S, ulong>(p, e, std::numeric_limits<long>::max(), negative, saturated);
 	if (overflow != 0) *overflow = saturated;
+	if (saturated) return (negative ? std::numeric_limits<long>::min() : std::numeric_limits<long>::max());
 	return long(negative ? 0 - l : l);
 }
 
@@ -232,9 +232,9 @@ template<class S> S unescape(typename S::const_iterator& p, const typename S::co
 			const CHAR* f = std::find(ESCAPE_CHARS, ESCAPE_CHARS + ESCAPE_CODE_COUNT, *++p);
 			ulong l;
 			if (f != ESCAPE_CHARS + ESCAPE_CODE_COUNT) { ++p; l = ESCAPE_CODES[f - ESCAPE_CHARS]; }
-			else if (*p == 'x') { b = ++p; l = hexToLong<S>(p, (e - p > 2 ? p + 2 : e)); }
-			else if (*p == 'u') { b = ++p; l = hexToLong<S>(p, (e - p > 4 ? p + 4 : e)); }
-			else if (*p == 'U') { b = ++p; l = hexToLong<S>(p, (e - p > 8 ? p + 8 : e)); }
+			else if (*p == 'x') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 2 ? p + 2 : e))); }
+			else if (*p == 'u') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 4 ? p + 4 : e))); }
+			else if (*p == 'U') { b = ++p; l = ulong(hexToLong<S>(p, (e - p > 8 ? p + 8 : e))); }
 			else { b = p; l = stringToLong<S>(p, e); }
 			if (p == b) throw Exception<S>(STR("Invalid escape character"));
 			b = p;
@@ -294,10 +294,18 @@ template<class S> STLValue<S>::operator int() const {
 	return int(y);
 }
 
-template<class S> STLValue<S>::operator ulong() const {
+template<class S> STLValue<S>::operator llong() const {
 	typename S::const_iterator p = S::begin();
 	bool negative, overflow;
-	ulong y = scanInteger<S>(p, S::end(), negative, overflow);															// Ignores overflow, keeping the low bits for the bitwise operators.
+	const ullong y = scanInteger<S, ullong>(p, S::end(), std::numeric_limits<llong>::max(), negative, overflow);
+	if (p == S::begin() || p < S::end() || overflow) throwInvalidInteger<S>(*this);
+	return llong(negative ? 0 - y : y);
+}
+
+template<class S> STLValue<S>::operator ullong() const {
+	typename S::const_iterator p = S::begin();
+	bool negative, overflow;
+	const ullong y = scanInteger<S, ullong>(p, S::end(), std::numeric_limits<llong>::max(), negative, overflow);		// Ignores overflow, keeping the low bits for the bitwise operators.
 	if (p == S::begin() || p < S::end()) throwInvalidInteger<S>(*this);
 	return negative ? 0 - y : y;																						// Negative values convert to two's complement.
 }
@@ -478,7 +486,7 @@ TMPL template<class F> bool Script<CFG>::Frame::addSubOp(StringIt& p, const Stri
 	else if (thres >= POSTFIX) return false;
 	else if (!dry) {
 		Value r = rvalue(v, false);																						// <-- post inc/dec
-		set(lvalue(v), incDec(long(r), *p == '-' ? -1 : 1));
+		set(lvalue(v), incDec(Int(r), *p == '-' ? -1 : 1));
 		v = XValue(false, r);
 	}
 	p += 2;
@@ -499,7 +507,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 	switch (p < e ? *p : 0) {
 		case 0:		return false;
 		case '!':	expr(++p, e, v, false, dry, PREFIX); if (!dry) v = XValue(false, !rvalue(v)); return true;			// <-- logical not
-		case '~':	expr(++p, e, v, false, dry, PREFIX); if (!dry) v = XValue(false, ~ulong(rvalue(v))); return true;	// <-- bitwise not
+		case '~':	expr(++p, e, v, false, dry, PREFIX); if (!dry) v = XValue(false, ~UInt(rvalue(v))); return true;	// <-- bitwise not
 		case '(':	termExpr(++p, e, v, false, dry, BRACKETS, ')'); return true;										// <-- parenthesis
 		case ':':	if (e - p > 1 && p[1] == ':') p += 2; break;														// <-- root
 		case '^':	while (++p < e && *p == '^'); break;																// <-- frame peek
@@ -528,7 +536,7 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					else if (++p >= e) return false;
 					else if (*p == *b) {
 						expr(++p, e, v, false, dry, PREFIX);															// <-- pre inc/dec
-						if (!dry) v = XValue(false, set(lvalue(v), incDec(long(rvalue(v, false)), *b == '-' ? -1 : 1)));
+						if (!dry) v = XValue(false, set(lvalue(v), incDec(Int(rvalue(v, false)), *b == '-' ? -1 : 1)));
 						return true;
 					} else if (*p < '0' || *p > '9') {
 						expr(p, e, v, false, dry, PREFIX);																// <-- positive / negative
@@ -537,9 +545,9 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 					} /* else continue */
 
 		case '0':	if (e - p > 1 && p[1] == 'x') {
-						ulong l = hexToLong<String>(p += 2, e);															// <-- hexadecimal literal
+						const UInt l = UInt(hexToLong<String>(p += 2, e));															// <-- hexadecimal literal
 						if (p == b + 2) throw Xception(STR("Invalid hexadecimal number"));
-						if (!dry) v = XValue(false, *b == '-' ? Value(long(0 - l)) : Value(l));						// Hex literals are integers and wrap like the bitwise operators.
+						if (!dry) v = XValue(false, *b == '-' ? Value(Int(0 - l)) : Value(l));						// Hex literals are integers and wrap like the bitwise operators.
 						return true;
 					} /* else continue */
 
@@ -598,11 +606,11 @@ TMPL bool Script<CFG>::Frame::pre(StringIt& p, const StringIt& e, XValue& v, boo
 	return (b != p);
 }
 
-TMPL long Script<CFG>::Frame::intDiv(long x, long y) {
+TMPL Int Script<CFG>::Frame::intDiv(Int x, Int y) {
 	if (y == 0) {
 		throw Xception(STR("Division by zero"));
 	}
-	if (y == -1 && x == std::numeric_limits<long>::min()) {													// LONG_MIN / -1 does not fit in a long and traps on x86 (just like division by zero).
+	if (y == -1 && x == std::numeric_limits<Int>::min()) {													// The most negative integer / -1 does not fit and traps on x86 (just like division by zero).
 		throw Xception(STR("Integer overflow"));
 	}
 	return x / y;
@@ -1020,9 +1028,9 @@ TMPL T_TYPE(String) Script<CFG>::lib::radix(const Frame& f) {
 	int radix = f.get(STR("$1"));
 	if (radix < 2 || radix > 16) throw Xception(String(STR("Radix out of range: ")) += intToString<String>(radix));
 	int minLength = f.getOptional(STR("$2"), 1);
-	if (minLength < 0 || minLength > int(sizeof (int) * 8))
+	if (minLength < 0 || minLength > int(sizeof (UInt) * 8))
 		throw Xception(String(STR("Minimum length out of range: ")) += intToString<String>(minLength));
-	return intToString<String, ulong>(f.get(STR("$0")), f.get(STR("$1")), minLength);
+	return intToString<String, UInt>(UInt(f.get(STR("$0"))), radix, minLength);
 }
 
 TMPL void Script<CFG>::lib::save(const String& file, const String& chars) {

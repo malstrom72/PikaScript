@@ -144,30 +144,34 @@
 <p>PikaScript is pretty strict with the kind of values it allows for many operations. For example, <tt>true</tt> and <tt>false</tt> are the only legal values for logical expressions (such as <tt>if</tt> and <tt>for</tt>). <a href="#Functions">Functions</a> and <i>lambda expressions</i> are the only legal targets for function calls and numbers are the only acceptable values for arithmetic operations.</p>
 <p>In PikaScript you simply declare variables by assigning them values (in fact, this is the only way to create new variables). Unless a variable is global (prefixed with <tt>::</tt>), it will be destroyed when the function wherein it is declared returns. Read more about variable scopes under <a href="#Functions">Functions</a>.</p>
 <h2><a name="Numbers">Numbers</a></h2>
-<p>There is only one kind of number value in PikaScript, but there are two different sets of rules for calculating with it. You can think of it as two worlds: the <i>floating point world</i> and the <i>integer world</i>. (JavaScript works in a similar way.)</p>
-<p>The floating point world is the default. Decimal literals (e.g. <tt>12</tt>, <tt>3.5</tt>, <tt>1e-8</tt> and <tt>infinity</tt>), the arithmetic operators <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>/</tt> and <tt>%</tt>, the numerical comparisons and the math functions all work with double precision floating point numbers. Results are written with up to 14 significant digits and integers of ten billion or more are written in exponential notation (e.g. <tt>10000000000</tt> becomes <tt>1e+10</tt>). Invalid operations such as <tt>0 / 0</tt> or <tt>sqrt(-1)</tt> result in <tt>nan</tt> ("not a number"), which is not accepted as a number by any other operation.</p>
-<p>The integer world consists of the operations that only work on integers:</p>
+<p>PikaScript calculates in two different ways, a little like JavaScript. Most operations use double precision floating point, but a few are integer operations with their own rules.</p>
+<p><b>Floating point:</b> decimal literals (e.g. <tt>12</tt>, <tt>3.5</tt>, <tt>1e-8</tt> and <tt>infinity</tt>), <tt>+</tt>, <tt>-</tt>, <tt>*</tt>, <tt>/</tt>, <tt>%</tt>, comparisons and the math functions. Results are written with up to 14 significant digits, so integers of ten billion or more get exponential notation (<tt>10000000000</tt> becomes <tt>1e+10</tt>) and comparisons are only exact up to 2<sup>53</sup> (use <tt>===</tt> beyond that). Invalid operations such as <tt>0 / 0</tt> give <tt>nan</tt>, which no operation accepts as a number.</p>
+<p><b>Integer:</b> <tt>++</tt>, <tt>--</tt>, <tt>\</tt> (rounds towards zero), the bitwise operators <tt>~</tt>, <tt>&amp;</tt>, <tt>|</tt>, <tt>^</tt>, <tt>&lt;&lt;</tt>, <tt>&gt;&gt;</tt> and hexadecimal literals. Integers are 32 bits on every platform, or 64 bits if PikaScript is compiled with <tt>PIKA_64_BIT_INTEGERS</tt>.</p>
 
 <ul>
-<li>Increment and decrement: <tt>++x</tt>, <tt>--x</tt>, <tt>x++</tt> and <tt>x--</tt>.</li>
-</ul>
-
-<ul>
-<li>Integer division: <tt>x \ y</tt> (rounds towards zero).</li>
-</ul>
-
-<ul>
-<li>The bitwise operators: <tt>~x</tt>, <tt>x &amp; y</tt>, <tt>x | y</tt>, <tt>x ^ y</tt>, <tt>x &lt;&lt; y</tt> and <tt>x &gt;&gt; y</tt>.</li>
-</ul>
-
-<ul>
-<li>Hexadecimal literals, e.g. <tt>0xFF</tt> and <tt>-0x10</tt>. (The sign is part of the literal. Negating a value, as in <tt>-(0x10)</tt> or <tt>-x</tt>, is a floating point operation.)
+<li><tt>++</tt>, <tt>--</tt>, <tt>\</tt> and the shift count are signed. The bitwise operators are unsigned and treat negative values as two's complement (<tt>~0</tt> is <tt>4294967295</tt> and <tt>-1 &amp; 0xFF</tt> is <tt>255</tt>).
 </li>
 </ul>
-<p>These operations use the C++ <tt>long</tt> integer type of the platform (or its unsigned counterpart for the bitwise operators). Notice that <tt>long</tt> is 32 bits on Windows, but 64 bits on macOS and most other Unix systems, so the range of integers depends on the platform.</p>
-<p>Results in the integer world wrap around at the ends of the range, just like integers in C. For example, with 32-bit integers <tt>x = 2147483647; ++x</tt> gives <tt>-2147483648</tt>, <tt>-0xFFFFFFFF</tt> gives <tt>1</tt> and <tt>~0</tt> gives <tt>4294967295</tt>. Negative values are treated as two's complement by the bitwise operators (e.g. <tt>-1 &amp; 0xFF</tt> is <tt>255</tt>). The shift count is a signed integer, and shifting by a negative count, or by as many bits as the integer has or more, gives <tt>0</tt>. Integer division by zero throws <tt>'Division by zero'</tt> and dividing the most negative integer by <tt>-1</tt> throws <tt>'Integer overflow'</tt>.</p>
-<p>A value that enters the integer world must be an integer written in decimal form (no fraction and no exponent), otherwise <tt>'Invalid integer'</tt> is thrown. E.g. <tt>1.5 \ 1</tt> throws, and since large decimal numbers are written in exponential notation, so does <tt>10000000000 \ 1</tt>. An integer that is too large for the range is cut down to its lowest bits by the bitwise operators (e.g. <tt>(4294967296 + 5) &amp; 0xFF</tt> is <tt>5</tt>), but it throws <tt>'Invalid integer'</tt> for <tt>++</tt>, <tt>--</tt> and <tt>\</tt>. Integers expected elsewhere, such as substring offsets and the integer arguments of <tt>radix()</tt> and <tt>precision()</tt>, follow the same rule as <tt>++</tt>, <tt>--</tt> and <tt>\</tt> (except the value converted by <tt>radix()</tt>, which follows the rule of the bitwise operators).</p>
-<p>Notice that <tt>==</tt>, <tt>&lt;</tt> and the other comparisons compare numbers as floating point values. Integers that are too large to be represented exactly in double precision (beyond 2<sup>53</sup>) may therefore compare as equal even when they differ. Use <tt>===</tt> to compare such integers exactly.</p>
+
+<ul>
+<li>A hexadecimal literal is unsigned (<tt>0xFFFFFFFF</tt> is <tt>4294967295</tt>), unless it has a minus sign, which is part of the literal (<tt>-0x10</tt> is <tt>-16</tt>). <tt>-(0x10)</tt> and <tt>-x</tt> are floating point negations.
+</li>
+</ul>
+
+<ul>
+<li>Results wrap around like in C: <tt>x = 2147483647; ++x</tt> gives <tt>-2147483648</tt> and <tt>-0xFFFFFFFF</tt> gives <tt>1</tt> (with 32 bits). Shifting by a negative count, or by the number of bits or more, gives <tt>0</tt>.
+</li>
+</ul>
+
+<ul>
+<li>Operands must be integers in decimal form, otherwise <tt>'Invalid integer'</tt> is thrown (e.g. <tt>1.5 \ 1</tt> and <tt>1e+10 \ 1</tt>). Integers that are too large throw the same error for the signed operations, while the bitwise
+ operators keep their lowest bits (<tt>(4294967296 + 5) &amp; 0xFF</tt> is <tt>5</tt>).
+</li>
+</ul>
+
+<ul>
+<li><tt>x \ 0</tt> throws <tt>'Division by zero'</tt> and the most negative integer <tt>\ -1</tt> throws <tt>'Integer overflow'</tt>.</li>
+</ul>
 <h2><a name="Operators">Operators</a></h2>
 <p>Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements (such as <tt>if</tt> and <tt>for</tt>) are actually operators rather than statements. See <a href="#Expressions">Expressions</a> for more on this.</p>
 <p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Levels 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
