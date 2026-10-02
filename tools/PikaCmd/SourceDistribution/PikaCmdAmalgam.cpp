@@ -3537,6 +3537,10 @@ Script::String getEnvironmentVar(const Script::String& var) {
 
 #ifdef LIBFUZZ
 
+#if defined(_MSC_VER)
+	#include <crtdbg.h>
+#endif
+
 struct CallDepthException { };
 struct TimeOutException { };
 
@@ -3576,6 +3580,17 @@ class LibFuzzRoot : public Script::FullRoot {
 	protected:	std::clock_t deadline;
 	protected:	int callDepth;
 };
+
+extern "C" int LLVMFuzzerInitialize(int*, char***) {
+#if defined(_MSC_VER)
+	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);	// No modal dialog: let libFuzzer catch the abort and save the input.
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+#endif
+	return 0;
+}
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     try {
