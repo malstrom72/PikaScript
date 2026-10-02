@@ -68,8 +68,6 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;
-typedef long long llong;
-typedef unsigned long long ullong;
 
 /**
 	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators,
@@ -97,7 +95,7 @@ typedef unsigned long long ullong;
 //@{
 
 template<class S> std::string toStdString(const S& s);																	///< Converts the string \p s to a standard C++ string. \details The default implementation is std::string(s.begin(), s.end()). You should specialize this template if necessary.
-template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);					///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
+template<class S> uint64_t hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit.
 template<class S, typename T> S intToString(T i, int radix = 10, int minLength = 1);									///< Converts the integer \p i to a string with a radix and minimum length of your choice. \details \p radix can be anything between 1 (binary) and 16 (hexadecimal).
 template<class S> double stringToDouble(typename S::const_iterator& p, const typename S::const_iterator& e);			///< Converts a string in scientific e notation (e.g. -12.34e-3) to a double floating point value. \details Spaces before 'e' are not accepted. Uppercase 'E' is allowed. Positive and negative 'infinity' is supported (provided the compiler allows it).\p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
@@ -228,8 +226,8 @@ template<class S> class STLValue : public S {
 	public:		STLValue(ulong i) : S(intToString<S, ulong>(i)) { }														///< Constructs a value representing the ulong integer \p l.
 	public:		STLValue(int i) : S(intToString<S, long>(i)) { }														///< Constructs a value representing the signed integer \p i.
 	public:		STLValue(uint i) : S(intToString<S, ulong>(i)) { }														///< Constructs a value representing the unsigned integer \p i.
-	public:		STLValue(llong i) : S(intToString<S, llong>(i)) { }														///< Constructs a value representing the signed long long integer \p i.
-	public:		STLValue(ullong i) : S(intToString<S, ullong>(i)) { }													///< Constructs a value representing the unsigned long long integer \p i.
+	public:		STLValue(long long i) : S(intToString<S, long long>(i)) { }												///< Constructs a value representing the signed 64-bit integer \p i. \details (Declared as long long since int64_t is long on some platforms.)
+	public:		STLValue(unsigned long long i) : S(intToString<S, unsigned long long>(i)) { }							///< Constructs a value representing the unsigned 64-bit integer \p i.
 	public:		STLValue(bool b) : S(b ? S(STR("true")) : S(STR("false"))) { }											///< Constructs a value representing the boolean \p b.
 	public:		template<class T> STLValue(const T& s) : S(s) { }														///< Pass other types of construction onwards to the super-class \p S.
 	//@}
@@ -239,11 +237,11 @@ template<class S> class STLValue : public S {
 	public:		operator long() const;																					///< Converts the value to a signed long integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator double() const;																				///< Converts the value to a double precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
 	public:		operator float() const { return float(double(*this)); }													///< Converts the value to a single precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
-	public:		operator ulong() const { return ulong(ullong(*this)); }													///< Converts the value to an ulong integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator ulong() const;																					///< Converts the value to an ulong integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
 	public:		operator int() const;																					///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator uint() const { return uint(ullong(*this)); }													///< Converts the value to an unsigned integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
-	public:		operator llong() const;																					///< Converts the value to a signed long long integer. \details If the value isn't in valid integer format, or does not fit, an exception is thrown.
-	public:		operator ullong() const;																				///< Converts the value to an unsigned long long integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator uint() const;																					///< Converts the value to an unsigned integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator long long() const;																				///< Converts the value to a signed 64-bit integer. \details If the value isn't in valid integer format, or does not fit, an exception is thrown.
+	public:		operator unsigned long long() const;																	///< Converts the value to an unsigned 64-bit integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
 	//@}
 	/// \name Overloaded operators (comparisons and subscript).
 	//@{

@@ -68,8 +68,6 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;
-typedef long long llong;
-typedef unsigned long long ullong;
 
 /**
 	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators,
@@ -97,7 +95,7 @@ typedef unsigned long long ullong;
 //@{
 
 template<class S> std::string toStdString(const S& s);																	///< Converts the string \p s to a standard C++ string. \details The default implementation is std::string(s.begin(), s.end()). You should specialize this template if necessary.
-template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);					///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
+template<class S> uint64_t hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in hexadecimal form to an unsigned 64-bit integer (wrapping around if there are too many digits). \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
 template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e);				///< Converts a string in decimal form to a signed long integer. \details \p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted. If the value does not fit in a long, the result saturates at the long range limit.
 template<class S, typename T> S intToString(T i, int radix = 10, int minLength = 1);									///< Converts the integer \p i to a string with a radix and minimum length of your choice. \details \p radix can be anything between 1 (binary) and 16 (hexadecimal).
 template<class S> double stringToDouble(typename S::const_iterator& p, const typename S::const_iterator& e);			///< Converts a string in scientific e notation (e.g. -12.34e-3) to a double floating point value. \details Spaces before 'e' are not accepted. Uppercase 'E' is allowed. Positive and negative 'infinity' is supported (provided the compiler allows it).\p p is updated on return to point to the first unparsed (e.g. invalid) character. If \p p == \p e, the full string was successfully converted.
@@ -228,8 +226,8 @@ template<class S> class STLValue : public S {
 	public:		STLValue(ulong i) : S(intToString<S, ulong>(i)) { }														///< Constructs a value representing the ulong integer \p l.
 	public:		STLValue(int i) : S(intToString<S, long>(i)) { }														///< Constructs a value representing the signed integer \p i.
 	public:		STLValue(uint i) : S(intToString<S, ulong>(i)) { }														///< Constructs a value representing the unsigned integer \p i.
-	public:		STLValue(llong i) : S(intToString<S, llong>(i)) { }														///< Constructs a value representing the signed long long integer \p i.
-	public:		STLValue(ullong i) : S(intToString<S, ullong>(i)) { }													///< Constructs a value representing the unsigned long long integer \p i.
+	public:		STLValue(long long i) : S(intToString<S, long long>(i)) { }												///< Constructs a value representing the signed 64-bit integer \p i. \details (Declared as long long since int64_t is long on some platforms.)
+	public:		STLValue(unsigned long long i) : S(intToString<S, unsigned long long>(i)) { }							///< Constructs a value representing the unsigned 64-bit integer \p i.
 	public:		STLValue(bool b) : S(b ? S(STR("true")) : S(STR("false"))) { }											///< Constructs a value representing the boolean \p b.
 	public:		template<class T> STLValue(const T& s) : S(s) { }														///< Pass other types of construction onwards to the super-class \p S.
 	//@}
@@ -239,11 +237,11 @@ template<class S> class STLValue : public S {
 	public:		operator long() const;																					///< Converts the value to a signed long integer. \details If the value isn't in valid integer format an exception is thrown.
 	public:		operator double() const;																				///< Converts the value to a double precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
 	public:		operator float() const { return float(double(*this)); }													///< Converts the value to a single precision floating point. \details If the value isn't in valid floating point format an exception is thrown.
-	public:		operator ulong() const { return ulong(ullong(*this)); }													///< Converts the value to an ulong integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator ulong() const;																					///< Converts the value to an ulong integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
 	public:		operator int() const;																					///< Converts the value to a signed integer. \details If the value isn't in valid integer format an exception is thrown.
-	public:		operator uint() const { return uint(ullong(*this)); }													///< Converts the value to an unsigned integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
-	public:		operator llong() const;																					///< Converts the value to a signed long long integer. \details If the value isn't in valid integer format, or does not fit, an exception is thrown.
-	public:		operator ullong() const;																				///< Converts the value to an unsigned long long integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator uint() const;																					///< Converts the value to an unsigned integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
+	public:		operator long long() const;																				///< Converts the value to a signed 64-bit integer. \details If the value isn't in valid integer format, or does not fit, an exception is thrown.
+	public:		operator unsigned long long() const;																	///< Converts the value to an unsigned 64-bit integer. \details Values that are too large keep their lowest bits (and negative values convert to two's complement). If the value isn't in valid integer format an exception is thrown.
 	//@}
 	/// \name Overloaded operators (comparisons and subscript).
 	//@{
@@ -718,9 +716,9 @@ template<> inline std::basic_istream<char>& xcin() { return std::cin; }
 template<> inline std::basic_istream<wchar_t>& xcin() { return std::wcin; }
 template<> inline std::string toStdString(const std::string& s) { return s; }
 
-inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }								// Out of range (and negative) shift counts are undefined behavior in C++.
+inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }							// Out of range (and negative) shift counts are undefined behavior in C++.
 inline UInt shiftLeft(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l << r; }
-inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }															// Increment and decrement wrap around (well defined in unsigned).
+inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }														// Increment and decrement wrap around (well defined in unsigned).
 inline UInt bitAnd(UInt l, UInt r) { return l & r; }
 inline UInt bitOr(UInt l, UInt r) { return l | r; }
 inline UInt bitXor(UInt l, UInt r) { return l ^ r; }
@@ -736,23 +734,23 @@ template<class S> std::string toStdString(const S& s) { return std::string(s.beg
 template<> std::string toStdString(const std::string& s);
 inline std::string& toStdString(std::string& s) { return s; }
 
-template<class S> ullong hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
+template<class S> uint64_t hexToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
 	assert(p <= e);
-	ullong l = 0;
+	uint64_t l = 0;
 	for (; p < e && ((*p >= '0' && *p <= '9') || (*p >= 'A' && *p <= 'F') || (*p >= 'a' && *p <= 'f')); ++p)
 		l = (l << 4) + (*p <= '9' ? *p - '0' : (*p & ~0x20) - ('A' - 10));
 	return l;
 }
 
-template<class S> ullong scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
-		, ullong maxPositive, bool& overflow) {
+template<class S> uint64_t scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
+		, uint64_t maxPositive, bool& overflow) {
 	assert(p <= e);
 	const bool negative = (e - p > 1 && ((*p == '+' || *p == '-') && p[1] >= '0' && p[1] <= '9') ? (*p++ == '-') : false);
-	const ullong limit = (negative ? maxPositive + 1 : maxPositive), cutoff = limit / 10, cutlim = limit % 10;
-	ullong l = 0;
+	const uint64_t limit = (negative ? maxPositive + 1 : maxPositive), cutoff = limit / 10, cutlim = limit % 10;
+	uint64_t l = 0;
 	overflow = false;
 	for (; p < e && *p >= '0' && *p <= '9'; ++p) {
-		const ullong d = *p - '0';
+		const uint64_t d = *p - '0';
 		overflow = overflow || l > cutoff || (l == cutoff && d > cutlim);
 		l = l * 10 + d;
 	}
@@ -762,7 +760,7 @@ template<class S> ullong scanInteger(typename S::const_iterator& p, const typena
 template<class S> long stringToLong(typename S::const_iterator& p, const typename S::const_iterator& e) {
 	const bool negative = (p < e && *p == '-');
 	bool overflow;
-	const ullong l = scanInteger<S>(p, e, std::numeric_limits<long>::max(), overflow);
+	const uint64_t l = scanInteger<S>(p, e, std::numeric_limits<long>::max(), overflow);
 	if (overflow) return (negative ? std::numeric_limits<long>::min() : std::numeric_limits<long>::max());
 	return long(l);
 }
@@ -813,7 +811,7 @@ template<class S> S doubleToString(double d, int precision) {
 	double x = fabs(d), y = x;
 	if (d != d) return S(STR("nan"));																					// NaN fails all tests below.
 	if (y <= EPSILON) return S(STR("0"));
-	else if (precision >= 12 && y < LARGE && llong(d) == d) return intToString<S, llong>(llong(d));
+	else if (precision >= 12 && y < LARGE && int64_t(d) == d) return intToString<S, int64_t>(int64_t(d));
 	else if (std::numeric_limits<double>::has_infinity && x == std::numeric_limits<double>::infinity())
 		return d < 0 ? S(STR("-infinity")) : S(STR("+infinity"));
 	typename S::value_type buffer[32], * bp = buffer + 2, * dp = bp, * pp = dp + 1, * ep = pp + precision;
@@ -862,7 +860,7 @@ template<class S> S unescape(typename S::const_iterator& p, const typename S::co
 		if (*p == '\\' && e - p > 1) {
 			d += S(b, p);
 			const CHAR* f = std::find(ESCAPE_CHARS, ESCAPE_CHARS + ESCAPE_CODE_COUNT, *++p);
-			ullong l;
+			uint64_t l;
 			if (f != ESCAPE_CHARS + ESCAPE_CODE_COUNT) { ++p; l = ESCAPE_CODES[f - ESCAPE_CHARS]; }
 			else if (*p == 'x') { b = ++p; l = hexToLong<S>(p, (e - p > 2 ? p + 2 : e)); }
 			else if (*p == 'u') { b = ++p; l = hexToLong<S>(p, (e - p > 4 ? p + 4 : e)); }
@@ -912,24 +910,31 @@ template<class S> STLValue<S>::operator bool() const {
 
 template<class S> void throwInvalidInteger(const S& s) { throw Exception<S>(S(STR("Invalid integer: ")) += escape(s)); }
 
-template<class S> ullong scanValue(const S& s, ullong maxPositive, bool& overflow) {
+template<class S> uint64_t scanValue(const S& s, uint64_t maxPositive, bool& overflow) {
 	typename S::const_iterator p = s.begin();
-	const ullong y = scanInteger<S>(p, s.end(), maxPositive, overflow);
+	const uint64_t y = scanInteger<S>(p, s.end(), maxPositive, overflow);
 	if (p == s.begin() || p < s.end()) throwInvalidInteger(s);
 	return y;
 }
 
 template<class T, class S> T toSignedInteger(const S& s) {
 	bool overflow;
-	const ullong y = scanValue(s, std::numeric_limits<T>::max(), overflow);
+	const uint64_t y = scanValue(s, std::numeric_limits<T>::max(), overflow);
 	if (overflow) throwInvalidInteger(s);
 	return T(y);
 }
 
-template<class S> STLValue<S>::operator long() const { return toSignedInteger<long, S>(*this); }
+template<class T, class S> T toUnsignedInteger(const S& s) {
+	bool overflow;
+	return T(scanValue(s, 0, overflow));
+}
+
 template<class S> STLValue<S>::operator int() const { return toSignedInteger<int, S>(*this); }
-template<class S> STLValue<S>::operator llong() const { return toSignedInteger<llong, S>(*this); }
-template<class S> STLValue<S>::operator ullong() const { bool overflow; return scanValue<S>(*this, 0, overflow); }	// Ignores overflow, keeping the lowest bits.
+template<class S> STLValue<S>::operator long() const { return toSignedInteger<long, S>(*this); }
+template<class S> STLValue<S>::operator long long() const { return toSignedInteger<long long, S>(*this); }
+template<class S> STLValue<S>::operator uint() const { return toUnsignedInteger<uint, S>(*this); }
+template<class S> STLValue<S>::operator ulong() const { return toUnsignedInteger<ulong, S>(*this); }
+template<class S> STLValue<S>::operator unsigned long long() const { return toUnsignedInteger<unsigned long long, S>(*this); }
 
 template<class S> STLValue<S>::operator double() const {
 	double d;
@@ -1654,7 +1659,7 @@ TMPL void Script<CFG>::lib::save(const String& file, const String& chars) {
 	std::basic_ofstream<Char> outstream(toStdString(file).c_str());															// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	if (!outstream.good()) throw Xception(String(STR("Cannot open file for writing: ")) += escape(file));
 	outstream.write(chars.data(), chars.size());
-	outstream.close();																										// Flush now so errors writing the last buffered bytes are not lost in the destructor.
+	outstream.close();																									// Flush now so errors writing the last buffered bytes are not lost in the destructor.
 	if (outstream.fail()) throw Xception(String(STR("Error writing to file: ")) += escape(file));
 }
 
