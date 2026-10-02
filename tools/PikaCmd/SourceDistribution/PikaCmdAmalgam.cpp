@@ -744,8 +744,6 @@ template<class S> ullong hexToLong(typename S::const_iterator& p, const typename
 	return l;
 }
 
-// Scans an optionally signed decimal integer and returns it in two's complement (wrapped modulo 2^64). `overflow` is set
-// if it does not fit in a signed integer type whose largest value is `maxPositive`.
 template<class S> ullong scanInteger(typename S::const_iterator& p, const typename S::const_iterator& e
 		, ullong maxPositive, bool& overflow) {
 	assert(p <= e);
@@ -914,7 +912,6 @@ template<class S> STLValue<S>::operator bool() const {
 
 template<class S> void throwInvalidInteger(const S& s) { throw Exception<S>(S(STR("Invalid integer: ")) += escape(s)); }
 
-// Converts all of `s` with scanInteger(), throwing 'Invalid integer' if it is not a decimal integer.
 template<class S> ullong scanValue(const S& s, ullong maxPositive, bool& overflow) {
 	typename S::const_iterator p = s.begin();
 	const ullong y = scanInteger<S>(p, s.end(), maxPositive, overflow);
