@@ -8,7 +8,7 @@
 	
 	\version
 	
-	Version 0.98
+	Version 0.981
 	
 	\page Copyright
 	
@@ -76,6 +76,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 				}
 
 	public:		virtual bool erase(const String& identifier) {
+					if (identifier.empty()) return false;
 					bool erased = (Super::vars.erase(identifier) != 0);
 					unsigned int i = hash(identifier);
 					if (cache[i].first == identifier) { cache[i] = std::pair<const String, Value>(); erased = true; }
