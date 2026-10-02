@@ -11,7 +11,7 @@
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -652,7 +652,7 @@ typedef Script<StdConfig> StdScript;
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -1796,7 +1796,7 @@ TMPL Script<CFG>::Variables::~Variables() { }
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2193,7 +2193,7 @@ bool unitTest();
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2300,7 +2300,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2360,7 +2360,7 @@ template struct Script<StdConfig>;
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -2447,7 +2447,7 @@ const char* BUILT_IN_DEBUG =
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
-	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -2710,7 +2710,7 @@ const char* BUILT_IN_HELP =
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
-	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -2920,7 +2920,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
-	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"
@@ -3040,7 +3040,7 @@ const char* BUILT_IN_STDLIB =
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
-	"\tCopyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem\n"
+	"\tCopyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem\n"
 	"\tAll rights reserved.\n"
 	"*/\n"
 	"\n"

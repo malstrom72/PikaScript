@@ -15,7 +15,7 @@
 	
 	PikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause
 	
-	Copyright (c) 2008-2025, NuEdge Development / Magnus Lidstroem
+	Copyright (c) 2008-2026, NuEdge Development / Magnus Lidstroem
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
