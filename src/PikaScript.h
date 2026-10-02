@@ -41,6 +41,7 @@
 #include <map>
 #include <string>
 #include <functional>
+#include <stdint.h>
 
 // These are defined as macros in the Windows headers and collide with some of our "proper" C++ definitions. Sorry, it
 // just ain't right to use global macros in C++. I #undef them. Include PikaScript.h before the Windows headers if you
@@ -73,16 +74,17 @@ typedef unsigned long long ullong;
 /**
 	Int and UInt are the integer types of the PikaScript integer operations (++, --, \, the bitwise operators and
 	hexadecimal literals). They are 32 bits on every platform, or 64 bits if PIKA_64_BIT_INTEGERS is defined to 1.
+	(STLValue converts them through its int / long / long long overloads.)
 **/
 #if !defined(PIKA_64_BIT_INTEGERS)
 	#define PIKA_64_BIT_INTEGERS 0
 #endif
 #if (PIKA_64_BIT_INTEGERS)
-	typedef llong Int;
-	typedef ullong UInt;
+	typedef int64_t Int;
+	typedef uint64_t UInt;
 #else
-	typedef int Int;
-	typedef uint UInt;
+	typedef int32_t Int;
+	typedef uint32_t UInt;
 #endif
 
 /**

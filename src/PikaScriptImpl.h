@@ -85,7 +85,7 @@ template<> inline std::string toStdString(const std::string& s) { return s; }
 
 inline UInt shiftRight(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l >> r; }							// Out of range (and negative) shift counts are undefined behavior in C++.
 inline UInt shiftLeft(UInt l, Int r) { return (UInt(r) >= sizeof (UInt) * 8) ? 0 : l << r; }
-inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }														// ++ / -- wrap around (well defined in unsigned).
+inline Int incDec(Int x, Int d) { return Int(UInt(x) + UInt(d)); }														// Increment and decrement wrap around (well defined in unsigned).
 inline UInt bitAnd(UInt l, UInt r) { return l & r; }
 inline UInt bitOr(UInt l, UInt r) { return l | r; }
 inline UInt bitXor(UInt l, UInt r) { return l ^ r; }

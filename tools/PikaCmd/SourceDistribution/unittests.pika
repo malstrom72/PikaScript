@@ -606,7 +606,7 @@ assert(> right(radix(-1, 16), 8) === 'ffffffff' && (-1 & 0xFF) == 255);		// Nega
 assert(> right(radix(~0, 16), 8) === 'ffffffff');
 assert(> ((4294967296 + 5) & 0xFF) == 5);									// Bitwise operators keep the low bits of values that are too large.
 assert(> 1e99999999999 == +infinity && 1e-99999999999 == 0);				// Huge exponents still parse.
-assert(>{ x = maxInt; ++x; x === minInt });								// ++ / -- are pure integer operations that wrap around (used to be undefined behavior).
+assert(>{ x = maxInt; ++x; x === minInt });								// Increment and decrement are integer operations that wrap around (used to be undefined behavior).
 assert(>{ x = minInt; x--; x === maxInt });								// - " -
 assert(> intIs32 || { x = 9999999999; ++x; x++; x === '10000000001' });	// Stays an integer (not 1.0000000001e+10) with 64-bit integers.
 assert(>{ x = 7; x \= 2; x <<= 2; x &= 0xF; x |= 1; x ^= 3; x == 14 });		// Compound assignments in the integer world.

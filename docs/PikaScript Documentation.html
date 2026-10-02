@@ -174,7 +174,7 @@
 </ul>
 <h2><a name="Operators">Operators</a></h2>
 <p>Since everything counts as expressions in PikaScript, you will find that quite a few of the standard C / C++ statements (such as <tt>if</tt> and <tt>for</tt>) are actually operators rather than statements. See <a href="#Expressions">Expressions</a> for more on this.</p>
-<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Levels 0&#8211;3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
+<p>The precedence values used in the table below match the <tt>Precedence</tt> enumeration in the header. Levels 0-3 are artificial levels reserved for the tracing system and the <tt>tick()</tt> callback. They never appear in actual expressions. Real operators start at the <tt>STATEMENT</tt> level (4) and continue upward with higher values meaning higher precedence.</p>
 <table>
 <tr>
 <th>Operator</th><th>Prec.</th><th colspan=2>Comment</th>
