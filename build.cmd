@@ -13,6 +13,13 @@ tools\PikaCmd\SourceDistribution\PikaCmd examples\ppegDocExample.pika || GOTO er
 
 tools\PikaCmd\SourceDistribution\PikaCmd tests\htmlifyTests.pika || GOTO error
 
+IF NOT EXIST output MD output
+CALL tools\PikaCmd\SourceDistribution\BuildCpp.cmd beta native output\PikaCmdFuzzReplay.exe /D LIBFUZZ /D "PLATFORM_STRING=WINDOWS" tools\PikaCmd\SourceDistribution\PikaCmdAmalgam.cpp tests\fuzz\FuzzMain.cpp || GOTO error
+IF EXIST output\fuzzReplay RD /S /Q output\fuzzReplay
+MD output\fuzzReplay || GOTO error
+tar -xzf tests\fuzz\corpus.tar.gz -C output\fuzzReplay || GOTO error
+DIR /B /S /A-D tests\fuzz\seeds\*.pika output\fuzzReplay | output\PikaCmdFuzzReplay.exe || GOTO error
+
 PUSHD tools\PikaCmd\SourceDistribution
 DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release

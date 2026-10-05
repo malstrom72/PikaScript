@@ -5,7 +5,7 @@ cd "$(dirname "$0")"/..
 mkdir -p output
 
 CPP_COMPILER="${CPP_COMPILER:-clang++}"
-CPP_OPTIONS="-std=c++14 -fsanitize=fuzzer,address"
+CPP_OPTIONS="-std=c++14 -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=all"
 export CPP_COMPILER CPP_OPTIONS
 
 bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/PikaCmdFuzz \
