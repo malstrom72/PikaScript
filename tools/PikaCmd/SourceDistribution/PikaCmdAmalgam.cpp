@@ -3599,6 +3599,11 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 		root.registerNative("getenv", getEnvironmentVar);
 		root.assign("exitCode", Script::Value(0));
 		root.assign("PLATFORM", Script::String(TO_STRING(PLATFORM_STRING)));
+		// Scripts can call natives by name (e.g. `<input>` in interactive.pika), so stubbing variables is not enough.
+		root.unregisterNative("save");
+		root.unregisterNative("print");
+		root.unregisterNative("input");
+		root.unregisterNative("system");
 		root.assign("save", Script::String("{}"));
 		root.assign("print", Script::String("{}"));
 		root.assign("input", Script::String("{void}"));
