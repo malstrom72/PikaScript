@@ -30,6 +30,10 @@ BuildCpp.sh and BuildCpp.cmd are copied from another repository. Only make chang
 Code style, design principles and commit messages follow [docs/CodingStyle.md](docs/CodingStyle.md), including the
 PikaScript exceptions in its "Local additions" section.
 
+Commit messages:
+- Short imperative subject, little or no body. Add a body only when the why is not visible in the diff itself.
+- No attribution trailers. No `Co-Authored-By` for tools or agents, no generated-with footers.
+
 When handling files with command-line tools (which may break tab characters):
 - Always run `expand -t 4` on the file before processing.
 - Always run `unexpand -t 4` on the file after processing.
