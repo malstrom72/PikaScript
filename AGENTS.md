@@ -25,46 +25,14 @@ Root-level `build.sh` and `build.cmd` (mirrored implementations) should build an
 
 BuildCpp.sh and BuildCpp.cmd are copied from another repository. Only make changes to them if there is no other solution.
 
-## Formatting rules
+## Coding style
 
-- Tabs (width 4) for indentation.
-- Opening braces stay on the same line as the control statement and closing braces are on their own line.
-- PikaScript uses a tight style: prefer no braces for single-statement `if`, `else` and `for` bodies, e.g.
-  `if (p >= e) return false;`.
-- Maximum line width is 120 characters. End-of-line comments may start at column 120.
-- Line continuations should start with the operator and be indented two tabs from the original line.
-- `#if`/`#endif` blocks should appear one tab *left* of the current indentation level.
-- Class comment - put a plain C-style block comment immediately above each class, *not* Doxygen.  
-	```
-	/**
-		One-sentence summary of what the class does.
-		Extra details if truly needed.
-	**/
-	```
-	* The two asterisks open/close the block; everything inside is indented with one tab.  
-- Small method comment - use a single end-of-line comment:  
-	void blahblah(int blah);	/// brief description of `blahblah`
-- Inside comment text, wrap any variable, parameter, class or function names in back-ticks, e.g. `blah` is the temporary buffer.
-- Keep the existing Doxygen-style comments (`///<` etc.) and the per-declaration access specifiers
-  (`public:<tab>declaration` on every line) used throughout the headers.
-- Use plain ASCII hyphens; never en or em dashes, or `--` as a dash (in code, comments, docs and commit messages).
+Code style, design principles and commit messages follow [docs/CodingStyle.md](docs/CodingStyle.md), including the
+PikaScript exceptions in its "Local additions" section.
 
 When handling files with command-line tools (which may break tab characters):
 - Always run `expand -t 4` on the file before processing.
 - Always run `unexpand -t 4` on the file after processing.
-
-## Design
-
-- RAII: a constructor produces a fully valid object or throws. No `init()` / `isValid()` style two-phase construction.
-- Design by contract: assert preconditions and invariants for programmer errors. Validate untrusted input once, where
-  it enters (e.g. the interpreter parsing a script); inside, trust the contract instead of re-checking it.
-- Throw for runtime conditions (bad input, I/O failure), never for programmer errors, and never return a half-done
-  result as success.
-
-## Commit messages
-
-- Short: a subject line, and a body only when the subject cannot carry it. No reports or investigation notes.
-- No `Co-Authored-By` or other attribution trailers for tools or agents.
 
 ## Script portability
 
