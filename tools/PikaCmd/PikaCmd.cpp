@@ -265,6 +265,7 @@ class LibFuzzRoot : public Script::FullRoot {
 
 extern "C" int LLVMFuzzerInitialize(int*, char***) {
 #if defined(_MSC_VER)
+	_set_error_mode(_OUT_TO_STDERR);
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);	// No modal dialog: let libFuzzer catch the abort and save the input.
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
