@@ -3326,7 +3326,7 @@ const char* BUILT_IN_STDLIB =
 
 	\version
 
-	Version 0.983
+	Version 0.982
 	
 	\page Copyright
 
@@ -3356,7 +3356,7 @@ const char* BUILT_IN_STDLIB =
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define PIKA_CMD_VERSION "0.983"
+#define PIKA_CMD_VERSION "0.982"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 
