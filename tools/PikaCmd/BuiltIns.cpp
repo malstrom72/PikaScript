@@ -1,6 +1,6 @@
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.981\n"
+	"\tdebug.pika v0.982\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -263,7 +263,7 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.981\n"
+	"\thelp.pika v0.982\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -473,7 +473,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.981\n"
+	"\tinteractive.pika v0.982\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -593,7 +593,7 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.981\n"
+	"\tstdlib.pika v0.982\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
