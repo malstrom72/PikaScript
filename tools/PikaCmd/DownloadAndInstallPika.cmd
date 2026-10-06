@@ -70,9 +70,9 @@ ECHO Extracting...
 cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
 DEL PikaCmdSourceDistribution.zip
 CD SourceDistribution || GOTO error
-CALL BuildPikaCmd || GOTO error
+CALL .\BuildPikaCmd.cmd || GOTO error
 REM runas.exe /savecred /user:administrator /noprofile "CMD /K CD /D %TEMP%&&CD SourceDistribution&&InstallPika.cmd C:\WINDOWS&&CD ..&&RMDIR /S /Q SourceDistribution" || GOTO error
-CALL InstallPika.cmd C:\WINDOWS || GOTO error
+CALL .\InstallPika.cmd C:\WINDOWS || GOTO error
 CD ..
 RMDIR /S /Q SourceDistribution
 ECHO SUCCESS!

@@ -5,7 +5,7 @@ CD /D "%~dp0"
 PUSHD tools\PikaCmd\SourceDistribution
 SET CPP_TARGET=beta
 DEL /Q PikaCmd.exe 2>NUL
-CALL BuildPikaCmd.cmd || GOTO error
+CALL .\BuildPikaCmd.cmd || GOTO error
 POPD
 tools\PikaCmd\SourceDistribution\PikaCmd tests\ppegTest.pika || GOTO error
 
@@ -23,7 +23,7 @@ DIR /B /S /A-D tests\fuzz\seeds\*.pika output\fuzzReplay | output\PikaCmdFuzzRep
 PUSHD tools\PikaCmd\SourceDistribution
 DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release
-CALL BuildPikaCmd.cmd || GOTO error
+CALL .\BuildPikaCmd.cmd || GOTO error
 POPD
 IF NOT EXIST output MD output
 COPY /Y tools\PikaCmd\SourceDistribution\PikaCmd.exe output\PikaCmd.exe || GOTO error

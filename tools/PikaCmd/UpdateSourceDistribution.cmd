@@ -9,7 +9,7 @@ IF NOT EXIST PikaCmd.exe (
         IF ERRORLEVEL 1 EXIT /B 1
 )
 
-PikaCmd.exe UpdateBuiltIns.pika
+.\PikaCmd.exe UpdateBuiltIns.pika
 IF ERRORLEVEL 1 (
 	ECHO Failed updating built-in files
 	EXIT /B 1
@@ -32,7 +32,7 @@ IF ERRORLEVEL 1 (
 )
 
 DEL /Q PikaCmd.exe >NUL 2>NUL
-CALL BuildPikaCmd.cmd
+CALL .\BuildPikaCmd.cmd
 IF ERRORLEVEL 1 EXIT /B 1
 
 COPY /Y PikaCmd.exe ..\PikaCmd.exe >NUL
