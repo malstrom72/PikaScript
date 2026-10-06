@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.981
+	Version 0.982
 	
 	\page Copyright
 	
@@ -929,8 +929,9 @@ TMPL T_TYPE(String) Script<CFG>::lib::lower(String s) {
 }
 
 TMPL T_TYPE(String) Script<CFG>::lib::character(double d) {
-	if (ushortChar(Char(d)) != d) throw Xception(String(STR("Illegal character code: ")) += doubleToString<String>(d));
-	return String(1, Char(d));
+	if (!(d >= 0 && d <= ushortChar(Char(-1)) && d == floor(d)))
+		throw Xception(String(STR("Illegal character code: ")) += doubleToString<String>(d));
+	return String(1, Char(ushort(d)));
 }
 
 TMPL uint Script<CFG>::lib::ordinal(const String& s) {
@@ -985,8 +986,8 @@ TMPL T_TYPE(Value) Script<CFG>::lib::invoke(Frame& f) {
 	long offset = long(f.getOptional(STR("$3"), 0));
 	long n = arg4.isVoid() ? long(f.get(source[String(STR("n"))])) - offset : long(arg4);
 	if (n < 0) throw Xception(STR("Too few array elements"));
-	std::vector<Value> a(n);
-	for (long i = 0; i < long(a.size()); ++i) a[i] = f.get(source[i + offset]);
+	std::vector<Value> a;
+	for (long i = 0; i < n; ++i) a.push_back(f.get(source[i + offset]));												// Not `a(n)`: a huge `n` must fail on a missing element, not allocate.
 	return f.call(f.getOptional(STR("$0")), f.getOptional(STR("$1")), long(a.size()), a.empty() ? 0 : &a[0]);
 }
 
