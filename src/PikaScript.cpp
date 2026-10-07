@@ -5,7 +5,7 @@
 	
 	\version
 	
-	Version 0.982
+	Version 0.983
 	
 	\page Copyright
 	
