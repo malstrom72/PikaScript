@@ -1,6 +1,6 @@
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.982\n"
+	"\tdebug.pika v0.983\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -263,7 +263,7 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.982\n"
+	"\thelp.pika v0.983\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -370,7 +370,7 @@ const char* BUILT_IN_HELP =
 	"describe('#queues', 'pushFront',\t\"@queue = pushFront(@queue, <value>)\",\t\t\t\"Pushes <value> to the front of the double-ended queue @queue. The returned value is the input @queue reference. (@queue must have been initialized with resetQueue() prior to calling this routine.)\", \"pushFront(@dq, 'firstOut')\", 'popBack, popFront, pushBack, queueSize, resetQueue');\n"
 	"\n"
 	"describe('#debug', 'assert',\t\"assert(?testResult|>testMe, ['description'])\",\t\t\"Asserts are used to check for programming errors in run-time. Until you run \\\"debug.pika\\\", asserts are disabled which means this function will do absolutely nothing (it is defined as an empty function in \\\"stdlib.pika\\\"). Running \\\"debug.pika\\\" will enable asserts by redefining this function. When enabled, it either checks the boolean ?testResult or executes >testMe and checks the result.\\n\\nTwo things differ depending on the choice of passing a boolean or a function / lambda expression. If you pass a boolean, e.g. assert(myfunc() == 3), and assertions are disabled, the argument will still be evaluated, i.e. myfunc() will still be called. Furthermore, if 'description' is omitted, the exception on an assertion failure will simply contain 'true' or 'false'. \\n\\nIf you pass a function / lambda expression, e.g. assert(>myfunc() == 3), the argument will only be evaluated if assertions are enabled and the exception will contain the full expression. In most cases you will want to use this variant.\", \"assert(>(0 <= $0 <= 100))\\nassert(alwaysCallMe(), 'alwaysCallMe() failed miserably')\");\n"
-	"describe('#debug', 'trace',\t\t\"trace([>tracer], [+level = 2])\",\t\t\t\t\t\"Sets or resets the tracer function. The tracer function is called at various points in the PikaScript interpreter code. For example, you can use it for tracing caught exceptions, function calls and even implement debuggers and profilers.\\n\\n+level ranges from 0 (no tracing) to 21 (maximum tracing) and determines which events that will trigger a callback. The default trace level of 2 calls the trace function on each function entry and exit. Other useful levels are 1 for tracing caught errors and 3 to trace every interpreted statement. (Please see \\\"PikaScriptImpl.h\\\" for a complete listing of all levels.)\\n\\nThe >tracer function will be called with the following arguments:\\n\\n$0 = the source code being executed\\n$1 = the offset into the source code\\n$2 = whether $3 is an lvalue or an rvalue (lvalue = identifier, rvalue = actual value)\\n$3 = the result from the last operation\\n$4 = trace level\\n$5 = false for \\\"entry\\\", true for \\\"exit\\\" (e.g. function call entry / exit).\\n\\nCall trace() without arguments to stop all tracing.\", \"trace()\\ntrace(function { print((if ($5) '} ' else '{ ') # if (exists(@^$callee)) ^$callee else '????') })\");\n"
+	"describe('#debug', 'trace',\t\t\"trace([>tracer], [+level = 2])\",\t\t\t\t\t\"Sets or resets the tracer function. The tracer function is called at various points in the PikaScript interpreter code. For example, you can use it for tracing caught exceptions, function calls and even implement debuggers and profilers.\\n\\n+level ranges from 0 (no tracing) to 22 (maximum tracing) and determines which events that will trigger a callback. If +level is outside this range the exception 'Illegal trace level: {level}' will be thrown. The default trace level of 2 calls the trace function on each function entry and exit. Other useful levels are 1 for tracing caught errors and 3 to trace every interpreted statement. (Please see \\\"PikaScriptImpl.h\\\" for a complete listing of all levels.)\\n\\nThe >tracer function will be called with the following arguments:\\n\\n$0 = the source code being executed\\n$1 = the offset into the source code\\n$2 = whether $3 is an lvalue or an rvalue (lvalue = identifier, rvalue = actual value)\\n$3 = the result from the last operation\\n$4 = trace level\\n$5 = false for \\\"entry\\\", true for \\\"exit\\\" (e.g. function call entry / exit).\\n\\nCall trace() without arguments to stop all tracing.\", \"trace()\\ntrace(function { print((if ($5) '} ' else '{ ') # if (exists(@^$callee)) ^$callee else '????') })\");\n"
 	"\n"
 	"describe('#help', 'help',\t\t\"help('page'|'/search')\", \"Prints a help page or searches the help database for text. Function syntax is documented with the following conventions:\\n\\n- Arguments in [ ] brackets are optional and default values may be documented like this: [arg = value]\\n- Vertical bar | is used to separate alternatives\\n- ... means repeat 0 or more times\\n- \\\"Type classes\\\" can be identified as follows: ?boolean, +number, 'string', >function, @reference, <arbitrary>\\n\\nType help('#categories') for a list of valid categories. help('#pages') lists all available help pages. You can also search the entire help database for a string with help('/search')\", \"help('#categories')\\nhelp('#pages')\\nhelp('#utils')\\nhelp('args')\\nhelp('/delete')\");\n"
 	"describe('#help', 'describe',\t\"describe('category', 'page', 'syntax', ['description'], ['examples'], ['seealso'])\", \"Adds a help page to the database.\", \"describe('#mine', 'countIf', '+count = countIf(@array, <value>)', 'Counts the number of items in @array that is equal to <value>.', \\\"n = countIf(@fruits, 'apple')\\\")\");\n"
@@ -473,7 +473,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.982\n"
+	"\tinteractive.pika v0.983\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -593,7 +593,7 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.982\n"
+	"\tstdlib.pika v0.983\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"

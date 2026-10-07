@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.982
+	Version 0.983
 	
 	\page Copyright
 	
@@ -1052,7 +1052,10 @@ TMPL int Script<CFG>::lib::system(const String& command) {
 }
 
 TMPL void Script<CFG>::lib::trace(const Frame& f) {
-	f.getRoot().setTracer(Precedence(int(f.getOptional(STR("$1"), int(TRACE_CALL)))), f.getOptional(STR("$0")));
+	const int level = int(f.getOptional(STR("$1"), int(TRACE_CALL)));
+	if (level < NO_TRACE || level > DEFINITION)
+		throw Xception(String(STR("Illegal trace level: ")) += intToString<String>(level));
+	f.getRoot().setTracer(Precedence(level), f.getOptional(STR("$0")));
 }
 
 TMPL T_TYPE(Value) Script<CFG>::lib::tryer(Frame& f) {
