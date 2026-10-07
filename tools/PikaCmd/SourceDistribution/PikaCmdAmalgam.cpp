@@ -3550,17 +3550,14 @@ struct TimeOutException { };
 
 class LibFuzzRoot : public Script::FullRoot {
 	typedef Script::FullRoot Super;
-	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), counter(0), deadline(std::clock() + CLOCKS_PER_SEC / 10)
+	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + CLOCKS_PER_SEC / 10)
 						, callDepth(0) {
 					updateTracer();
 				}
 	public:		virtual void trace(Frame& frame, const Script::String& source, Script::SizeType offset, bool lvalue
 						, const Script::Value& value, Pika::Precedence level, bool exit) {
 					if (level <= userLevel) Super::trace(frame, source, offset, lvalue, value, level, exit);
-					if (level <= Pika::TRACE_LOOP && ++counter >= 100) {
-						counter = 0;
-						if (std::clock() > deadline) throw TimeOutException();
-					}
+					if (level <= Pika::TRACE_LOOP && std::clock() > deadline) throw TimeOutException();					// Every tick: one statement can grow a string exponentially.
 					if (level == Pika::TRACE_CALL) {
 						if (!exit && callDepth >= 20) {
 							throw CallDepthException();
@@ -3580,7 +3577,6 @@ class LibFuzzRoot : public Script::FullRoot {
 				}
 	protected:	Pika::Precedence userLevel;
 	protected:	Script::Value userTracer;
-	protected:	int counter;
 	protected:	std::clock_t deadline;
 	protected:	int callDepth;
 };
