@@ -124,7 +124,8 @@ Turn off CRT dialogs in `LLVMFuzzerInitialize`, or a failed assert hangs the wor
   campaign in `output/fuzz`, and `tools/updateFuzzCorpus.sh/.cmd` merge and repack `tests/fuzz/corpus.tar.gz`. Seeds
   are in `tests/fuzz/seeds/` and the dictionary is `tests/fuzz/pika.dict`.
 - **Replay:** `build.sh/.cmd` build `tests/fuzz/FuzzMain.cpp` with the amalgam in the beta target and replay the seeds
-  and the corpus through it. It reads the file paths from stdin.
+  and the corpus through it. It reads the file paths from stdin, and `LIBFUZZ_TIME_LIMIT` cuts each input to 20 ms
+  instead of the fuzzer's 100 ms.
 - **Exceptions:**
   - Both fuzz builds use the beta target (asserts on, `DEBUG` defined) rather than release with `NDEBUG` undefined.
     MSVC links with the beta's debug runtime. The MSVC build sets the 8 MB stack with `/F 8388608`.
