@@ -5,6 +5,8 @@ One line install boot strap:
 	
 powershell.exe -Command "(New-Object System.Net.WebClient).DownloadFile('https://github.com/malstrom72/PikaScript/releases/latest/download/install.bat','%TEMP%\install.bat')" && %TEMP%\install.bat
 
+Run it from a Command Prompt opened with "Run as administrator", since it installs into C:\WINDOWS.
+
 
 MAC / UNIX
 ----------
