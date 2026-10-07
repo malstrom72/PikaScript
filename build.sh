@@ -8,7 +8,8 @@ tools/PikaCmd/SourceDistribution/PikaCmd examples/ppegDocExample.pika
 tools/PikaCmd/SourceDistribution/PikaCmd tests/htmlifyTests.pika
 
 mkdir -p output
-bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/PikaCmdFuzzReplay -DLIBFUZZ -DPLATFORM_STRING=UNIX \
+bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/PikaCmdFuzzReplay -DLIBFUZZ '-DLIBFUZZ_TIME_LIMIT=(CLOCKS_PER_SEC/50)' \
+		-DPLATFORM_STRING=UNIX \
 		tools/PikaCmd/SourceDistribution/PikaCmdAmalgam.cpp tests/fuzz/FuzzMain.cpp
 rm -rf output/fuzzReplay
 mkdir -p output/fuzzReplay

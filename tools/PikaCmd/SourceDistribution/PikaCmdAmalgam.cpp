@@ -3545,12 +3545,16 @@ Script::String getEnvironmentVar(const Script::String& var) {
 	#include <crtdbg.h>
 #endif
 
+#if !defined(LIBFUZZ_TIME_LIMIT)
+	#define LIBFUZZ_TIME_LIMIT (CLOCKS_PER_SEC / 10)																	// CPU time per input. Corpus replays in normal builds use less.
+#endif
+
 struct CallDepthException { };
 struct TimeOutException { };
 
 class LibFuzzRoot : public Script::FullRoot {
 	typedef Script::FullRoot Super;
-	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + CLOCKS_PER_SEC / 10)
+	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + LIBFUZZ_TIME_LIMIT)
 						, callDepth(0) {
 					updateTracer();
 				}
