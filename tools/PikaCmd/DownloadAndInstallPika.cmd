@@ -2,14 +2,12 @@
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
 SETLOCAL
 
-SET SOURCEDIR=%CD%
 CD /D "%TEMP%"
 ECHO test >PikaTest.tmp
 COPY PikaTest.tmp C:\WINDOWS\ >NUL 2>NUL
 IF ERRORLEVEL 1 (
-	ECHO Must run with administrator right. E.g.
-	ECHO.
-	ECHO runas.exe /savecred /user:administrator /noprofile "CMD /C CD /D %SOURCEDIR%&&DownloadAndInstallPika.cmd"
+	ECHO Installing PikaCmd in C:\WINDOWS needs administrator rights.
+	ECHO Open a Command Prompt with "Run as administrator" and run the install command again.
 	DEL /Q PikaTest.tmp
 	EXIT /b 1
 )
@@ -71,7 +69,6 @@ cscript /B j_unzip.vbs PikaCmdSourceDistribution.zip || GOTO error
 DEL PikaCmdSourceDistribution.zip
 CD SourceDistribution || GOTO error
 CALL .\BuildPikaCmd.cmd || GOTO error
-REM runas.exe /savecred /user:administrator /noprofile "CMD /K CD /D %TEMP%&&CD SourceDistribution&&InstallPika.cmd C:\WINDOWS&&CD ..&&RMDIR /S /Q SourceDistribution" || GOTO error
 CALL .\InstallPika.cmd C:\WINDOWS || GOTO error
 CD ..
 RMDIR /S /Q SourceDistribution
