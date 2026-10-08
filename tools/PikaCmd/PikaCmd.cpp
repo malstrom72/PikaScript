@@ -236,14 +236,16 @@ struct TimeOutException { };
 
 class LibFuzzRoot : public Script::FullRoot {
 	typedef Script::FullRoot Super;
-	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + LIBFUZZ_TIME_LIMIT)
+	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + LIBFUZZ_TIME_LIMIT), ticks(0)
 						, callDepth(0) {
+					setMaxDepth(2400);																					// 8 MB stack like PikaCmd. The deadline keeps errors traced, which allows an eighth.
 					updateTracer();
 				}
 	public:		virtual void trace(Frame& frame, const Script::String& source, Script::SizeType offset, bool lvalue
 						, const Script::Value& value, Pika::Precedence level, bool exit) {
 					if (level <= userLevel) Super::trace(frame, source, offset, lvalue, value, level, exit);
-					if (level <= Pika::TRACE_LOOP && std::clock() > deadline) throw TimeOutException();					// Every tick: one statement can grow a string exponentially.
+					if (level <= Pika::TRACE_LOOP && (++ticks & 15) == 0 && std::clock() > deadline)					// Often: a statement can grow a string exponentially. Not every tick: clock() can be slow.
+						throw TimeOutException();
 					if (level == Pika::TRACE_CALL) {
 						if (!exit && callDepth >= 20) {
 							throw CallDepthException();
@@ -264,6 +266,7 @@ class LibFuzzRoot : public Script::FullRoot {
 	protected:	Pika::Precedence userLevel;
 	protected:	Script::Value userTracer;
 	protected:	std::clock_t deadline;
+	protected:	unsigned int ticks;
 	protected:	int callDepth;
 };
 
