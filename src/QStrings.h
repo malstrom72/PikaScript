@@ -17,7 +17,7 @@
 	
 	\version
 	
-	Version 0.983
+	Version 0.984
 	
 	\page Copyright
 	

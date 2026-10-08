@@ -538,6 +538,12 @@ shared memory pool and is not thread-safe, so it must only be used from one thre
 calling `assignNative`. You can also supply your own `Variables` subclass to sandbox execution or share globals between
 multiple interpreters. See the generated C++ API reference for details.
 
+ The interpreter runs on the calling thread's native stack, and every nested expression or function call uses some of
+it. To keep deep recursion from overflowing that stack, nesting beyond a limit throws `"Recursion too deep"`, which
+scripts can catch like any other error. The default limit of 300 levels is safe on a 1 MB stack. A host whose
+interpreter thread has a larger stack can raise it with `Root::setMaxDepth()`; PikaCmd runs on an 8 MB stack and
+allows 2400.
+
 Standard Native Functions
 =========================
 
