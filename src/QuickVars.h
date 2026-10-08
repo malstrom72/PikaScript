@@ -8,7 +8,7 @@
 	
 	\version
 	
-	Version 0.984
+	Version 0.985
 	
 	\page Copyright
 	
