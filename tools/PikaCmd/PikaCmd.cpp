@@ -7,7 +7,7 @@
 
 	\version
 
-	Version 0.983
+	Version 0.984
 	
 	\page Copyright
 
@@ -37,12 +37,16 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define PIKA_CMD_VERSION "0.983"
+#define PIKA_CMD_VERSION "0.984"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 
 #if (!defined(PLATFORM_STRING))
 	#error Must define PLATFORM_STRING
+#endif
+
+#if defined(_MSC_VER)
+	#pragma comment(linker, "/STACK:8388608")																			// 8 MB like macOS and Linux, see setMaxDepth() in main().
 #endif
 
 #include <cstdlib>
@@ -316,6 +320,7 @@ int main(int argc, const char* argv[]) {
 		if (pos == std::string::npos) pikaCmdDir.clear();
 		else pikaCmdDir = pikaCmdDir.substr(0, pos + 1);
 		Script::FullRoot root;
+		root.setMaxDepth(2400);																							// Eight times the default for the 8 MB stack.
 		root.registerNative("load", overloadedLoad);
 		root.registerNative("loadBinary", loadBinary);
 		root.registerNative("saveBinary", saveBinary);

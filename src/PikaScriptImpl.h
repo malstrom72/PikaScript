@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.983
+	Version 0.984
 	
 	\page Copyright
 	
@@ -730,6 +730,13 @@ TMPL void Script<CFG>::Frame::tick(const StringIt& p, const XValue& v, Precedenc
 
 TMPL bool Script<CFG>::Frame::expr(StringIt& p, const StringIt& e, XValue& v, bool emptyOk, bool dry, Precedence thres) {
 	assert(p <= e);
+	struct DepthGuard {
+		DepthGuard(int& depth) : depth(depth) { ++depth; }
+		~DepthGuard() { --depth; }
+		int& depth;
+	} depthGuard(root.depth);
+	if (root.depth > (root.doTrace(TRACE_ERROR) ? root.maxDepth / 8 : root.maxDepth))									// Error tracing makes unwinding deeper.
+		throw Xception(STR("Recursion too deep"));
 	if (p < e && maybeWhite(*p)) white(p, e);
 	if (!dry && root.doTrace(thres)) tick(p, v, thres, false);
 	if (pre(p, e, v, dry)) {
@@ -749,48 +756,52 @@ TMPL bool Script<CFG>::Frame::termExpr(StringIt& p, const StringIt& e, XValue& v
 	return nonEmpty;
 }
 
+TMPL void Script<CFG>::Frame::statements(StringIt& p, const StringIt& e, XValue& v) {
+	while (p < e) {
+		expr(p, e, v, true, false, STATEMENT);
+		if (p < e) {
+			if (*p != ';') throw Xception(STR("Syntax error"));
+			++p;
+		}
+	}
+	v = XValue(false, rvalue(v));
+}
+
 TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
+	struct SourceGuard {
+		SourceGuard(const String*& current, const String* source) : current(current), old(current) { current = source; }
+		~SourceGuard() { current = old; }
+		const String*& current;
+		const String* const old;
+	} sourceGuard(this->source, &source);
 	XValue v;
-	const String* oldSource = this->source;
-	this->source = &source;
+	StringIt p = source.begin(), e = source.end();
+	// No catch and rethrow unless tracing: with MSVC every rethrow costs stack while unwinding deep recursion.
+	if (!root.doTrace(TRACE_ERROR)) {
+		statements(p, e, v);
+		return v.second;
+	}
+	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
 	try {
-		StringIt p = source.begin(), e = source.end();
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
 		try {
-			try {
-				while (p < e) {
-					expr(p, e, v, true, false, STATEMENT);
-					if (p < e) {
-						if (*p != ';') throw Xception(STR("Syntax error"));
-						++p;
-					}
-				}
-				v = XValue(false, rvalue(v));
-			} catch (const Xception& x) {
-				if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, x.getError()), TRACE_ERROR, previous == 0);
-				throw;
-			} catch (const std::exception& x) {
-				if (root.doTrace(TRACE_ERROR)) {
-					const char* s = x.what();
-					String err = String(std::basic_string<Char>(s, s + strlen(s)));
-					tick(p, XValue(false, err), TRACE_ERROR, previous == 0);
-				}
-				throw;
-			} catch (...) {
-				if (root.doTrace(TRACE_ERROR))
-					tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
-				throw;
-			}
+			statements(p, e, v);
+		} catch (const Xception& x) {
+			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, x.getError()), TRACE_ERROR, previous == 0);
+			throw;
+		} catch (const std::exception& x) {
+			const char* s = x.what();
+			if (root.doTrace(TRACE_ERROR))
+				tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
+			throw;
 		} catch (...) {
-			if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
 			throw;
 		}
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 	} catch (...) {
-		this->source = oldSource;
+		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 		throw;
 	}
-	this->source = oldSource;
+	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 	return v.second;
 }
 
@@ -830,8 +841,8 @@ TMPL void Script<CFG>::Frame::registerNative(const String& identifier, Native* n
 
 /* --- Root --- */
 
-TMPL Script<CFG>::Root::Root(Variables& vars) : Frame(vars, *this, 0), traceLevel(NO_TRACE), isInsideTracer(false)
-		, autoLabelStart(autoLabel + 29) {
+TMPL Script<CFG>::Root::Root(Variables& vars) : Frame(vars, *this, 0), depth(0), maxDepth(300), traceLevel(NO_TRACE)
+		, isInsideTracer(false), autoLabelStart(autoLabel + 29) {
 	std::fill_n(autoLabel, 32, ':');
 }
 
