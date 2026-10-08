@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.984
+	Version 0.985
 	
 	\page Copyright
 	
@@ -735,7 +735,7 @@ TMPL bool Script<CFG>::Frame::expr(StringIt& p, const StringIt& e, XValue& v, bo
 		~DepthGuard() { --depth; }
 		int& depth;
 	} depthGuard(root.depth);
-	if (root.depth > (root.doTrace(TRACE_ERROR) ? root.maxDepth / 8 : root.maxDepth))									// Error tracing makes unwinding deeper.
+	if (root.depth > root.depthLimit)
 		throw Xception(STR("Recursion too deep"));
 	if (p < e && maybeWhite(*p)) white(p, e);
 	if (!dry && root.doTrace(thres)) tick(p, v, thres, false);
@@ -841,8 +841,8 @@ TMPL void Script<CFG>::Frame::registerNative(const String& identifier, Native* n
 
 /* --- Root --- */
 
-TMPL Script<CFG>::Root::Root(Variables& vars) : Frame(vars, *this, 0), depth(0), maxDepth(300), traceLevel(NO_TRACE)
-		, isInsideTracer(false), autoLabelStart(autoLabel + 29) {
+TMPL Script<CFG>::Root::Root(Variables& vars) : Frame(vars, *this, 0), depth(0), maxDepth(300), depthLimit(300)
+		, traceLevel(NO_TRACE), isInsideTracer(false), autoLabelStart(autoLabel + 29) {
 	std::fill_n(autoLabel, 32, ':');
 }
 
@@ -862,6 +862,12 @@ TMPL T_TYPE(String) Script<CFG>::Root::generateLabel() {
 TMPL void Script<CFG>::Root::setTracer(Precedence traceLevel, const Value& tracerFunction) throw() {
 	this->traceLevel = traceLevel;
 	this->tracerFunction = tracerFunction;
+	setMaxDepth(maxDepth);
+}
+
+TMPL void Script<CFG>::Root::setMaxDepth(int maxDepth) throw() {
+	this->maxDepth = maxDepth;
+	depthLimit = (doTrace(TRACE_ERROR) ? maxDepth / 8 : maxDepth);														// Error tracing makes unwinding deeper.
 }
 
 TMPL void Script<CFG>::Root::trace(Frame& frame, const String& source, SizeType offset, bool lvalue, const Value& value
