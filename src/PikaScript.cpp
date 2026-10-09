@@ -5,7 +5,7 @@
 	
 	\version
 	
-	Version 0.985
+	Version 0.986
 	
 	\page Copyright
 	
