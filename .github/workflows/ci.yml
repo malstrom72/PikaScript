@@ -35,6 +35,7 @@ jobs:
     env:
       CPP_COMPILER: clang++
       CPP_OPTIONS: -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer
+      UBSAN_OPTIONS: print_stacktrace=1
     steps:
     - uses: actions/checkout@v4
     - name: Build & test

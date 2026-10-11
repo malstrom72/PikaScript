@@ -130,8 +130,12 @@ template<typename C, size_t PS = (64 - 12)> class QString {
 
 /* --- Implementation --- */
 
-template<> inline void QString<char>::copychars(char* d, const char* s, size_t l) { memcpy(d, s, l); }
-template<> inline void QString<wchar_t>::copychars(wchar_t* d, const wchar_t* s, size_t l) { wmemcpy(d, s, l); }
+template<> inline void QString<char>::copychars(char* d, const char* s, size_t l) {
+	if (l != 0) memcpy(d, s, l);
+}
+template<> inline void QString<wchar_t>::copychars(wchar_t* d, const wchar_t* s, size_t l) {
+	if (l != 0) wmemcpy(d, s, l);
+}
 
 template<typename C, size_t PS> class QString<C, PS>::Buffer {
 	friend class QString<C, PS>;
