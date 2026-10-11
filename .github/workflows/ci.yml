@@ -28,3 +28,14 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build & test
       run: bash ./build.sh
+
+  # Every build, unit test and the fuzz corpus replay under AddressSanitizer and UndefinedBehaviorSanitizer.
+  linux-clang-sanitizers:
+    runs-on: ubuntu-latest
+    env:
+      CPP_COMPILER: clang++
+      CPP_OPTIONS: -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build & test
+      run: bash ./build.sh
