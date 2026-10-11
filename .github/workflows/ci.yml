@@ -28,3 +28,23 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build & test
       run: bash ./build.sh
+
+  # PIKA_64_BIT_INTEGERS on both platforms where int64_t differs: long long on Windows, long on Linux.
+  windows-msvc-int64:
+    runs-on: windows-latest
+    env:
+      CPP_OPTIONS: /D PIKA_64_BIT_INTEGERS=1
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Build & test
+      run: .\build.cmd
+
+  linux-gcc-int64:
+    runs-on: ubuntu-latest
+    env:
+      CPP_OPTIONS: -DPIKA_64_BIT_INTEGERS=1
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build & test
+      run: bash ./build.sh
