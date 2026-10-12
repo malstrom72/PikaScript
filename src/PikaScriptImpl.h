@@ -999,20 +999,11 @@ TMPL T_TYPE(String) Script<CFG>::lib::input(const String& prompt) {
 
 TMPL T_TYPE(Value) Script<CFG>::lib::invoke(Frame& f) {
 	Value source = f.get(STR("$2")), arg4 = f.getOptional(STR("$4"));
-	const long offset = long(f.getOptional(STR("$3"), 0));
-	const long LOWEST = std::numeric_limits<long>::min(), HIGHEST = std::numeric_limits<long>::max();
-	long n;
-	if (arg4.isVoid()) {
-		const long count = long(f.get(source[String(STR("n"))]));
-		if (offset > 0 ? count < LOWEST + offset : count > HIGHEST + offset) throw Xception(STR("Array offset out of range"));
-		n = count - offset;
-	} else {
-		n = long(arg4);
-		if (offset > 0 && n > HIGHEST - offset) throw Xception(STR("Array offset out of range"));
-	}
+	long offset = long(f.getOptional(STR("$3"), 0));
+	long n = arg4.isVoid() ? long(ulong(long(f.get(source[String(STR("n"))]))) - ulong(offset)) : long(arg4);			// ulong wraps instead of overflowing.
 	if (n < 0) throw Xception(STR("Too few array elements"));
 	std::vector<Value> a;
-	for (long i = 0; i < n; ++i) a.push_back(f.get(source[i + offset]));												// Not `a(n)`: a huge `n` must fail on a missing element, not allocate.
+	for (long i = 0; i < n; ++i) a.push_back(f.get(source[long(ulong(i) + ulong(offset))]));							// Not `a(n)`: a huge `n` must fail on a missing element, not allocate.
 	return f.call(f.getOptional(STR("$0")), f.getOptional(STR("$1")), long(a.size()), a.empty() ? 0 : &a[0]);
 }
 
