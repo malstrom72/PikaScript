@@ -9,7 +9,7 @@
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -776,30 +776,29 @@ TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
 	} sourceGuard(this->source, &source);
 	XValue v;
 	StringIt p = source.begin(), e = source.end();
-	// No catch and rethrow unless tracing: with MSVC every rethrow costs stack while unwinding deep recursion.
-	if (!root.doTrace(TRACE_ERROR)) {
-		statements(p, e, v);
-		return v.second;
-	}
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
+	String error;
+	bool failed = false;
 	try {
-		try {
-			statements(p, e, v);
-		} catch (const Xception& x) {
-			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, x.getError()), TRACE_ERROR, previous == 0);
-			throw;
-		} catch (const std::exception& x) {
-			const char* s = x.what();
-			if (root.doTrace(TRACE_ERROR))
-				tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
-			throw;
-		} catch (...) {
-			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
-			throw;
-		}
-	} catch (...) {
+		statements(p, e, v);
+	} catch (const Xception& x) {
+		error = x.getError();																							// Thrown again below, once this catch has unwound the inner frames. With MSVC,
+		failed = true;																									// throwing from inside a catch block adds stack at every level of a deep recursion.
+	} catch (const std::exception& x) {
+		const char* s = x.what();
+		if (root.doTrace(TRACE_ERROR))
+			tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
 		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 		throw;
+	} catch (...) {
+		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
+		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+		throw;
+	}
+	if (failed) {
+		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, error), TRACE_ERROR, previous == 0);
+		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+		throw Xception(error);
 	}
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 	return v.second;
@@ -1000,8 +999,17 @@ TMPL T_TYPE(String) Script<CFG>::lib::input(const String& prompt) {
 
 TMPL T_TYPE(Value) Script<CFG>::lib::invoke(Frame& f) {
 	Value source = f.get(STR("$2")), arg4 = f.getOptional(STR("$4"));
-	long offset = long(f.getOptional(STR("$3"), 0));
-	long n = arg4.isVoid() ? long(f.get(source[String(STR("n"))])) - offset : long(arg4);
+	const long offset = long(f.getOptional(STR("$3"), 0));
+	const long LOWEST = std::numeric_limits<long>::min(), HIGHEST = std::numeric_limits<long>::max();
+	long n;
+	if (arg4.isVoid()) {
+		const long count = long(f.get(source[String(STR("n"))]));
+		if (offset > 0 ? count < LOWEST + offset : count > HIGHEST + offset) throw Xception(STR("Array offset out of range"));
+		n = count - offset;
+	} else {
+		n = long(arg4);
+		if (offset > 0 && n > HIGHEST - offset) throw Xception(STR("Array offset out of range"));
+	}
 	if (n < 0) throw Xception(STR("Too few array elements"));
 	std::vector<Value> a;
 	for (long i = 0; i < n; ++i) a.push_back(f.get(source[i + offset]));												// Not `a(n)`: a huge `n` must fail on a missing element, not allocate.

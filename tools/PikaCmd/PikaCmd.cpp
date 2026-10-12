@@ -7,7 +7,7 @@
 
 	\version
 
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 
@@ -37,7 +37,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define PIKA_CMD_VERSION "0.986"
+#define PIKA_CMD_VERSION "0.987"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 
@@ -180,6 +180,12 @@ static std::string executablePath(const char* argv0) {	/// full path of the runn
 	return argv0;
 }
 
+Script::String loadBuiltIn(const Script::String& filename) {
+	for (int i = 0; i < sizeof (BUILT_IN_FILES) / sizeof (*BUILT_IN_FILES); ++i)
+		if (filename == BUILT_IN_FILES[i].first) return BUILT_IN_FILES[i].second;
+	throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+}
+
 Script::String overloadedLoad(const Script::String& filename) {
 	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	{
@@ -190,11 +196,7 @@ Script::String overloadedLoad(const Script::String& filename) {
 		std::basic_ifstream<Script::Char> instream((pikaCmdDir + name).c_str());
 		if (instream.good()) return loadFile(instream, filename);
 	}
-	{
-		for (int i = 0; i < sizeof (BUILT_IN_FILES) / sizeof (*BUILT_IN_FILES); ++i)
-			if (filename == BUILT_IN_FILES[i].first) return BUILT_IN_FILES[i].second;
-	}
-	throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+	return loadBuiltIn(filename);
 }
 
 Script::String loadBinary(const Script::String& filename) {
@@ -285,8 +287,7 @@ extern "C" int LLVMFuzzerInitialize(int*, char***) {
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     try {
 		LibFuzzRoot root;
-		root.registerNative("load", overloadedLoad);
-		root.registerNative("getenv", getEnvironmentVar);
+		root.registerNative("load", loadBuiltIn);																		// No files or devices (e.g. /dev/stdin), only the built-in scripts.
 		root.assign("exitCode", Script::Value(0));
 		root.assign("PLATFORM", Script::String(TO_STRING(PLATFORM_STRING)));
 		// Scripts can call natives by name (e.g. `<input>` in interactive.pika), so stubbing variables is not enough.

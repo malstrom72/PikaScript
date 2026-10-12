@@ -128,7 +128,8 @@ Turn off CRT dialogs in `LLVMFuzzerInitialize`, or a failed assert hangs the wor
 
 - **Target:** `PikaCmdFuzz`, the `LIBFUZZ` section of `tools/PikaCmd/PikaCmd.cpp`. Each input runs as a script on a
   fresh root with the standard library, a 100 ms deadline and a call depth of 20. The `save`, `print`, `input` and
-  `system` natives are unregistered and their variables stubbed.
+  `system` natives are unregistered and their variables stubbed, `load` serves only the built-in scripts, and there is
+  no `getenv`.
 - **Scripts:** `tools/buildPikaCmdFuzz.sh/.cmd` build it, `tools/fuzzPikaCmd.sh/.cmd [seconds=600] [jobs=8]` run a
   campaign in `output/fuzz`, and `tools/updateFuzzCorpus.sh/.cmd` merge and repack `tests/fuzz/corpus.tar.gz`. Seeds
   are in `tests/fuzz/seeds/` and the dictionary is `tests/fuzz/pika.dict`.
