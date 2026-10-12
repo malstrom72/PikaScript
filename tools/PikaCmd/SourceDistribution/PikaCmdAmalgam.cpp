@@ -5,7 +5,7 @@
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -58,10 +58,10 @@ namespace Pika {
 
 #if (PIKA_UNICODE)
 	#define STR(s) L##s
-	#define PIKA_SCRIPT_VERSION L"0.986"
+	#define PIKA_SCRIPT_VERSION L"0.987"
 #else
 	#define STR(x) x
-	#define PIKA_SCRIPT_VERSION "0.986"
+	#define PIKA_SCRIPT_VERSION "0.987"
 #endif
 
 typedef unsigned char uchar;
@@ -648,7 +648,7 @@ typedef Script<StdConfig> StdScript;
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -1415,30 +1415,29 @@ TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
 	} sourceGuard(this->source, &source);
 	XValue v;
 	StringIt p = source.begin(), e = source.end();
-	// No catch and rethrow unless tracing: with MSVC every rethrow costs stack while unwinding deep recursion.
-	if (!root.doTrace(TRACE_ERROR)) {
-		statements(p, e, v);
-		return v.second;
-	}
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
+	String error;
+	bool failed = false;
 	try {
-		try {
-			statements(p, e, v);
-		} catch (const Xception& x) {
-			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, x.getError()), TRACE_ERROR, previous == 0);
-			throw;
-		} catch (const std::exception& x) {
-			const char* s = x.what();
-			if (root.doTrace(TRACE_ERROR))
-				tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
-			throw;
-		} catch (...) {
-			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
-			throw;
-		}
-	} catch (...) {
+		statements(p, e, v);
+	} catch (const Xception& x) {
+		error = x.getError();																							// Thrown again below, once this catch has unwound the inner frames. With MSVC,
+		failed = true;																									// throwing from inside a catch block adds stack at every level of a deep recursion.
+	} catch (const std::exception& x) {
+		const char* s = x.what();
+		if (root.doTrace(TRACE_ERROR))
+			tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
 		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 		throw;
+	} catch (...) {
+		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
+		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+		throw;
+	}
+	if (failed) {
+		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, error), TRACE_ERROR, previous == 0);
+		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+		throw Xception(error);
 	}
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 	return v.second;
@@ -1639,8 +1638,17 @@ TMPL T_TYPE(String) Script<CFG>::lib::input(const String& prompt) {
 
 TMPL T_TYPE(Value) Script<CFG>::lib::invoke(Frame& f) {
 	Value source = f.get(STR("$2")), arg4 = f.getOptional(STR("$4"));
-	long offset = long(f.getOptional(STR("$3"), 0));
-	long n = arg4.isVoid() ? long(f.get(source[String(STR("n"))])) - offset : long(arg4);
+	const long offset = long(f.getOptional(STR("$3"), 0));
+	const long LOWEST = std::numeric_limits<long>::min(), HIGHEST = std::numeric_limits<long>::max();
+	long n;
+	if (arg4.isVoid()) {
+		const long count = long(f.get(source[String(STR("n"))]));
+		if (offset > 0 ? count < LOWEST + offset : count > HIGHEST + offset) throw Xception(STR("Array offset out of range"));
+		n = count - offset;
+	} else {
+		n = long(arg4);
+		if (offset > 0 && n > HIGHEST - offset) throw Xception(STR("Array offset out of range"));
+	}
 	if (n < 0) throw Xception(STR("Too few array elements"));
 	std::vector<Value> a;
 	for (long i = 0; i < n; ++i) a.push_back(f.get(source[i + offset]));												// Not `a(n)`: a huge `n` must fail on a missing element, not allocate.
@@ -1802,7 +1810,7 @@ TMPL Script<CFG>::Variables::~Variables() { }
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -2199,7 +2207,7 @@ bool unitTest();
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -2307,7 +2315,7 @@ template<class Super, unsigned int CACHE_SIZE = 11> class QuickVars : public Sup
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -2367,7 +2375,7 @@ template struct Script<StdConfig>;
 	
 	\version
 	
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 	
@@ -2456,7 +2464,7 @@ REGISTER_UNIT_TEST(QStrings::unitTest)
 #endif
 const char* BUILT_IN_DEBUG =
 	"/*\n"
-	"\tdebug.pika v0.986\n"
+	"\tdebug.pika v0.987\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -2719,7 +2727,7 @@ const char* BUILT_IN_DEBUG =
 
 const char* BUILT_IN_HELP =
 	"/*\n"
-	"\thelp.pika v0.986\n"
+	"\thelp.pika v0.987\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -2929,7 +2937,7 @@ const char* BUILT_IN_INTERACTIVE =
 	"#! /usr/local/bin/PikaCmd\n"
 	"\n"
 	"/*\n"
-	"\tinteractive.pika v0.986\n"
+	"\tinteractive.pika v0.987\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -3049,7 +3057,7 @@ const char* BUILT_IN_INTERACTIVE =
 
 const char* BUILT_IN_STDLIB =
 	"/*\n"
-	"\tstdlib.pika v0.986\n"
+	"\tstdlib.pika v0.987\n"
 	"\t\n"
 	"\tPikaScript is released under the BSD 2-Clause License. https://opensource.org/licenses/BSD-2-Clause\n"
 	"\t\n"
@@ -3352,7 +3360,7 @@ const char* BUILT_IN_STDLIB =
 
 	\version
 
-	Version 0.986
+	Version 0.987
 	
 	\page Copyright
 
@@ -3382,7 +3390,7 @@ const char* BUILT_IN_STDLIB =
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define PIKA_CMD_VERSION "0.986"
+#define PIKA_CMD_VERSION "0.987"
 #define PIKA_UNICODE 0
 #define QUICKER_SCRIPT 1
 
@@ -3525,6 +3533,12 @@ static std::string executablePath(const char* argv0) {	/// full path of the runn
 	return argv0;
 }
 
+Script::String loadBuiltIn(const Script::String& filename) {
+	for (int i = 0; i < sizeof (BUILT_IN_FILES) / sizeof (*BUILT_IN_FILES); ++i)
+		if (filename == BUILT_IN_FILES[i].first) return BUILT_IN_FILES[i].second;
+	throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+}
+
 Script::String overloadedLoad(const Script::String& filename) {
 	std::string name(Pika::toStdString(filename));	// Sorry, can't pass a wchar_t filename. MSVC supports it, but it is non-standard. So we convert to a std::string to be on the safe side.
 	{
@@ -3535,11 +3549,7 @@ Script::String overloadedLoad(const Script::String& filename) {
 		std::basic_ifstream<Script::Char> instream((pikaCmdDir + name).c_str());
 		if (instream.good()) return loadFile(instream, filename);
 	}
-	{
-		for (int i = 0; i < sizeof (BUILT_IN_FILES) / sizeof (*BUILT_IN_FILES); ++i)
-			if (filename == BUILT_IN_FILES[i].first) return BUILT_IN_FILES[i].second;
-	}
-	throw Script::Xception(Script::String("Cannot open file for reading: ") += Pika::escape(filename));
+	return loadBuiltIn(filename);
 }
 
 Script::String loadBinary(const Script::String& filename) {
@@ -3630,8 +3640,7 @@ extern "C" int LLVMFuzzerInitialize(int*, char***) {
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     try {
 		LibFuzzRoot root;
-		root.registerNative("load", overloadedLoad);
-		root.registerNative("getenv", getEnvironmentVar);
+		root.registerNative("load", loadBuiltIn);																		// No files or devices (e.g. /dev/stdin), only the built-in scripts.
 		root.assign("exitCode", Script::Value(0));
 		root.assign("PLATFORM", Script::String(TO_STRING(PLATFORM_STRING)));
 		// Scripts can call natives by name (e.g. `<input>` in interactive.pika), so stubbing variables is not enough.

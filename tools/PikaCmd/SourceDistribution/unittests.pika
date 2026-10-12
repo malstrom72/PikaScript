@@ -1,5 +1,5 @@
 /*
-	unittests.pika v0.986
+	unittests.pika v0.987
 
 	PikaScript is released under the "New Simplified BSD License". http://www.opensource.org/licenses/bsd-license.php
 	
@@ -650,6 +650,21 @@ delete(@::deep);
 
 assert(> 99.9999999999995 == 100);											// Rounding up past the first digit read an uninitialized buffer byte.
 assert(> -9.99999999999995 == -10);
+
+// 0.986 -> 0.987
+
+trace(void, 0);
+::tracedError = void;
+::traceTest = function { trace(function { if ($4 == 1) ::tracedError = $3 }, 1); undefinedThing };
+try(>::traceTest());
+traceErrors();
+assert(> ::tracedError === "Undefined: 'undefinedThing'");									// Errors in the frame that turned on tracing were not traced.
+delete(@::tracedError);
+delete(@::traceTest);
+compose(@offsetTest, 1, 2);
+assert(> try(> invoke('max', , @offsetTest, -9223372036854775807)) !== void);				// Extreme offsets overflowed signed arithmetic.
+assert(> try(> invoke('max', , @offsetTest, -2147483647)) !== void);
+assert(> try(> invoke('max', , @offsetTest, 2147483647, 2)) !== void);
 
 //////////////////////////
 
