@@ -20,6 +20,9 @@ MD output\fuzzReplay || GOTO error
 tar -xzf tests\fuzz\corpus.tar.gz -C output\fuzzReplay || GOTO error
 DIR /B /S /A-D tests\fuzz\seeds\*.pika output\fuzzReplay | output\PikaCmdFuzzReplay.exe || GOTO error
 
+CALL tools\PikaCmd\SourceDistribution\BuildCpp.cmd beta native output\StackTest.exe src\PikaScript.cpp src\QStrings.cpp tests\StackTest.cpp || GOTO error
+output\StackTest.exe || GOTO error
+
 PUSHD tools\PikaCmd\SourceDistribution
 DEL /Q PikaCmd.exe 2>NUL
 SET CPP_TARGET=release
@@ -33,6 +36,9 @@ output\PikaCmd.exe tests\ppegTest.pika || GOTO error
 output\PikaCmd.exe examples\ppegDocExample.pika || GOTO error
 
 output\PikaCmd.exe tests\htmlifyTests.pika || GOTO error
+
+CALL tools\PikaCmd\SourceDistribution\BuildCpp.cmd release native output\StackTest.exe src\PikaScript.cpp src\QStrings.cpp tests\StackTest.cpp || GOTO error
+output\StackTest.exe || GOTO error
 
 EXIT /b 0
 :error
