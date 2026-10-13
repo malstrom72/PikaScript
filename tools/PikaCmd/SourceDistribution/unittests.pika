@@ -665,6 +665,9 @@ compose(@offsetTest, 1, 2);
 assert(> try(> invoke('max', , @offsetTest, -9223372036854775807)) !== void);				// Extreme offsets overflowed signed arithmetic.
 assert(> try(> invoke('max', , @offsetTest, -2147483647)) !== void);
 assert(> try(> invoke('max', , @offsetTest, 2147483647, 2)) !== void);
+assert(> try(> repeat('ab', 1 / 0)) === 'Invalid repeat count: +infinity');
+assert(> try(> repeat('ab', -1)) === 'Invalid repeat count: -1');
+assert(> repeat('ab', 0) === '' && repeat('ab', 2) === 'abab');
 
 //////////////////////////
 

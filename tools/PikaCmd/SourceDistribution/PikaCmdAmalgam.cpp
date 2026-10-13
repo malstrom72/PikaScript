@@ -2880,7 +2880,7 @@ const char* BUILT_IN_HELP =
 	"describe('#strings', 'ordinal',\t\t\"+code = ordinal('character')\",\t\t\t\t\t\t\"Returns the ordinal (i.e. the character code) of the single character string 'character'. Depending on how PikaScript is configured, the character code is an ASCII or Unicode value. If 'character' cannot be converted to a character code the exception 'Value is not single character: {character}' will be thrown.\\n\\nInverse: char(+code).\", \"ordinal('A') == 65\\nordinal(char(211)) == 211\", 'char');\n"
 	"describe('#strings', 'precision',\t\"'string' = precision(+value, +precision)\",\t\t\t\"Converts +value to a decimal number string (in scientific E notation if required). +precision is the maximum number of digits to include in the output. Scientific E notation (e.g. 1.3e+3) will be used if +precision is smaller than the number of digits required to express +value in decimal notation. The maximum number of characters returned is +precision plus 7 (for possible minus sign, decimal point and exponent).\", \"precision(12345, 3) === '1.23e+4'\\nprecision(9876, 8) === '9876'\\nprecision(9876.54321, 8) === '9876.5432'\\nprecision(-0.000000123456, 5) === '-1.2346e-7'\\nprecision(+infinity, 1) === '+infinity'\", \"radix, trunc\");\n"
 	"describe('#strings', 'radix',\t\t\"'string' = radix(+value, +radix, [+minLength])\",\t\"Converts the integer +value to a string using a selectable radix between 2 (binary) and 16 (hexadecimal). +value is treated like an operand of the bitwise operators, i.e. as an unsigned integer where negative values become their two's complement. If +minLength is specified and the string becomes shorter than this, it will be padded with leading zeroes. May throw 'Radix out of range: {radix}' or 'Minimum length out of range: {minLength}'.\", \"radix(0xaa, 2, 12) === '000010101010'\\nradix(3735928559, 16) === 'deadbeef'\\nradix(0x2710, 10) === 10000\", 'precision');\n"
-	"describe('#strings', 'repeat',\t\t\"'repeated' = repeat('repeatme', +count)\",\t\t\t\"Concatenates 'repeatme' +count number of times.\", \"repeat(' ', 5) === '     '\\nrepeat('-#-', 10) === '-#--#--#--#--#--#--#--#--#--#-'\");\n"
+	"describe('#strings', 'repeat',\t\t\"'repeated' = repeat('repeatme', +count)\",\t\t\t\"Concatenates 'repeatme' +count number of times. A negative or infinite +count throws 'Invalid repeat count: {count}'.\", \"repeat(' ', 5) === '     '\\nrepeat('-#-', 10) === '-#--#--#--#--#--#--#--#--#--#-'\");\n"
 	"describe('#strings', 'replace',\t\t\"'processed' = replace('source', 'what', 'with', [>findFunction = search], [+dropCount = length(what)], [>replaceFunction = >$1])\",\t\"Replaces all occurrences of 'what' with 'with' in the 'source' string.\\n\\nThe optional >findFunction allows you to modify how the function finds occurrences of 'what' and +dropCount determines how many characters are replaced on each occurrence. The default >findFunction is ::search (and +dropCount is the number of characters in 'what'), which means that 'what' represents a substring to substitute. If you want this function to substitute any occurrence of any character in 'what', you can let >findFunction be ::find and +dropCount be 1. Similarly, you may use ::span to substitute occurrences of all characters not present in 'what'.\\n\\nFinally, >replaceFunction lets you customize how substrings should be replaced. It will be called with two arguments, the source substring in $0 and 'with' in $1, and it is expected to return the replacement substring.\", \"replace('Barbazoo', 'zoo', 'bright') === 'Barbabright'\\nreplace('Barbalama', 'lm', 'p', find, 1) === 'Barbapapa'\\nreplace('Bqaxrbzzabypeillme', 'Bbarel', '', span, 1) === 'Barbabelle'\\nreplace('B03102020', '0123', 'abmr', find, 1, >$1{$0}) === 'Barbamama'\", \"bake, find, search, span\");\n"
 	"describe('#strings', 'reverse',\t\t\"'backwards' = reverse('string')\",\t\t\t\t\t\"Returns 'string' reversed.\", \"reverse('stressed') === 'desserts'\");\n"
 	"describe('#strings', 'rfind',\t\t\"+offset = rfind('string', 'chars')\",\t\t\t\t\"As find(), but finds the last occurrence of any character of 'chars' instead of the first. -1 is returned if no character was found (unlike find() which returns the length of 'string').\", \"rfind('abcd', 'd') == 3\\nrfind('abcdcba', 'dc') == 4\\nrfind('nomatch', 'xyz') == -1\", 'find, rsearch, rspan');\n"
@@ -3147,7 +3147,10 @@ const char* BUILT_IN_STDLIB =
 	"\t( out )\n"
 	"};\n"
 	"chop = function { $0{:length($0) - $1} };\n"
-	"repeat = function { $1 *= length($0); for (s = $0; length(s) < $1;) s #= s; ( s{:$1} ) };\n"
+	"repeat = function {\n"
+	"\tif (!($1 >= 0 && $1 < +infinity)) throw('Invalid repeat count: ' # $1);\n"
+	"\t$1 *= length($0); for (s = $0; length(s) < $1;) s #= s; ( s{:$1} )\n"
+	"};\n"
 	"replace = function {\n"
 	"\tvargs(@src, @what, @with, , @findFunction, @dropCount, @replaceFunction);\n"
 	"\tdefaults(@findFunction, search, @dropCount, length(what), @replaceFunction, >$1);\n"
@@ -3582,7 +3585,7 @@ struct TimeOutException { };
 
 class LibFuzzRoot : public Script::FullRoot {
 	typedef Script::FullRoot Super;
-	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + LIBFUZZ_TIME_LIMIT), ticks(0)
+	public:		LibFuzzRoot() : userLevel(Pika::NO_TRACE), deadline(std::clock() + LIBFUZZ_TIME_LIMIT)
 						, callDepth(0) {
 					setMaxDepth(2400);																					// 8 MB stack like PikaCmd. The deadline keeps errors traced, which allows an eighth.
 					updateTracer();
@@ -3590,8 +3593,7 @@ class LibFuzzRoot : public Script::FullRoot {
 	public:		virtual void trace(Frame& frame, const Script::String& source, Script::SizeType offset, bool lvalue
 						, const Script::Value& value, Pika::Precedence level, bool exit) {
 					if (level <= userLevel) Super::trace(frame, source, offset, lvalue, value, level, exit);
-					if (level <= Pika::TRACE_LOOP && (++ticks & 15) == 0 && std::clock() > deadline)					// Often: a statement can grow a string exponentially. Not every tick: clock() can be slow.
-						throw TimeOutException();
+					if (level <= Pika::TRACE_LOOP && std::clock() > deadline) throw TimeOutException();					// Every tick: one statement can grow a string exponentially (e.g. repeat()).
 					if (level == Pika::TRACE_CALL) {
 						if (!exit && callDepth >= 20) {
 							throw CallDepthException();
@@ -3612,7 +3614,6 @@ class LibFuzzRoot : public Script::FullRoot {
 	protected:	Pika::Precedence userLevel;
 	protected:	Script::Value userTracer;
 	protected:	std::clock_t deadline;
-	protected:	unsigned int ticks;
 	protected:	int callDepth;
 };
 

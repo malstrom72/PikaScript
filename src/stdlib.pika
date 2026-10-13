@@ -98,7 +98,10 @@ bake = function {
 	( out )
 };
 chop = function { $0{:length($0) - $1} };
-repeat = function { $1 *= length($0); for (s = $0; length(s) < $1;) s #= s; ( s{:$1} ) };
+repeat = function {
+	if (!($1 >= 0 && $1 < +infinity)) throw('Invalid repeat count: ' # $1);
+	$1 *= length($0); for (s = $0; length(s) < $1;) s #= s; ( s{:$1} )
+};
 replace = function {
 	vargs(@src, @what, @with, , @findFunction, @dropCount, @replaceFunction);
 	defaults(@findFunction, search, @dropCount, length(what), @replaceFunction, >$1);
