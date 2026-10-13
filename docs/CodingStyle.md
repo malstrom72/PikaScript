@@ -274,9 +274,10 @@ others are taken from.
   unwinds. With a 1 MB stack and a beta build, rethrowing in place in `Frame::evaluate()` overflowed natively at a depth
   of 143, below the default depth limit of 300, instead of throwing "Recursion too deep" (throwing after the catch
   reaches 595). So `evaluate()` catches an `Xception`, leaves the catch and throws a new one. Other exceptions are
-  caught, and rethrown in place, only while tracing, which is why error tracing cuts the depth limit to an eighth.
-  PikaCmd runs on an 8 MB stack, which hides all this, so test such changes on Windows with the default 1 MB stack and
-  the default depth limit.
+  caught, and rethrown in place, only while tracing. Error tracing also cuts the depth limit to an eighth, a margin from
+  0.984 when Xceptions were rethrown in place while tracing too; with the deferred throw it is conservative, but it
+  still covers the in-place rethrow of other exceptions. PikaCmd runs on an 8 MB stack, which hides all this, so test
+  such changes on Windows with the default 1 MB stack and the default depth limit.
 - **Only `Xception` reaches scripts.** `try()` catches `Xception` and nothing else, and always has. A native that wants
   a script to see its error throws `Xception`; any other C++ exception (e.g. `std::bad_alloc`) passes through `try()`
   to the host. An `Xception` subclass comes out of `evaluate()` as a plain `Xception` carrying the same message, by
