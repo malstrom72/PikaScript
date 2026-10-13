@@ -267,6 +267,20 @@ others are taken from.
   ```
 - **The interpreter is the perimeter.** Script source and every value a script passes in are untrusted and checked
   where the interpreter parses or receives them. Past that point, code trusts the contract.
+- **Stability before language design.** PikaScript is legacy technology that is still maintained for existing users.
+  When a fix has to choose, preventing crashes wins over cleaner language semantics, and existing behavior stays.
+- **Never throw inside a catch on the unwinding path of deep recursion.** On MSVC a `throw` or `throw;` inside a catch
+  block keeps that level's stack until the new exception is caught, so every frame adds to the stack while an error
+  unwinds. With a 1 MB stack and a beta build, rethrowing in place in `Frame::evaluate()` overflowed natively at a depth
+  of 143, below the default depth limit of 300, instead of throwing "Recursion too deep" (throwing after the catch
+  reaches 595). So `evaluate()` catches an `Xception`, leaves the catch and throws a new one. Other exceptions are
+  caught, and rethrown in place, only while tracing, which is why error tracing cuts the depth limit to an eighth.
+  PikaCmd runs on an 8 MB stack, which hides all this, so test such changes on Windows with the default 1 MB stack and
+  the default depth limit.
+- **Only `Xception` reaches scripts.** `try()` catches `Xception` and nothing else, and always has. A native that wants
+  a script to see its error throws `Xception`; any other C++ exception (e.g. `std::bad_alloc`) passes through `try()`
+  to the host. An `Xception` subclass comes out of `evaluate()` as a plain `Xception` carrying the same message, by
+  design: preserving the subclass would need a throw inside the catch (see above) or C++11's `std::exception_ptr`.
 - **`++` and `--` may sit inside expressions.** The scanners and the parser step through text with them, as in
   `while (++p < e && *p >= '0')` and `(*p++ == '-')`, in the same tight style as the braceless bodies. This replaces
   the "used sparingly" rule in section 9.

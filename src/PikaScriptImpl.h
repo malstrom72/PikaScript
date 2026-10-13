@@ -779,8 +779,8 @@ TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
 	XValue v;
 	StringIt p = source.begin(), e = source.end();
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
-	String error;
-	bool failed = false;
+	String error;																										// Xceptions are thrown again below, outside the catch. On MSVC a throw inside a catch
+	bool failed = false;																								// keeps stack at every level while unwinding (see docs/CodingStyle.md, Local additions).
 	if (!root.doTrace(TRACE_ERROR)) {																					// Other exceptions are caught only while tracing, since they are rethrown in place.
 		try { statements(p, e, v); } catch (const Xception& x) { error = x.getError(); failed = true; }
 	} else {
