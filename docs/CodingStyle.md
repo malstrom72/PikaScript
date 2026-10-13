@@ -276,8 +276,9 @@ others are taken from.
   reaches 595). So `evaluate()` catches an `Xception`, leaves the catch and throws a new one. Other exceptions are
   caught, and rethrown in place, only while tracing. Error tracing also cuts the depth limit to an eighth, a margin from
   0.984 when Xceptions were rethrown in place while tracing too; with the deferred throw it is conservative, but it
-  still covers the in-place rethrow of other exceptions. PikaCmd runs on an 8 MB stack, which hides all this, so test
-  such changes on Windows with the default 1 MB stack and the default depth limit.
+  still covers the in-place rethrow of other exceptions. PikaCmd runs on an 8 MB stack, which hides all this, so
+  `tests/StackTest.cpp` (run by `build.sh` and `build.cmd`) checks the default depth limit on a 1 MB stack. Only the
+  Windows build shows the MSVC cost, so run it there before changing how `evaluate()` throws.
 - **Only `Xception` reaches scripts.** `try()` catches `Xception` and nothing else, and always has. A native that wants
   a script to see its error throws `Xception`; any other C++ exception (e.g. `std::bad_alloc`) passes through `try()`
   to the host. An `Xception` subclass comes out of `evaluate()` as a plain `Xception` carrying the same message, by
