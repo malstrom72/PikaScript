@@ -226,10 +226,11 @@ if (PLATFORM == 'UNIX') {
 
 	fromNativePath = function { $0 };
 	toNativePath = function { $0 };
-	quotePath = function { "'" # (if ($0{0} === '-') './') # replace($0, "'", "'\\''") # "'" };	// ./ so a leading - is not taken as a command option.
+	undashPath = function { (if ($0{0} === '-') './') # $0 };	// ./ so a leading - is not taken as a command option.
+	quotePath = function { "'" # replace(undashPath($0), "'", "'\\''") # "'" };
 	quoteWildcardPath = function {																						// Escapes everything but letters, digits, harmless punctuation and the wildcards * ? [ ].
 		if ($0 === '') ( "''" )
-		else ( (if ($0{0} === '-') './') # replace($0,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/._-+,=@%:*?[]'
+		else ( replace(undashPath($0), 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/._-+,=@%:*?[]'
 				, '', span, 1, >(if ($0 === "\n") "'\n'" else '\' # $0)) )
 	};
 	currentDir = function { appendDirSlash(pipe('pwd -L')) };
