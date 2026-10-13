@@ -779,22 +779,32 @@ TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
 	XValue v;
 	StringIt p = source.begin(), e = source.end();
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
-	try {																												// Always caught, since tracing can start after this frame was entered.
-		statements(p, e, v);
-	} catch (const Xception& x) {
-		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, x.getError()), TRACE_ERROR, previous == 0);
+	String error;
+	bool failed = false;
+	if (!root.doTrace(TRACE_ERROR)) {																					// Other exceptions are caught only while tracing, since they are rethrown in place.
+		try { statements(p, e, v); } catch (const Xception& x) { error = x.getError(); failed = true; }
+	} else {
+		try {
+			statements(p, e, v);
+		} catch (const Xception& x) {
+			error = x.getError();
+			failed = true;
+		} catch (const std::exception& x) {
+			const char* s = x.what();
+			if (root.doTrace(TRACE_ERROR))
+				tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
+			if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+			throw;
+		} catch (...) {
+			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
+			if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+			throw;
+		}
+	}
+	if (failed) {
+		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, error), TRACE_ERROR, previous == 0);
 		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
-		throw;
-	} catch (const std::exception& x) {
-		const char* s = x.what();
-		if (root.doTrace(TRACE_ERROR))
-			tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
-		throw;
-	} catch (...) {
-		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
-		throw;
+		throw Xception(error);																							// By design a plain Xception, also for subclasses.
 	}
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
 	return v.second;
