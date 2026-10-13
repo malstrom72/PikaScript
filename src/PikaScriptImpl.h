@@ -334,7 +334,8 @@ template<class S> const STLValue<S> STLValue<S>::operator[](const STLValue& i) c
 /* --- Frame --- */
 
 TMPL Script<CFG>::Frame::Frame(Variables& vars, Root& root, Frame* previous) : vars(vars), root(root)
-		, previous(previous), closure(this), label(previous == 0 ? String(STR("::")) : root.generateLabel()) { }
+		, previous(previous), closure(this), source(0)
+		, label(previous == 0 ? String(STR("::")) : root.generateLabel()) { }
 
 TMPL T_TYPE(Value) Script<CFG>::Frame::rvalue(const XValue& v, bool fallback) {
 	return !v.first ? v.second : get(v.second, fallback);
@@ -685,7 +686,8 @@ TMPL bool Script<CFG>::Frame::post(StringIt& p, const StringIt& e, XValue& v, bo
 							if (!dry) {
 								String s = rvalue(v);
 								long i = !gotIndex ? 0L : long(rvalue(index));
-								long n = gotCount ? long(rvalue(count)) + mini(i, 0L) : String::npos;
+								const long c = (gotCount ? long(rvalue(count)) : 0L);
+								long n = gotCount ? (c < 0 ? -1L : c + mini(i, 0L)) : String::npos;						// c < 0 first: c + i could overflow.
 								v = XValue(false, i <= long(s.size()) && (!gotCount || n >= 0L)
 										? Value(s.substr(maxi(i, 0L), n)) : Value());
 							}
@@ -779,21 +781,25 @@ TMPL T_TYPE(Value) Script<CFG>::Frame::evaluate(const String source) {
 	if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, false);
 	String error;
 	bool failed = false;
-	try {
-		statements(p, e, v);
-	} catch (const Xception& x) {
-		error = x.getError();																							// Thrown again below, once this catch has unwound the inner frames. With MSVC,
-		failed = true;																									// throwing from inside a catch block adds stack at every level of a deep recursion.
-	} catch (const std::exception& x) {
-		const char* s = x.what();
-		if (root.doTrace(TRACE_ERROR))
-			tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
-		throw;
-	} catch (...) {
-		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
-		if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
-		throw;
+	if (!root.doTrace(TRACE_ERROR)) {																					// Other exceptions are caught only while tracing, since they are rethrown in place.
+		try { statements(p, e, v); } catch (const Xception& x) { error = x.getError(); failed = true; }
+	} else {
+		try {
+			statements(p, e, v);
+		} catch (const Xception& x) {
+			error = x.getError();
+			failed = true;
+		} catch (const std::exception& x) {
+			const char* s = x.what();
+			if (root.doTrace(TRACE_ERROR))
+				tick(p, XValue(false, String(std::basic_string<Char>(s, s + strlen(s)))), TRACE_ERROR, previous == 0);
+			if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+			throw;
+		} catch (...) {
+			if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, STR("Unknown exception")), TRACE_ERROR, previous == 0);
+			if (root.doTrace(TRACE_CALL)) tick(p, v, TRACE_CALL, true);
+			throw;
+		}
 	}
 	if (failed) {
 		if (root.doTrace(TRACE_ERROR)) tick(p, XValue(false, error), TRACE_ERROR, previous == 0);

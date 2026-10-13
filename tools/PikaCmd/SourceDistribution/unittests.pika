@@ -668,6 +668,9 @@ assert(> try(> invoke('max', , @offsetTest, 2147483647, 2)) !== void);
 assert(> try(> repeat('ab', 1 / 0)) === 'Invalid repeat count: +infinity');
 assert(> try(> repeat('ab', -1)) === 'Invalid repeat count: -1');
 assert(> repeat('ab', 0) === '' && repeat('ab', 2) === 'abab');
+assert(> 'abc'{-1:-2147483648} === void);												// A negative index plus a huge negative count overflowed.
+assert(> try(> ::substrTest = 'abc'{-1:'-9223372036854775808'}) !== void || ::substrTest === void);
+delete(@::substrTest);
 
 //////////////////////////
 
