@@ -308,3 +308,8 @@ others are taken from.
 - **`++` and `--` may sit inside expressions.** The scanners and the parser step through text with them, as in
   `while (++p < e && *p >= '0')` and `(*p++ == '-')`, in the same tight style as the braceless bodies. This replaces
   the "used sparingly" rule in section 9.
+- **`long` and `long long` stay where section 10 cannot apply.** `STLValue` keeps its `long`, `unsigned long`,
+  `long long` and `unsigned long long` overloads: `int64_t` and `uint64_t` are `long` on some platforms and `long long`
+  on others, and the `Int`/`UInt` conversions need every one of them. Code that already works in `long` (the integer
+  helpers, `invoke()`, the substring operator) stays `long` when it is edited. Switching it to fixed-width types would
+  change behavior where `long` is 32 bits, so that is a deliberate change of its own. New code follows section 10.
