@@ -6,8 +6,8 @@ include(run.root # 'htmlify.pika');
 
 vargs(@self, @srcPath, , @cssPath);
 if (srcPath === void) {
-    print('Usage: htmlifyFile.pika <input.txt> [style.css]');
-    exit(1);
+	print('Usage: htmlifyFile.pika <input.txt> [style.css]');
+	exit(1);
 };
 defaults(@cssPath, run.root # 'docstyle.css');
 
@@ -24,7 +24,7 @@ head = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/
 '    <meta http-equiv="Content-Style-Type" content="text/css">' # LF #
 '    <title>' # title # '</title>' # LF;
 if (css !== void) {
-    head #= '    <style type="text/css">' # LF # css # LF # '    </style>' # LF;
+	head #= '    <style type="text/css">' # LF # css # LF # '    </style>' # LF;
 };
 head #= '  </head>' # LF #
 '  <body>' # LF;

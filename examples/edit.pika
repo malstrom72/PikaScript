@@ -54,7 +54,7 @@
 		args(@$from, @$to);
 		$from = (if ($from === '') (lines.n - 1) else min(max(+$from - 1, 0), lines.n - 1));
 		$to = (if ($to === '') ($from) else min(max(+$to, $from), lines.n - 1));
-           for ({ $row = $from + 1; $text = '' }; ($s = input(' ' # radix($row, 10, 4) # ':')) !== ''; ) {
+		for ({ $row = $from + 1; $text = '' }; ($s = input(' ' # radix($row, 10, 4) # ':')) !== ''; ) {
 			if (span($s, ' ') == length($s)) $s = chop($s, 1);
 			$text #= $s # LF;
 			++$row;
@@ -89,7 +89,7 @@
 	loadedPath = '';
 	for (quit = false; !quit;) {
 		for ({ i = topLine; botLine = min(lines.n - 1, i + SCREEN_ROWS) }; i < botLine; ++i) {
-                   print((if (lineNumbers) (' ' # radix(i + 1, 10, 4) # ' ') else '') # str{lines[i]:lines[i + 1] - lines[i] - 1});
+			print((if (lineNumbers) (' ' # radix(i + 1, 10, 4) # ' ') else '') # str{lines[i]:lines[i + 1] - lines[i] - 1});
 		};
 		if (botLine >= lines.n - 1) { print('--- EOF ---'); botLine = 0 };
 		for (; {

@@ -4,14 +4,14 @@ include('systools.pika');
 include(run.root # '../tools/htmlify.pika');
 
 runTest = function {
-    args(@path);
-    html = trim(htmlify(load(path)), void);
-    path = htmlFolder # basenameOfPath(path) # '.html';
-    if (makeGold) save(path, html)
-    else {
-        gold = trim(load(path), void);
-        assert(html == gold, 'mismatch for ' # path);
-    }
+	args(@path);
+	html = trim(htmlify(load(path)), void);
+	path = htmlFolder # basenameOfPath(path) # '.html';
+	if (makeGold) save(path, html)
+	else {
+		gold = trim(load(path), void);
+		assert(html == gold, 'mismatch for ' # path);
+	}
 };
 
 makeGold = ($n > 1 && $1 === 'update');

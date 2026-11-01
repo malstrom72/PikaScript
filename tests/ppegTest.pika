@@ -7,10 +7,10 @@ PPEG_ROOT = run.root # '../tools/ppeg/';
 digitsFile = EXAMPLES_ROOT # 'digits.ppeg';
 
 testDigits = function {
-        success = ppeg.compileFunction(src=load(digitsFile), @parseDigits);
-        if (!success) throw('compile failed');
-        assert(> parseDigits('12345'));
-        assert(> !parseDigits('12a45'));
+	success = ppeg.compileFunction(src=load(digitsFile), @parseDigits);
+	if (!success) throw('compile failed');
+	assert(> parseDigits('12345'));
+	assert(> !parseDigits('12a45'));
 };
 
 testDigits();
