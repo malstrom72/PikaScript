@@ -9,6 +9,6 @@ CPP_OPTIONS="-std=c++14 -fsanitize=fuzzer,address,undefined -fno-sanitize-recove
 export CPP_COMPILER CPP_OPTIONS
 
 bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/PikaCmdFuzz \
-                -DLIBFUZZ -DPLATFORM_STRING=UNIX -I src \
-                tools/PikaCmd/PikaCmd.cpp tools/PikaCmd/BuiltIns.cpp src/PikaScript.cpp src/QStrings.cpp
+		-DLIBFUZZ -DPLATFORM_STRING=UNIX -I src \
+		tools/PikaCmd/PikaCmd.cpp tools/PikaCmd/BuiltIns.cpp src/PikaScript.cpp src/QStrings.cpp
 

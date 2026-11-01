@@ -3,14 +3,14 @@ set -e -o pipefail -u
 cd "$(dirname "$0")"
 
 if [ -e ./PikaCmd ]; then
-       :
+	:
 else
-       # Use the portable build script from SourceDistribution to avoid
-       # platform-specific flags such as `-target`
-       bash ./SourceDistribution/BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../../src/*.cpp
-       if [ $? -ne 0 ]; then
-               exit 1
-       fi
+	# Use the portable build script from SourceDistribution to avoid
+	# platform-specific flags such as `-target`
+	bash ./SourceDistribution/BuildCpp.sh ./PikaCmd -DPLATFORM_STRING=UNIX PikaCmd.cpp BuiltIns.cpp ../../src/*.cpp
+	if [ $? -ne 0 ]; then
+		exit 1
+	fi
 fi
 
 ./PikaCmd UpdateBuiltIns.pika
@@ -31,8 +31,8 @@ cp -f ../../../tests/unittests.pika . \
 		&& cp -f ../../../tests/systoolsTests.pika . \
 		&& cp -f ../../../LICENSE .
 if [ $? -ne 0 ]; then
-        echo Failed copying files
-        exit 1
+	echo Failed copying files
+	exit 1
 fi
 
 rm -f ./PikaCmd

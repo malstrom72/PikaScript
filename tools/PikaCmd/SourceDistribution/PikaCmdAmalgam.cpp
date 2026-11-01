@@ -3636,7 +3636,7 @@ extern "C" int LLVMFuzzerInitialize(int*, char***) {
 }
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-    try {
+	try {
 		LibFuzzRoot root;
 		root.registerNative("load", loadBuiltIn);																		// No files or devices (e.g. /dev/stdin), only the built-in scripts.
 		root.assign("exitCode", Script::Value(0));
@@ -3655,7 +3655,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	catch (const Script::Xception&) { }
 	catch (const TimeOutException&) { }
 	catch (const CallDepthException&) { }
-  	return 0;  // Non-zero return values are reserved for future use.
+	return 0;  // Non-zero return values are reserved for future use.
 }
 
 #endif
