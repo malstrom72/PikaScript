@@ -29,6 +29,19 @@ jobs:
     - name: Build & test
       run: bash ./build.sh
 
+  # The sanitizers don't see reads of uninitialized memory, which change results only when the stray bytes happen to
+  # matter. Valgrind reports every one.
+  linux-valgrind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+    - uses: actions/checkout@v4
+    - name: Replay the fuzz corpus under Valgrind
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq valgrind
+        bash tools/replayFuzzCorpus.sh valgrind
+
   # PIKA_64_BIT_INTEGERS on both platforms where int64_t differs: long long on Windows, long on Linux.
   windows-msvc-int64:
     runs-on: windows-latest

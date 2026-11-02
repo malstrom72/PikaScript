@@ -7,14 +7,7 @@ tools/PikaCmd/SourceDistribution/PikaCmd tests/ppegTest.pika
 tools/PikaCmd/SourceDistribution/PikaCmd examples/ppegDocExample.pika
 tools/PikaCmd/SourceDistribution/PikaCmd tests/htmlifyTests.pika
 
-mkdir -p output
-bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/PikaCmdFuzzReplay -DLIBFUZZ '-DLIBFUZZ_TIME_LIMIT=(CLOCKS_PER_SEC/50)' \
-		-DPLATFORM_STRING=UNIX \
-		tools/PikaCmd/SourceDistribution/PikaCmdAmalgam.cpp tests/fuzz/FuzzMain.cpp
-rm -rf output/fuzzReplay
-mkdir -p output/fuzzReplay
-tar -xzf tests/fuzz/corpus.tar.gz -C output/fuzzReplay
-(ls tests/fuzz/seeds/*.pika && find output/fuzzReplay -type f) | output/PikaCmdFuzzReplay
+bash tools/replayFuzzCorpus.sh
 
 bash tools/PikaCmd/SourceDistribution/BuildCpp.sh beta native output/StackTest src/PikaScript.cpp src/QStrings.cpp tests/StackTest.cpp
 (ulimit -s 1024 && output/StackTest)
