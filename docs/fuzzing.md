@@ -1,6 +1,6 @@
 # Fuzzing
 
-Version: 2026-10-08
+Version: 2026-11-02
 
 How these projects fuzz with libFuzzer. Every copy of this file is identical apart from the "Local additions" section
 at the end, which holds a project's targets, scripts and exceptions.
@@ -116,6 +116,13 @@ Turn off CRT dialogs in `LLVMFuzzerInitialize`, or a failed assert hangs the wor
 - The normal build replays every past crash input, always. It also replays the corpus and the seeds as long as that
   takes no more than about 30 seconds per build configuration. A corpus over that budget is replayed by a separate
   script, run in CI and before every release or freeze, so the normal build stays fast and nothing ships unreplayed.
+- AddressSanitizer and UndefinedBehaviorSanitizer do not see reads of uninitialized memory, which change a result only
+  when the stray bytes happen to matter. CI therefore also replays the corpora through the plain replay build under
+  Valgrind on Linux (`valgrind -q --error-exitcode=1`), at about 25 times the normal replay time. MemorySanitizer
+  would be faster, but it needs every library, the C++ runtime included, built with it.
+- Where CI minutes cost money, run the fuzz builds and the replays in a workflow of their own, triggered only by
+  changes to what they compile or read. List the sources to skip rather than those to include, so that a new file
+  triggers it.
 - Commit the input of each fixed crash as a plain file in `tests/fuzz/<target>Crashes/`, outside the archives:
   `-merge=1` drops any input whose features others already cover, fixed crashes included. Mark these files `binary`
   in `.gitattributes`, so line-ending conversion cannot rewrite them.
@@ -133,9 +140,11 @@ Turn off CRT dialogs in `LLVMFuzzerInitialize`, or a failed assert hangs the wor
 - **Scripts:** `tools/buildPikaCmdFuzz.sh/.cmd` build it, `tools/fuzzPikaCmd.sh/.cmd [seconds=600] [jobs=8]` run a
   campaign in `output/fuzz`, and `tools/updateFuzzCorpus.sh/.cmd` merge and repack `tests/fuzz/corpus.tar.gz`. Seeds
   are in `tests/fuzz/seeds/` and the dictionary is `tests/fuzz/pika.dict`.
-- **Replay:** `build.sh/.cmd` build `tests/fuzz/FuzzMain.cpp` with the amalgam in the beta target and replay the seeds
-  and the corpus through it. It reads the file paths from stdin, and `LIBFUZZ_TIME_LIMIT` cuts each input to 20 ms
-  instead of the fuzzer's 100 ms.
+- **Replay:** `tools/replayFuzzCorpus.sh/.cmd`, run by `build.sh/.cmd`, build `tests/fuzz/FuzzMain.cpp` with the
+  amalgam in the beta target and replay the seeds and the corpus through it. It reads the file paths from stdin, and
+  `LIBFUZZ_TIME_LIMIT` cuts each input to 20 ms instead of the fuzzer's 100 ms. `replayFuzzCorpus.sh valgrind` runs it
+  under Valgrind with 500 ms per input, so that each input gets as far as without Valgrind. CI's `linux-valgrind` job
+  in `ci.yml` runs that on every push, since CI minutes are free for this public repository.
 - **Exceptions:**
   - Both fuzz builds use the beta target (asserts on, `DEBUG` defined) rather than release with `NDEBUG` undefined.
     MSVC links with the beta's debug runtime. The MSVC build sets the 8 MB stack with `/F 8388608`.
